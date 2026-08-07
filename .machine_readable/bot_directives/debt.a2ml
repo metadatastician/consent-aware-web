@@ -6,44 +6,242 @@
 # Becomes the next session's Phase 0 input.
 #
 # Reference: ADR-002 in standards/agentic-a2ml/docs/
+#
+# Each item: category, component, issue, effort (easy|medium|hard),
+#            impact (high|medium|low), discovered (ISO date).
+# Categories: licence | docs | code | proof | cicd | spec | upstream
+#
+# Items are consumed (removed) when fixed. Human-readable companion:
+# docs/status/DEBT.adoc — keep the two in step.
+#
+# Baseline established 2026-08-07 at extraction from hyperpolymath/standards.
+# Everything below was found by inspection or by a gate, not assumed.
 
 [metadata]
 version = "1.0.0"
 last-updated = "2026-08-07"
-
-# ============================================================================
-# DEBT ITEMS
-# ============================================================================
-# Each item has: component, issue, effort (easy|medium|hard), impact (high|medium|low),
-# priority (should|could), and discovered date.
-#
-# Items are consumed (removed) when fixed. New items are added at session end.
-# The debt list prevents the "one more wave" loop — found things are persisted,
-# not forgotten, and not used as justification for infinite meandering.
+baseline = "extraction from hyperpolymath/standards, 2026-08-07"
 
 # ============================================================================
 # SHOULD — would fix next wave
 # ============================================================================
-# These are inputs for the next session if the user says "keep going".
-#
-# Example:
-# [[debt.should]]
-# component = "system-tools/monitoring/observatory"
-# issue = "Stale duplicate of root observatory/"
-# effort = "easy"
-# impact = "medium"
-# discovered = "2026-03-23"
+
+[[debt.should]]
+category = "spec"
+component = "drafts/"
+issue = "Author identity differs between the two drafts: draft-jewell-aibdp-00 names 'J. D. A. Jewell' / 'NUJ Ethics Council' / j.d.a.jewell@open.ac.uk; draft-jewell-http-430-consent-required-00 names 'Jonathan D.A. Jewell' / 'National Union of Journalists' / jonathan@metadatastician.art. Different bodies; normatively visible in a published I-D. Owner decision, not an agent's."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "spec"
+component = "drafts/"
+issue = "Both drafts are -00 and have never been submitted to the IETF datatracker. Until submission there is no external review, no working-group feedback, and no claim to being a standard in progress."
+effort = "medium"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "spec"
+component = "draft-jewell-aibdp-00.xml"
+issue = "Policy resolution order (policies[purpose] -> scope -> exceptions) is specified only in the reference implementation and in prose. It is not normative text. Two implementations can disagree about exception precedence and both claim conformance."
+effort = "medium"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "spec"
+component = "draft-jewell-aibdp-00.xml"
+issue = "Unanswered: can an `exceptions` entry GRANT a permission the enclosing policy refuses, or only narrow it? A manifest whose plain reading and machine reading differ is the failure mode this protocol exists to prevent. See PROOF-NEEDS.adoc INV."
+effort = "medium"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "cicd"
+component = ".github/workflows/spec-gates.yml"
+issue = "draft-structure validates structure only. No rendering validation, because xml2rfc is Python-only and the estate language policy denies Python. Options: IETF external-standards carve-out (precedent at standards/.machine_readable/licensing-policy.toml:61 for this very project), the author-tools.ietf.org API, or accepting an unrendered build. The gate states its own limit rather than implying full validation."
+effort = "medium"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "code"
+component = "examples/reference-implementations/aibdp_middleware.js"
+issue = "No unit tests. pathMatches, getApplicablePolicy, extractAiPurpose and checkPolicyConditions are exercised only end-to-end through five HTTP requests. Glob semantics (/docs/**, ?) and exception precedence are untested at the unit level — and glob semantics are themselves unspecified."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "code"
+component = "tests/"
+issue = "The five invalid manifests used to prove validate-manifests.ts can fail were built ad hoc during development and discarded. Without a committed negative corpus the proof is anecdotal, not repeatable."
+effort = "easy"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "code"
+component = "examples/manifest-scenarios/"
+issue = "41 KB of worked manifest scenarios exist only as prose inside README.md. There are no .json files, so no gate validates any of them. Scenarios that cannot be validated will drift from the schema silently — the same class of failure as the demo manifest whose scope paths did not match its own server."
+effort = "medium"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "licence"
+component = "tree-wide"
+issue = "Four licences coexist: CC-BY-SA-4.0 (125 files), MPL-2.0 (111), MIT OR GPL-3.0-or-later (6, the reference implementations), CC-BY-4.0 (2, carried from standards). The MIT/GPL choice is deliberate — IETF submission requires it, recorded in standards/.machine_readable/licensing-policy.toml:61 — but the root LICENSE does not mention the carve-out, so the tree does not explain itself. NOTE: licence files are owner-managed; no automated edits, ever."
+effort = "easy"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "licence"
+component = "standards/.machine_readable/licensing-policy.toml"
+issue = "The MIT external-standards carve-out and the prospective-PMPL entry both name this project by its OLD path (consent-aware-http, a directory inside standards). After extraction and rename they point at nothing. Owner-only to amend."
+effort = "easy"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "docs"
+component = "docs/status/SCOPE.adoc"
+issue = "Marked Definitive and scopes the suite to HTTP 430 + AIBDP, but the repository is now named consent-aware-web and README presents a six-layer architecture. Either SCOPE widens or the name narrows. Currently README marks four layers 'not drafted', which is honest but leaves the two documents saying different things about what this project is."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "cicd"
+component = ".github/settings.yml"
+issue = "contexts = [] — no required status checks. Every gate is advisory until pinned. Pinning must wait until each job has run green once and the exact context string has been read from the check-runs API; a context that never reports blocks the branch permanently."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "cicd"
+component = ".github/workflows/sonarqube.yml"
+issue = "SONAR_TOKEN is not set (the repository has no Actions secrets) and it is unconfirmed whether a SonarCloud organisation 'metadatastician' exists. The job will fail until both are resolved. Failing loudly is correct; leaving it unexplained is the debt."
+effort = "easy"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "upstream"
+component = "hyperpolymath/standards"
+issue = "LANGUAGE-POLICY.adoc section 1 rules Bun > Deno > pnpm > npm, but governance-reusable.yml:490 still fails builds carrying bun.lockb with 'Use Deno instead', docs/JS-RUNTIME-POLICY.adoc:79 states the exact inverse ordering, and .claude/CLAUDE.md:115 instructs agents to migrate Bun to Deno. governance-reusable is called estate-wide, so the ruling is recorded but not in force. This repository's validator is dependency-free specifically to avoid tripping it."
+effort = "medium"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "upstream"
+component = "hyperpolymath/rsr-template-repo"
+issue = ".cursorrules, .clinerules, .windsurfrules and .github/copilot-instructions.md all instruct agents 'TypeScript -> use ReScript' and 'Node.js / npm / bun -> use Deno'. LANGUAGE-POLICY section 1.2 retired the ReScript rule because ReScript is no longer used in this estate. These files propagate to every mint, so every new repository is born instructing agents toward a dead language and the second-choice runtime. Corrected wording exists in this repository and can be lifted verbatim."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "upstream"
+component = "hyperpolymath/rsr-template-repo build/just/repo-init.just"
+issue = "Line 305 still excludes './build/just/init.just', a path deleted in the 2026-08-02 init->repo-init rename. Unpatched, the self-name pass rewrites the minted repo's own PARENT_SLUG (uppercase PARENT evades the case-sensitive provenance guard) and inverts its 'if REPO != rsr-template-repo' guard. One-line fix; not covered by open PR #16. Patched locally before minting this repository."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "upstream"
+component = "hyperpolymath/rsr-template-repo build/just/repo-init.just"
+issue = "RSR_NON_INTERACTIVE=1 is unusable. The read() stub at line 20 also captures the two 'while read -r file' substitution loops, so under set -u the recipe aborts with 'file: unbound variable' having substituted nothing, and without it loops forever. Mint via piped stdin instead."
+effort = "medium"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "upstream"
+component = "hyperpolymath/rsr-template-repo scripts/check-no-placeholders.sh"
+issue = "Dies silently in a repository that has no origin remote. Under 'set -euo pipefail' the line REPO_NAME=$(git config --get remote.origin.url | sed ...) exits 1 when no remote is configured, killing the script before it prints anything. Exit 1 with no output reads as 'the check found placeholders' when in fact the check never ran. The failure window is exactly the freshly minted repo before its first push. Verified 2026-08-07: adding a remote makes it PASS, removing it restores the silent exit 1. Fix: tolerate the missing remote (|| true) and fall back to the directory name."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
 
 # ============================================================================
 # COULD — would fix eventually
 # ============================================================================
-# These are low-priority items that don't justify a session on their own.
-# They get picked up when an agent is in the area for other reasons.
-#
-# Example:
-# [[debt.could]]
-# component = "cicada"
-# issue = "RSR_OUTLINE.adoc references banned AGPL-3.0"
-# effort = "easy"
-# impact = "low"
-# discovered = "2026-03-23"
+
+[[debt.could]]
+category = "code"
+component = "src/*.affine"
+issue = "The three AffineScript sources (Aibdp, Express, Node) are compiled, linted and tested by nothing. They were ported from ReScript and have never been verified to build. Carried because deleting authored work is worse than carrying unverified work, but they are currently decorative."
+effort = "hard"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "cicd"
+component = ".github/workflows/spec-gates.yml"
+issue = "Only the Bun server is exercised by the enforcement job. The shared core is claimed runtime-neutral, and that was verified locally on Deno, but CI does not assert it — so 'runtime-neutral' rests on one manual run."
+effort = "easy"
+impact = "low"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "docs"
+component = "docs/faq.adoc, docs/server-configurations.adoc"
+issue = "748 and 879 lines of pandoc output. Spot-checked (tables balanced, 17 source blocks preserved, no HTML leakage) and they validate clean under asciidoctor, but neither has been read end to end since conversion."
+effort = "medium"
+impact = "low"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "docs"
+component = "docs/wikis/"
+issue = "Scaffold only — a README describing an intended structure (Core Concepts, Workflows, Glossary) with no content, and a sync step to a forge-hosted wiki that has never run."
+effort = "medium"
+impact = "low"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "docs"
+component = "AUDIT.adoc, AFFIRMATION.adoc"
+issue = "Both still carry template scaffolding markers. AFFIRMATION in particular is meant to be a dated, signed honesty snapshot; an unfilled one is the opposite of its purpose."
+effort = "easy"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "docs"
+component = "docs/"
+issue = "docs/directory-structure.md was dropped at extraction (it described the pre-extraction layout and would have re-created the M4 defect) and not replaced. The only description of the current layout is the table in README.adoc."
+effort = "easy"
+impact = "low"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "cicd"
+component = "build/guix.scm"
+issue = "Declares version 0.1.0 while .machine_readable/descriptiles/STATE.a2ml declares 0.2.0. guix-policy.yml checks for the file's presence, not its contents, so nothing catches the divergence."
+effort = "easy"
+impact = "low"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "cicd"
+component = ".github/workflows/"
+issue = "The five reusable-workflow callers are pinned to SHAs verified green on metadatastician/sr71-blackglider, not yet observed green here. The template's own pin (bd0df9ea) is startup_failure on three of them, which is why they were re-pinned at all."
+effort = "easy"
+impact = "medium"
+discovered = "2026-08-07"
+
+[[debt.could]]
+category = "proof"
+component = "PROOF-NEEDS.adoc"
+issue = "Tier T5 (Exempt) is correct today — no ABI, no crypto, no concurrency. But three obligations are recorded as deferred (DOM: resolution determinism and totality; INV: exceptions narrow not widen; ALG: path-pattern matching). The first two become real the moment a second implementation exists."
+effort = "hard"
+impact = "medium"
+discovered = "2026-08-07"

@@ -48,7 +48,7 @@ help recipe="":
 
 # Show this project's info
 info:
-    @echo "Project: consent_aware_http"
+    @echo "Project: consent_aware_web"
     @echo "Version: {{version}}"
     @echo "RSR Tier: {{tier}}"
     @echo "Recipes: $(just --summary | wc -w)"
@@ -87,7 +87,7 @@ import? "build/just/assess.just"
 
 # Build the project (debug mode)
 build *args:
-    @echo "Building consent_aware_http (debug)..."
+    @echo "Building consent_aware_web (debug)..."
     # TODO: Replace with your build command
     # Examples:
     #   cargo build {{args}}                    # Rust
@@ -98,7 +98,7 @@ build *args:
 
 # Build in release mode with optimizations
 build-release *args:
-    @echo "Building consent_aware_http (release)..."
+    @echo "Building consent_aware_web (release)..."
     # TODO: Replace with your release build command
     # Examples:
     #   cargo build --release {{args}}
@@ -273,7 +273,7 @@ run-verbose *args: build
 
 # Install to user path
 install: build-release
-    @echo "Installing consent_aware_http..."
+    @echo "Installing consent_aware_web..."
     # TODO: Replace with your install command
 
 # ═══════════════════════════════════════════════════════════════════════════════
@@ -328,7 +328,7 @@ cookbook:
     #!/usr/bin/env bash
     mkdir -p docs
     OUTPUT="docs/just-cookbook.adoc"
-    echo "= consent_aware_http Justfile Cookbook" > "$OUTPUT"
+    echo "= consent_aware_web Justfile Cookbook" > "$OUTPUT"
     echo ":toc: left" >> "$OUTPUT"
     echo ":toclevels: 3" >> "$OUTPUT"
     echo "" >> "$OUTPUT"
@@ -354,10 +354,10 @@ cookbook:
 man:
     #!/usr/bin/env bash
     mkdir -p docs/man
-    cat > docs/man/consent_aware_http.1 << EOF
-    .TH consent_aware_http 1 "$(date +%Y-%m-%d)" "{{version}}" "consent_aware_http Manual"
+    cat > docs/man/consent_aware_web.1 << EOF
+    .TH consent_aware_web 1 "$(date +%Y-%m-%d)" "{{version}}" "consent_aware_web Manual"
     .SH NAME
-    consent_aware_http \- RSR-compliant project
+    consent_aware_web \- RSR-compliant project
     .SH SYNOPSIS
     .B just
     [recipe] [args...]
@@ -366,7 +366,7 @@ man:
     .SH AUTHOR
     $(git config user.name 2>/dev/null || echo "Author") <$(git config user.email 2>/dev/null || echo "email")>
     EOF
-    echo "Generated: docs/man/consent_aware_http.1"
+    echo "Generated: docs/man/consent_aware_web.1"
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # CI & AUTOMATION

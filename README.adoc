@@ -122,19 +122,36 @@ curl -o /dev/null -w '%{http_code}\n' localhost:5000/article -H 'User-Agent: GPT
 
 == What you get
 
-* *Machine-readable metadata* (`.machine_readable/descriptiles/`) — `STATE`, `META`,
-  `ECOSYSTEM`, `PLAYBOOK`, `AGENTIC`, `NEUROSYM`, `CLADE`, and `anchors/ANCHOR`,
+* *The specifications* — two Internet-Drafts in `drafts/`, RFC-XML v3, plus the
+  AIBDP JSON Schema in `schemas/`.
+* *A working reference implementation* — `examples/reference-implementations/`,
+  one runtime-neutral core with Bun and Deno entry points. Enforcement is
+  verified by making requests and asserting 430, not by inspecting files.
+* *This repository's own AIBDP declaration* — `.well-known/aibdp.json`,
+  validated in CI. The dogfooding claim is checked, not asserted.
+* *Machine-readable metadata* (`.machine_readable/descriptiles/`) — `STATE`,
+  `META`, `ECOSYSTEM`, `PLAYBOOK`, `AGENTIC`, `NEUROSYM`, `CLADE` and `ANCHOR`
   in a2ml, so tools and agents can read the project's state and boundaries.
-* *AI gatekeeper protocol* — `0-AI-MANIFEST.a2ml` is the universal entry point that
-  tells an AI agent how to work in this repo before it touches anything.
-* *Typed ABI/FFI seam* — `src/interface/Abi/` (Idris2 type + layout proofs) over
-  `src/interface/ffi/` (Zig implementation), with generated C headers.
-* *CI/CD* — GitHub Actions for quality, security (CodeQL, Scorecard, secret
-  scanning), multi-forge mirroring, and RSR anti-pattern enforcement.
-* *Supply-chain & reproducibility* — container layering (stapeln), Guix shells,
-  SBOM, and signing hooks.
-* *Governance* — `GOVERNANCE.adoc`, `MAINTAINERS.adoc`, `.github/` community health
-  files, and a release `AUDIT.adoc` gate.
+* *AI gatekeeper protocol* — `0-AI-MANIFEST.a2ml` is the entry point that tells
+  an agent how to work here before it touches anything.
+* *Gates that can fail* — see below. Every one of them corresponds to a defect
+  that was actually present in this tree before extraction.
+* *Governance* — `GOVERNANCE.adoc`, `MAINTAINERS.adoc`, `.github/` community
+  health files, and a release `AUDIT.adoc` gate.
+
+== The gates
+
+[cols="1,3"]
+|===
+| Job | What it fails on
+
+| `single-source` | Any `draft-*.xml` at the repository root, or two drafts sharing a base name. The 430 draft once existed twice with different normative text — see ADR-0005.
+| `rfcxml-v3` | A draft missing `version="3"`, `seriesInfo`, `submissionType` or `expiresDate`.
+| `no-v2` | RFC-XML v2 constructs (`<section title=>`, `<list>`, `hangText=`, an rfc2629 DOCTYPE). The AIBDP draft was v2 throughout while declaring v3.
+| `schema-validate` | Any manifest that does not validate against `schemas/aibdp-schema-v0.2.json`, including this repo's own.
+| `claims-audit` | Any repository path a governance document asserts but which is not on disk. The predecessor claimed RSR Gold against files that did not exist.
+| `draft-expiry` | A draft past its `expiresDate`. Red here is the gate working.
+|===
 
 == Repository map
 
@@ -142,13 +159,17 @@ curl -o /dev/null -w '%{http_code}\n' localhost:5000/article -H 'User-Agent: GPT
 |===
 | Path | What lives there
 
+| `drafts/`                 | The Internet-Drafts. Single source of truth.
+| `schemas/`                | AIBDP JSON Schema (draft-2020-12).
+| `.well-known/aibdp.json`  | This repository's own AIBDP declaration.
+| `examples/`               | Reference implementations and worked manifest scenarios.
+| `src/`                    | AffineScript sources.
 | `0-AI-MANIFEST.a2ml`      | Universal entry point for AI agents (read first).
 | `.machine_readable/`      | Project metadata, policies, contractiles, AI configs.
-| `src/interface/`          | Typed ABI (Idris2) + FFI (Zig) + generated headers.
-| `docs/`                   | Onboarding, status, governance, practice, decisions.
-| `build/`, `Justfile`      | Task orchestration (`just` phases delegate to `build/just/*.just`).
+| `docs/`                   | Explainer, FAQ, conformance, ethics, onboarding, decisions.
+| `build/`, `Justfile`      | Task orchestration (`just` phases delegate to `build/just/`).
+| `scripts/`                | The gate implementations.
 | `.github/`                | Workflows + community health files.
-| `tests/`, `benches/`      | Test suites and benchmarks.
 |===
 
 == Where to go next
@@ -156,7 +177,6 @@ curl -o /dev/null -w '%{http_code}\n' localhost:5000/article -H 'User-Agent: GPT
 * `EXPLAINME.adoc` — the engineering deep-dive: how the pieces actually work.
 * `AFFIRMATION.adoc` — the dated, signed honesty snapshot of the repo's true state.
 * `AUDIT.adoc` — the release audit gate.
-* `.machine_readable/ai/PLACEHOLDERS.adoc` — the full placeholder reference.
 
 == Licence
 

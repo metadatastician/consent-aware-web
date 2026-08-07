@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-BINARY_NAME="consent_aware_http"
+BINARY_NAME="consent_aware_web"
 REPORT_PATH="docs/reports/security/assault-latest.json"
 PA_BIN="${PANIC_ATTACK_BIN:-panic-attack}"
 

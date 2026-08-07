@@ -1,0 +1,136 @@
+# SPDX-License-Identifier: MPL-2.0
+# This workflow is managed by gh actions-lock.
+# Copyright (c) 2026 Jonathan D.A. Jewell (metadatastician) <jonathan@metadatastician.art>
+#
+# Spec Gates — the checks that make this repository's claims falsifiable.
+#
+# Every job here corresponds to a defect that was actually present in this tree
+# before it was extracted from hyperpolymath/standards, and to one of the four
+# MUST invariants in docs/onboarding/QUICKSTART-DEV.adoc. None of them is
+# decorative: each was demonstrated to fail against the pre-extraction files
+# before being wired.
+#
+# Job ids are stable because a required-status context must equal an emitted job
+# id. Do not add any of these to branch protection until it has run green once
+# and the exact context string has been read back from the check-runs API.
+
+name: Spec Gates
+on:
+  push:
+    branches: [main]
+  pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  contents: read
+
+jobs:
+  # M2 + RFC-XML structure. Covers: a draft at the repository root, two drafts
+  # sharing a base name, missing seriesInfo/submissionType/expiresDate, and
+  # RFC-XML v2 constructs in a file declaring version="3".
+  draft-structure:
+    name: Draft structure
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2.2.0
+      - name: Check drafts
+        run: bun run scripts/check-drafts.ts
+
+  # M3 + S2. The repository's own manifest is validated alongside the examples:
+  # if .well-known/aibdp.json is absent or invalid, the README's central
+  # dogfooding claim is false and this job fails.
+  schema-validate:
+    name: Manifest schema
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2.2.0
+      - name: Repository manifest exists
+        run: |
+          test -f .well-known/aibdp.json || {
+            echo "::error::.well-known/aibdp.json is missing. This repository claims to dogfood AIBDP; without this file that claim is false."
+            exit 1
+          }
+      - name: Validate all manifests against the schema
+        run: |
+          bun run scripts/validate-manifests.ts schemas/aibdp-schema-v0.2.json \
+            .well-known/aibdp.json \
+            docs/example-aibdp.json \
+            examples/reference-implementations/deno/example-aibdp.json \
+            examples/reference-implementations/bun/example-aibdp.json
+
+  # M4. A governance document may not assert a path that is not on disk.
+  claims-audit:
+    name: Claims audit
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2.2.0
+      - name: Every asserted path must exist
+        run: bun run scripts/check-claims.ts
+
+  # The reference implementation must actually enforce. A server that prints
+  # "enforcement: ENABLED" has demonstrated nothing; only a 430 has. This runs
+  # the server and asserts the status codes.
+  enforcement:
+    name: Enforcement (Bun)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2.2.0
+      - name: Start the reference server
+        working-directory: examples/reference-implementations/bun
+        run: |
+          bun run example_server.js &
+          echo $! > /tmp/srv.pid
+          for _ in $(seq 1 30); do
+            curl -sf -o /dev/null http://localhost:5000/ && break
+            sleep 0.5
+          done
+      - name: Assert enforcement behaviour
+        run: |
+          fail=0
+          check() {  # name expected url [header]
+            if [ -n "$4" ]; then code=$(curl -s -o /dev/null -w '%{http_code}' "$3" -H "$4")
+            else code=$(curl -s -o /dev/null -w '%{http_code}' "$3"); fi
+            if [ "$code" = "$2" ]; then echo "  ok   $1 -> $code"
+            else echo "::error::$1 expected $2, got $code"; fail=1; fi
+          }
+          check "human request"            200 http://localhost:5000/
+          check "training agent, in scope" 430 http://localhost:5000/article  "User-Agent: GPTBot/1.0"
+          check "training agent, excepted" 200 http://localhost:5000/public   "User-Agent: GPTBot/1.0"
+          check "indexing agent, allowed"  200 http://localhost:5000/article  "User-Agent: Claude-Web/1.0"
+          check "manifest served"          200 http://localhost:5000/.well-known/aibdp.json
+          exit $fail
+      - name: Stop the server
+        if: always()
+        run: kill "$(cat /tmp/srv.pid)" 2>/dev/null || true
+
+  # Expiry is separated so it can go red on its own without masking the others.
+  # An expired draft presented as current is the failure this suite exists to
+  # name; red here is the gate working, not a gate to silence.
+  draft-expiry:
+    name: Draft expiry
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2.2.0
+      - name: No draft may be past its expiresDate
+        run: bun run scripts/check-drafts.ts

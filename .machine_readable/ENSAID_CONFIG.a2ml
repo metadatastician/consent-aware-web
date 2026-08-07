@@ -89,7 +89,7 @@ version = "1.0.0"
 
 # Example: a custom portfolio for this project
 # [[portfolios.custom]]
-# id = "consent_aware_http-dev"
+# id = "consent_aware_web-dev"
 # name = "Consent-Aware Web Development"
 # description = "Panels for Consent-Aware Web development"
 # panels = ["valence-shell", "editor-bridge", "build-dashboard"]

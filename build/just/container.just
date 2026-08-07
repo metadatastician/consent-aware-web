@@ -59,8 +59,8 @@ container-init:
     fi
 
     # Prompt for container-specific values
-    read -rp "Service name (e.g. my-api) [consent_aware_http]: " _SERVICE_NAME
-    SERVICE_NAME="${_SERVICE_NAME:-consent_aware_http}"
+    read -rp "Service name (e.g. my-api) [consent_aware_web]: " _SERVICE_NAME
+    SERVICE_NAME="${_SERVICE_NAME:-consent_aware_web}"
 
     read -rp "Primary port [8080]: " _PORT
     PORT="${_PORT:-8080}"
@@ -113,9 +113,9 @@ container-build *args:
     if [ -f "container/stapeln/ct-build.sh" ]; then
         cd container/stapeln && CONTAINER_ENGINE="$ENGINE" ./ct-build.sh {{args}}
     elif [ -f "container/Containerfile" ]; then
-        "$ENGINE" build -t consent_aware_http:latest -f container/Containerfile .
+        "$ENGINE" build -t consent_aware_web:latest -f container/Containerfile .
     elif [ -f "Containerfile" ]; then
-        "$ENGINE" build -t consent_aware_http:latest -f Containerfile .
+        "$ENGINE" build -t consent_aware_web:latest -f Containerfile .
     else
         echo "No Containerfile found in container/ or project root"
         exit 1
@@ -177,7 +177,7 @@ container-push:
         cd container/stapeln && CONTAINER_ENGINE="$ENGINE" ./ct-build.sh --push
     else
         echo "No container/stapeln/ct-build.sh found — falling back to $ENGINE push"
-        "$ENGINE" push consent_aware_http:latest
+        "$ENGINE" push consent_aware_web:latest
     fi
 
 # Run the container interactively (for debugging)
@@ -185,7 +185,7 @@ container-run *args:
     #!/usr/bin/env bash
     set -euo pipefail
     {{_engine}}
-    "$ENGINE" run --rm -it consent_aware_http:latest {{args}}
+    "$ENGINE" run --rm -it consent_aware_web:latest {{args}}
 
 # Container matrix: [build|run|push|shell|scan] x [registry] x [tag]
 container-matrix action="build" registry="ghcr.io/metadatastician" tag="latest":

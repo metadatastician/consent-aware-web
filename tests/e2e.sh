@@ -62,7 +62,7 @@ skip_test() {
 }
 
 echo "═══════════════════════════════════════════════════════════════"
-echo "  CONSENT_AWARE_HTTP — End-to-End Tests"
+echo "  CONSENT_AWARE_WEB — End-to-End Tests"
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
@@ -122,7 +122,7 @@ echo ""
 # else
 #     STATUS=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$VERISIM_URL/api/v1/hexads" \
 #         -H "Content-Type: application/json" \
-#         -d '{"tool":"CONSENT_AWARE_HTTP","modality":"document","content":"e2e test"}')
+#         -d '{"tool":"CONSENT_AWARE_WEB","modality":"document","content":"e2e test"}')
 #     check_status "hexad POST" "201" "$STATUS"
 # fi
 

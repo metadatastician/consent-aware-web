@@ -50,7 +50,7 @@ Session state is per-repository runtime output, not standards text.
 How this is implemented:
 
 * `session/dispatch.sh` writes command and continuity-core capture stubs to
-  `.session/LAST-CANONICAL-COMMAND.md` in the target repository path.
+  `session/` (dispatch.sh, custom-checks.k9, local-hooks.sh) in the target repository path.
 
 Caveat:
 

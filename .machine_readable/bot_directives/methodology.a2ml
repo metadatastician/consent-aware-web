@@ -102,14 +102,20 @@ constraints = [
 
 [methodology.state-validation]
 # A regex, not a literal list. The list form named the exact strings it was
-# meant to catch ("CONSENT_AWARE_HTTP"), so `just repo-init` substituted the detector along
+# meant to catch ("CONSENT_AWARE_WEB"), so `just repo-init` substituted the detector along
 # with everything else and shipped reject-if-contains = ["MY_PROJECT", ...] —
 # a guard against unfilled tokens that had been eaten by the filling. The
 # escaped pattern below contains no token for init to match, and covers every
 # upper-snake token rather than the three anyone remembered to enumerate.
 # Enforced by scripts/check-no-placeholders.sh.
 reject-if-matches = ["\\{\\{[A-Z][A-Z0-9_]*\\}\\}"]
-reject-if-contains = ["consent-aware-web"]
+# RECURRENCE, fixed 2026-08-07. The comment above describes repo-init eating the
+# literal token list. The same thing then happened to THIS line: it held the
+# template's own slug, repo-init substituted it, and the guard against corrupt
+# state files ended up rejecting any state file containing the repository's own
+# name. A detector must not contain a string the substituter rewrites. The regex
+# above needs no literal and is the only guard that survives minting.
+reject-if-contains = []
 reject-if-project-name-mismatch = true
 staleness-threshold-days = 90
 fallback-files = ["TODO.md", "TODO.adoc", "ROADMAP.adoc", "README.adoc"]

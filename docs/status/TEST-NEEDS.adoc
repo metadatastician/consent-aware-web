@@ -1,126 +1,71 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
 = TEST-NEEDS: consent-aware-web
+:toc: preamble
 
-== CRG Grade: C — ACHIEVED 2026-04-04
+[IMPORTANT]
+====
+This file previously read *"CRG Grade: C — ACHIEVED 2026-04-04"* and inventoried
+Idris2 ABI modules, Zig FFI tests and a template-instantiation E2E suite. None of
+that was ever about this project — it was the RSR template's own test inventory,
+carried through the mint unchanged, and the trees it described were removed at
+extraction. The claim has been withdrawn. Current grade is in `READINESS.adoc`.
+====
 
-== Current State (Updated 2026-04-04)
+== Current state — 2026-08-07
 
-[cols="2,1,4", options="header"]
+[cols="2,1,4",options="header"]
 |===
-| Category | Count | Details
+| Category | Count | Detail
 
-| *Source modules* | 6 | 3 Idris2 ABI (Foreign, Layout, Types), 2 Zig FFI (build, main), 1 Zig integration test template
-| *Unit tests* | 0 | None in main source (inline tests in main.zig)
-| *Integration tests* | 1 | `test/integration_test.zig` (documented template, 1 placeholder test)
-| *E2E tests* | 1 | `tests/e2e/template_instantiation_test.sh` (full instantiation + validation)
-| *Workflow tests* | 1 | `tests/workflows/validate_workflows_test.sh` (21 workflows validated)
-| *Validation tests* | 1 | `scripts/validate-template.sh` (8-phase comprehensive validation)
-| *Benchmarks* | 5 | `benches/template_bench.sh` (validation, Zig build, tests, workflows, instantiation)
-| *Fuzz tests* | 0 | `README.adoc` scaffold with harness instructions
+| Specification sources | 2 | `drafts/*.xml`, RFC-XML v3
+| Schemas | 1 | `schemas/aibdp-schema-v0.2.json` (draft-2020-12)
+| Gate scripts | 3 | `check-drafts.ts`, `validate-manifests.ts`, `check-claims.ts`
+| CI jobs asserting behaviour | 5 | `spec-gates.yml`
+| Manifests under validation | 4 | repo manifest, docs example, two demo manifests
+| Reference implementations | 1 core, 2 runtimes | shared middleware; Bun + Deno servers
+| Unit tests | *0* | the middleware has no unit tests — see debt
+| Conformance suite | *0* | none exists — see debt
+| Negative corpus | 5 (ad hoc) | built during development, not committed — see debt
 |===
 
-== Completed Work (CRG C - Testing & Benchmarking)
+== What is actually tested
 
-=== Template Validation Script ✅
+Each gate was demonstrated to fail before being wired. That demonstration is the
+evidence; a gate never observed failing is not known to work.
 
-* [x] `scripts/validate-template.sh` — 8-phase validation
-** Phase 1: Core repository structure (root files, directories)
-** Phase 2: Machine-readable metadata (`.machine_readable/`)
-** Phase 3: GitHub Actions workflows (17 required + all present)
-** Phase 4: Idris2 ABI and Zig FFI source files
-** Phase 5: Placeholder token replacement (skipped in template)
-** Phase 6: SPDX license headers (100% coverage, 6/6 files)
-** Phase 7: Build system verification (`zig build` + `idris2` syntax check)
-** Phase 8: Documentation requirements (TOPOLOGY, ABI-FFI-README, etc)
-* Status: *PASSING* (0 errors, 3 warnings about template placeholders)
+[cols="2,3,3",options="header"]
+|===
+| Gate | Asserts | Shown to fail against
 
-=== E2E Template Instantiation Test ✅
+| `single-source` | no `draft-*.xml` at root; no two drafts sharing a base name | a draft copied back to the root
+| `rfcxml-v3` | `version="3"`, `seriesInfo`, `submissionType`, `expiresDate` present | the pre-extraction AIBDP draft (3 failures)
+| `no-v2` | no `<section title=>`, `<list>`, `hangText=`, rfc2629 DOCTYPE, bogus namespace | the pre-extraction AIBDP draft (6 failures)
+| `schema-validate` | all four manifests validate, and the repo's own exists | five hand-built invalid manifests, each rejected with a precise message
+| `claims-audit` | every repository path a governance doc asserts exists | its first run — it caught this repository asserting `src/interface/` and `PLACEHOLDERS.adoc` after both had been deleted
+| `enforcement` | 430 for a training agent in scope; 200 for exception, allowed purpose, and human | the demo before its `scope` typo was fixed, where every request returned 200
+|===
 
-* [x] `tests/e2e/template_instantiation_test.sh` — full workflow
-** Clones template to temp directory
-** Runs the real `just repo-init` (never a second copy of its substitution list)
-** Validates resulting structure with `scripts/validate-template.sh`
-** Verifies Zig build works after instantiation
-** Checks no placeholder survives, via `scripts/check-no-placeholders.sh`
-** Cleans up temp directory
+== Gaps
 
-NOTE: this entry read `[x]` from the day it was written until 2026-07-17, while
-the test aborted at its first substitution line (`file: unbound variable`) on
-every invocation. Nothing noticed: CI ran `tests/e2e.sh`, which did not call it,
-and its only caller — `benches/template_bench.sh` — pipes it to `/dev/null` and
-appends `|| true`, so it was timing a script that died instantly. The tick was
-copied from the test's intent, not from a run. Tick these boxes from observed
-output only.
-* Status: *READY TO TEST* (can be verified by CI)
+. *No unit tests for the middleware.* `pathMatches`, `getApplicablePolicy`,
+  `extractAiPurpose` and `checkPolicyConditions` are only exercised end-to-end
+  through five HTTP requests. Glob semantics (`/docs/**`) and exception
+  precedence are untested at the unit level.
+. *No committed negative corpus.* The five invalid manifests used to prove the
+  validator can fail were built ad hoc and discarded. They should live in
+  `tests/` so the proof is repeatable rather than anecdotal.
+. *No conformance suite.* Nothing lets a third-party implementation demonstrate
+  that it resolves policies the same way this one does. Until that exists,
+  "interoperable" is untested by construction.
+. *`draft-validate` is partial.* Structure is checked; rendering is not, because
+  the toolchain question is open. The gate says so rather than implying full
+  validation.
+. *The Deno path is not exercised in CI.* Only the Bun server is asserted. The
+  shared core is runtime-neutral, but "runtime-neutral" is currently a claim
+  supported by one local run, not by CI.
 
-=== Workflow Validation Test ✅
+== Priority
 
-* [x] `tests/workflows/validate_workflows_test.sh`
-** Validates all 21 workflows exist and have proper structure
-** Checks SPDX headers, `name` field
-** Verifies all 15 required workflows present
-* Status: *PASSING* (0 errors, 15/15 required workflows found)
-
-=== Zig FFI Tests ✅
-
-* [x] `src/interface/ffi/test/integration_test.zig` — template with examples
-** Converted from `consent_aware_http` placeholders to "template" namespace
-** Added comprehensive comments for how to instantiate
-** Tests grouped by category (lifecycle, operations, strings, errors, version, memory safety, threading)
-** Compiles and passes placeholder test
-* Status: *PASSING* (1 test: `placeholder_test_implementation_required` passes)
-
-=== Benchmarks ✅
-
-* [x] `benches/template_bench.sh` — 5 benchmark suites
-** Validation script: ~5.8s average (3 runs)
-** Zig build: ~19ms (clean build)
-** Zig tests: ~20ms
-** Workflow validation: ~117ms
-** Template instantiation: ~427ms
-* Formats: human, json, csv
-* Status: *PASSING* (all benchmarks execute)
-
-=== Build System ✅
-
-* [x] `src/interface/ffi/build.zig` — updated for Zig 0.15.2
-** Simplified to test-only configuration
-** Supports both unit tests and integration tests
-** Works with `zig build` without errors
-* Status: *PASSING* (builds successfully)
-
-== Test Results Summary
-
-----
-Validation Script:    PASS (0 errors, 3 warnings)
-Workflow Validation:  PASS (21/21 workflows valid)
-Integration Tests:    PASS (1/1 placeholder test)
-E2E Instantiation:    READY (needs CI confirmation)
-Benchmarks:           PASS (5/5 benchmark suites)
-Build System:         PASS (zig build succeeds)
-----
-
-== CRG C Compliance
-
-* *Coverage*: 6/6 test categories (unit, integration, E2E, workflow, validation, benchmarks)
-* *Documentation*: All test files have SPDX headers + inline documentation
-* *Author Attribution*: Jonathan D.A. Jewell <6759885+hyperpolymath@users.noreply.github.com>
-* *License*: MPL-2.0 on all new files
-* *Automation*: All scripts executable + working
-
-== FLAGGED ISSUES - ALL RESOLVED
-
-* [.line-through]#*Template repo used by ALL new repos has 0 validation tests*# → FIXED: 4 test suites + validation script
-* [.line-through]#*fuzz/placeholder.txt*# → FIXED: replaced with `README.adoc` containing real harness instructions
-* [.line-through]#*No E2E tests for template instantiation*# → FIXED: full E2E test suite
-* [.line-through]#*Zig FFI integration tests are placeholders*# → FIXED: converted to documented template format
-
-== Next Steps (Future Sessions)
-
-* [ ] Integrate test scripts into CI/CD workflows
-* [ ] Generate test coverage reports
-* [ ] Add more specialized benchmarks (memory, threading stress)
-* [ ] Document test instantiation patterns for new repos
-
-== Priority: P0 (COMPLETE) ✅
+`1` and `2` are cheap and would move the grade. `3` is the one that matters for
+the specification actually being a specification.

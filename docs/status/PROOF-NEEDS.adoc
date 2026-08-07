@@ -1,122 +1,90 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: rsr-template-repo/docs/status/PROOF-NEEDS.adoc
-// Authoritative master list: ~/Desktop/PROOF-REQUIREMENTS-MASTER.adoc
-= Proof Requirements — CONSENT_AWARE_HTTP
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= Proof Requirements — consent-aware-web
+:toc: preamble
 
 == Proof Tier
 
-// Assign one: T1 (Critical), T2 (High), T3 (Standard), T4 (Light), T5 (Exempt)
-*Tier*: T3 — Standard
+*Tier*: T5 — Exempt
 
-== Proof Categories
+[IMPORTANT]
+====
+This file previously declared *T3 — Standard* with seven obligations: five ABI/FFI
+and two typing. Those were inherited from the RSR template and referred to
+`src/interface/Abi/` (Idris2) and `src/interface/ffi/` (Zig) — a C ABI seam this
+project never had. Both trees were removed at extraction as capability fiction, so
+the obligations they generated no longer exist.
 
-[cols="1,3,1", options="header"]
+Declaring proof obligations against absent code is the same failure as declaring
+capabilities you do not have: it makes the oracle score empty modules.
+====
+
+== Why T5
+
+There is no code whose correctness a machine-checked proof would establish.
+
+* The deliverables are two documents and a JSON Schema.
+* The reference implementation is illustrative, not normative. If it disagrees with
+  the drafts, the drafts win — so proving the implementation correct would prove
+  the wrong artefact.
+* There is no ABI, no FFI seam, no concurrency, no cryptography. AIBDP deliberately
+  carries no crypto; that is recorded in `docs/status/SCOPE.adoc` as the boundary
+  against AVOW.
+
+Verification that *does* apply here is empirical and lives in `spec-gates.yml`:
+structural validation of the drafts, schema validation of every manifest, and
+assertion of enforcement behaviour over real HTTP requests.
+
+== What would warrant proofs later
+
+Recorded so the T5 is a considered position rather than an absence of thought.
+
+[cols="1,3,2",options="header"]
+|===
+| Code | Obligation | Trigger
+
+| DOM
+| *Policy resolution is deterministic and total.* Given a manifest, a purpose and a
+  path, `policies[purpose]` → `scope` → `exceptions` must yield exactly one outcome,
+  independent of key order, and must be defined for every input. Today this order is
+  specified only in code and prose, not normatively in the draft.
+| A second implementation, or a conformance suite. Two implementations disagreeing
+  about exception precedence is the first real interoperability failure this
+  protocol can have.
+
+| INV
+| *Exceptions narrow, never widen.* An `exceptions` entry should not be able to grant
+  a permission the enclosing policy refuses — otherwise a manifest can be written
+  whose plain reading and machine reading differ.
+| Before `-01`. This is a specification question, not an implementation one, and it
+  is currently unanswered.
+
+| ALG
+| *Path-pattern matching terminates and matches what a reader expects.* `pathMatches`
+  compiles glob-ish patterns to regular expressions; `/docs/**` and `?` semantics are
+  neither specified nor unit-tested.
+| Alongside the conformance suite.
+
+| SEC
+| Not applicable unless the optional COSE/JWS manifest signature described in
+  `draft-jewell-aibdp-00` is implemented. It is not.
+| Implementation of manifest signing.
+|===
+
+None of the above is scheduled. `INV` is the one that should be resolved as
+*specification text* before submission, whether or not it is ever proven.
+
+== Proof categories
+
+[cols="1,3,1",options="header"]
 |===
 | Code | Meaning | Applies?
 
-| *TP* | Typing Proofs (type soundness, type safety) | Yes
-| *INV* | Invariant Proofs (state machines, monotonicity, bounds) |
-| *SEC* | Security Proofs (crypto, injection freedom, access control) |
-| *CONC* | Concurrency Proofs (linearizability, deadlock freedom) |
-| *ALG* | Algorithm Proofs (termination, correctness, bounds) |
-| *ABI* | ABI/FFI Proofs (memory layout, pointer safety, platform compat) | Yes
-| *DOM* | Domain-Specific Proofs (bespoke to this project) |
+| *TP* | Typing Proofs (type soundness, type safety) | No — no typed seam
+| *INV* | Invariant Proofs (state machines, monotonicity, bounds) | Deferred — see above
+| *SEC* | Security Proofs (crypto, injection freedom, access control) | No — no crypto
+| *CONC* | Concurrency Proofs (linearizability, deadlock freedom) | No — no concurrency
+| *ALG* | Algorithm Proofs (termination, correctness, bounds) | Deferred — see above
+| *DOM* | Domain Proofs (protocol semantics) | Deferred — see above
+| *ABI* | ABI/FFI Proofs | No — removed at extraction; there is no ABI
 |===
-
-== Mandatory Proofs (All RSR Repos)
-
-These proofs come from the consent-aware-web and MUST be present in every repo:
-
-=== ABI/FFI Boundary Proofs (Idris2)
-
-[cols="1,3,1,3", options="header"]
-|===
-| # | Proof | Status | File
-
-| ABI-1 | Non-null pointer proofs (`So (ptr /= 0)`) | Needed | `verification/proofs/idris2/ABI/Pointers.idr`
-| ABI-2 | Memory layout correctness (`HasSize`, `HasAlignment`) | Needed | `verification/proofs/idris2/ABI/Layout.idr`
-| ABI-3 | Platform type size proofs (per platform) | Needed | `verification/proofs/idris2/ABI/Platform.idr`
-| ABI-4 | FFI function return type proofs | Needed | `verification/proofs/idris2/ABI/Foreign.idr`
-| ABI-5 | C ABI compliance (`CABICompliant`, `FieldsAligned`) | Needed | `verification/proofs/idris2/ABI/Compliance.idr`
-|===
-
-=== Typing Proofs (Prover Varies)
-
-[cols="1,3,1,3", options="header"]
-|===
-| # | Proof | Status | File
-
-| TP-1 | Core data type well-formedness | Needed | `verification/proofs/idris2/Types.idr`
-| TP-2 | Public API type safety (exported functions) | Needed | `verification/proofs/lean4/ApiTypes.lean`
-|===
-
-== Project-Specific Proofs
-
-// Fill in proofs specific to this project. Copy from PROOF-REQUIREMENTS-MASTER.adoc
-// Delete this section for T4/T5 repos
-
-[cols="1,3,1,1,1,2", options="header"]
-|===
-| # | Proof Needed | Category | Prover | Priority | File(s)
-
-| | | | | |
-|===
-
-== Dangerous Patterns (BANNED)
-
-The following MUST NOT appear anywhere in proof files:
-
-[cols="2,2,3", options="header"]
-|===
-| Pattern | Language | Meaning
-
-| `believe_me` | Idris2 | Unsafe cast / trust-me
-| `assert_total` | Idris2 | Skip totality check
-| `postulate` | Idris2/Agda | Unproven axiom
-| `sorry` | Lean4 | Incomplete proof
-| `Admitted` | Coq | Incomplete proof
-| `unsafeCoerce` | Haskell | Unsafe type cast
-| `Obj.magic` | OCaml/ReScript | Unsafe type cast
-| `unsafe` (unaudited) | Rust | Unsafe block without safety comment
-|===
-
-CI will reject any PR introducing these patterns (enforced by `panic-attack assail`).
-
-== Prover Selection Guide
-
-[cols="2,2,3", options="header"]
-|===
-| Use Case | Recommended Prover | Why
-
-| ABI/FFI boundaries | *Idris2* | Dependent types model layouts precisely
-| Type system proofs | *Coq* or *Lean4* | Mature proof assistants for metatheory
-| Algebraic properties | *Lean4* | Good mathlib support
-| Inductive/coinductive | *Agda* | Native support for (co)induction
-| Distributed systems | *TLA+* | Model checking for protocols
-| Numerical properties | *Isabelle* | Strong real analysis library
-|===
-
-== Proof File Locations
-
-----
-verification/proofs/
-├── idris2/          # Idris2 proofs (ABI, dependent types)
-│   ├── ABI/         # ABI-specific proofs
-│   └── *.idr        # Project-specific Idris2 proofs
-├── lean4/           # Lean4 proofs (algebra, lattices)
-│   └── *.lean
-├── agda/            # Agda proofs (induction, metatheory)
-│   └── *.agda
-├── coq/             # Coq proofs (type systems, compilation)
-│   └── *.v
-└── tlaplus/         # TLA+ specs (distributed protocols)
-    └── *.tla
-----
-
-== References
-
-* Master list: `~/Desktop/PROOF-REQUIREMENTS-MASTER.adoc`
-* Proof status tracking: `PROOF-STATUS.adoc` (this repo)
-* Proven library: `proven` repo (Idris2 verified foundations)
-* Template: `rsr-template-repo/docs/status/PROOF-NEEDS.adoc`

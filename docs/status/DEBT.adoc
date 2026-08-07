@@ -1,0 +1,86 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= Consent-Aware Web — Debt Register
+:toc: preamble
+
+Machine-readable source: `.machine_readable/bot_directives/debt.a2ml`. That file
+is authoritative; this one is for reading. Keep them in step.
+
+*Baseline:* 2026-08-07, at extraction from `hyperpolymath/standards`.
+*Totals:* 18 should-fix, 8 could-fix, across seven categories.
+
+Everything here was found by inspection or by a gate. Nothing is speculative, and
+nothing found has been left out — including items that reflect badly on the work
+done in this session.
+
+== By category
+
+[cols="1,1,1,4",options="header"]
+|===
+| Category | Should | Could | Weight of it
+
+| Spec     | 4 | 0 | The heaviest. Unsubmitted drafts, inconsistent authorship, and two genuinely unanswered semantic questions.
+| CI/CD    | 3 | 3 | Mostly "not yet observed", not "known broken". Required contexts are unpinned by design.
+| Code     | 3 | 1 | No unit tests; 41 KB of examples nothing validates.
+| Upstream | 4 | 0 | Estate-level; fixes belong in `standards` and `rsr-template-repo`, not here.
+| Docs     | 1 | 4 | Mostly scaffolding never filled.
+| Licence  | 2 | 0 | Four licences coexisting, one carve-out pointing at a dead path. Owner-only.
+| Proof    | 0 | 1 | Correctly exempt today; three obligations deferred, not denied.
+|===
+
+== The five that matter
+
+. *Nobody outside this repository has implemented AIBDP.* One implementation,
+  written by the specification's author, tested against a manifest written by the
+  same author, is self-consistency rather than validation. This is why
+  `READINESS.adoc` grades E and not D — and no amount of internal work moves it.
+. *Policy resolution is not normative.* The order
+  `policies[purpose]` → `scope` → `exceptions` exists in code and in prose, not in
+  the draft. Two conforming implementations can disagree about exception
+  precedence. Related and unanswered: may an exception *grant* what the enclosing
+  policy refuses, or only narrow it?
+. *41 KB of manifest scenarios that no gate can validate.* They live as prose
+  inside `examples/manifest-scenarios/README.md`; there are no `.json` files. This
+  is precisely how the demo manifest came to declare `scope: ["/article.html"]`
+  against a server serving `/article` — an example nothing checks will drift, and
+  the middleware fails open, so it drifts silently.
+. *`draft-structure` cannot check rendering.* `xml2rfc` is Python-only and the
+  estate language policy denies Python. The gate checks what it can and says so,
+  which is honest but not sufficient — a draft can be structurally valid and still
+  fail at the datatracker.
+. *The estate's Bun ruling is recorded but not in force.* `LANGUAGE-POLICY.adoc §1`
+  makes Bun tier 1; `governance-reusable.yml` — called estate-wide — still fails
+  any repository carrying a Bun lockfile. This repository's manifest validator is
+  dependency-free specifically to route around that, which is a workaround, not a
+  fix.
+
+== Debt introduced by this session
+
+Recorded separately because it would otherwise be invisible.
+
+* `docs/faq.adoc` and `docs/server-configurations.adoc` are pandoc output. They
+  validate clean and were spot-checked, but neither has been read end to end.
+* `docs/technical.adoc` and `docs/start-here.adoc` were *reconstructed* — their
+  sources had lost all markdown markup. Prose was diffed against the originals to
+  prove markup-only change, but the structure (which lines are headings, which are
+  list items, where code fences belong) is my reading of unmarked text, not the
+  author's.
+* `draft-jewell-aibdp-00.xml` was migrated RFC-XML v2 → v3 by script. Verified
+  lossless (71 attributes → 71 elements, prose byte-identical), but it is a
+  machine transformation of a normative document and deserves a human read.
+* `docs/directory-structure.md` was dropped and not replaced.
+
+== Not debt
+
+Listed so they are not repeatedly rediscovered and refiled.
+
+* *`draft-expiry` will fail on 2027-02-08.* That is the gate working. The response
+  is a revision, not an exemption.
+* *`capabilities = []` in `rsr-profile.a2ml`.* This is the honest declaration for a
+  specification suite, not an unfilled token. Declaring capabilities that do not
+  exist is what the RSR oracle punishes.
+* *Proof tier T5.* There is no ABI, no cryptography and no concurrency. The
+  reference implementation is illustrative, not normative — proving it correct
+  would prove the wrong artefact.
+* *Four of six architecture layers undrafted.* `README.adoc` marks them "not
+  drafted" and no milestone depends on them. Direction, not commitment.

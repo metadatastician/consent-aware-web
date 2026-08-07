@@ -1,23 +1,65 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= YOUR Template Repo Roadmap
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= Consent-Aware Web — Roadmap
+:toc: preamble
 
-== Current Status
+Machine-readable counterpart: `.machine_readable/descriptiles/STATE.a2ml`.
+Where the two disagree, STATE.a2ml is authoritative and this file is stale.
 
-Initial development phase.
+== Current status
+
+Phase *design*, maturity *experimental*, ~30% complete.
+
+Two Internet-Drafts exist and are well-formed RFC-XML v3. Neither has been
+submitted to the IETF datatracker. The JSON Schema is valid and exercised by CI.
+A reference implementation exists and its enforcement behaviour is asserted in
+CI rather than described. Four of the six architectural layers are named but not
+drafted.
 
 == Milestones
 
-=== v0.1.0 - Foundation
-* [ ] Core functionality
-* [ ] Basic documentation
-* [ ] CI/CD pipeline
+=== Done
 
-=== v1.0.0 - Stable Release
-* [ ] Full feature set
-* [ ] Comprehensive tests
-* [ ] Production ready
+* [x] AIBDP JSON Schema (draft-2020-12), validated in CI against four manifests
+* [x] `draft-jewell-aibdp-00` — migrated from RFC-XML v2 to v3
+* [x] `draft-jewell-http-430-consent-required-00` — duplicate retired, Standards Track restored
+* [x] Reference implementation: runtime-neutral core, Bun (tier 1) and Deno (tier 2) servers
+* [x] `.well-known/aibdp.json` — the repository declares under its own protocol
+* [x] Five CI gates, each demonstrated to fail before being wired
+* [x] Extraction from `hyperpolymath/standards` into a repository of its own
 
-== Future Directions
+=== v0.3 — submittable
 
-_To be determined based on community feedback._
+* [ ] Resolve the author organization (the two drafts name different bodies)
+* [ ] Decide the draft-rendering toolchain (see `PROOF-NEEDS.adoc` and STATE.a2ml blockers)
+* [ ] Render both drafts to `.txt` and confirm datatracker acceptance
+* [ ] Submit `-00` of both drafts
+* [ ] Reconcile `SCOPE.adoc` with the repository name, or narrow the name
+
+=== v0.4 — conformance
+
+* [ ] Conformance test suite for AIBDP manifest processors: a corpus of manifests
+      plus expected policy-resolution outcomes, runnable against any implementation
+* [ ] Negative corpus — malformed manifests a processor must reject
+* [ ] Document the resolution order (`policies[purpose]` → `scope` → `exceptions`)
+      normatively in the draft rather than only in code
+
+=== v1.0 — adopted
+
+* [ ] A second, independent, interoperating implementation not written here
+* [ ] At least one third-party origin publishing a real AIBDP manifest
+* [ ] IANA considerations resolved for the 430 code point
+* [ ] `-01` or later revisions reflecting working-group feedback
+
+== Not on this roadmap
+
+The Identity, Consent Flow, Provenance and Accountability layers named in
+`README.adoc` are direction, not commitment. They are listed there as "not
+drafted" and no milestone above depends on them. Adding one is a scope decision,
+not a roadmap item.
+
+== Known risk
+
+Both drafts expire 2027-02-08. `draft-expiry` in `spec-gates.yml` will fail the
+build from that date. That is the gate working; the response is a revision, not
+an exemption.

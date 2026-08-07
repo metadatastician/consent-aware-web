@@ -1,30 +1,38 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Consent-Aware Web Component Readiness Assessment
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= Consent-Aware Web — Component Readiness Assessment
+:toc: preamble
 
-*Standard:* link:https://github.com/metadatastician/standards/tree/main/component-readiness-grades[Component Readiness Grades (CRG) v2.0 STRICT] +
+*Standard:* Component Readiness Grades (CRG) v2.0 STRICT +
 *Assessed:* 2026-08-07 +
 *Assessor:* Jonathan D.A. Jewell +
-*Previous assessment:* _<date or "none">_
+*Previous assessment:* none — this repository was extracted from
+`hyperpolymath/standards` on 2026-08-07
 
-*Current Grade:* X
+*Current Grade:* E
 
-This line is parsed by `just crg-grade` / `just crg-badge`. The grade above is
-the worst-graded in-scope component — *the project's weakest link sets its
-grade*. See the per-component table in §3.
+This line is parsed by `just crg-grade` / `just crg-badge`. The grade above is the
+worst-graded in-scope component — *the project's weakest link sets its grade*.
+See §3.
 
 [NOTE]
 ====
 *Honest grading.* Per CRG v2.0 Principle 4: grade as-is today, not
 aspirationally. Long alpha is discipline, not shame. Demote immediately if
 evidence doesn't support the claim.
+
+The predecessor of this repository shipped an `RSR-COMPLIANCE.md` claiming *"RSR
+Gold, 100% compliant"* while the estate's own scorecard rated it 1 of 5 MUSTs,
+and a `TEST-NEEDS.adoc` claiming CRG *C* against a test inventory belonging to a
+different project. Both have been withdrawn. This assessment is deliberately
+conservative in reaction to that.
 ====
 
 '''
 
 == 1. CRG v2.0 Grade Reference
 
-[cols="1,2,2,3,2", options="header"]
+[cols="1,2,2,3,2",options="header"]
 |===
 | Grade | Name | Release Stage | Stability Posture | Shorthand
 
@@ -37,150 +45,81 @@ evidence doesn't support the claim.
 | A | Field-Proven          | Stable    | Stable                 | `stable`
 |===
 
-*Evidence gates (v2.0 is stricter than v1.0):*
+== 2. Why E and not higher
 
-* *D*: RSR-compliant + per-capability tests + documented scope. Test matrix
-  must cite counts and live in `.machine_readable/descriptiles/STATE.a2ml` or CI.
-* *C*: All of D, plus active dogfooding in home context with *no known
-  home-context failures over an evidence window*, plus *deep per-file and
-  per-directory annotation* (purpose, boundaries, invariants,
-  execution/test/proof surfaces, per-directory orientation READMEs).
-  STATE.a2ml `[dogfooding-status]` populated with concrete "done — <evidence>"
-  entries.
-* *B*: All of C, plus *six genuinely diverse external targets* with
-  feedback fed back. STATE.a2ml `[external-targets]` holds target identities
-  + dates + outcomes; `[issues-fed-back]` holds the closed-issue trail.
-  Internal-capability items do *not* count.
-* *A*: All of B, plus multi-source real-world external feedback confirming
-  value, no harm in the wild. STATE.a2ml `[field-signal]` populated.
+*D* requires RSR compliance, per-capability tests, and documented scope. Three of
+those are now met — but D also requires the capability itself to be coherent, and
+for a *specification* the capability is "a third party can implement this and
+interoperate". Nothing here demonstrates that. There is one implementation, written
+by the same author as the specification, tested against a manifest written by the
+same author. That is self-consistency, not validation.
 
-*Publication gate:* non-abstract implementation claims require *B+*.
-Below B, any publication must be explicitly abstract or provisional.
+*C* additionally requires dogfooding with *no known failures over an evidence
+window*. This repository has been dogfooding its own protocol for hours, not a
+window. It also requires deep per-file annotation, which is not present.
 
-'''
+The honest reading is that the *repository* is in reasonable shape and the
+*specification* is pre-alpha. CRG grades the weakest in-scope component, so E.
 
-== 2. Headline Evidence (as of 2026-08-07)
+== 3. Per-component assessment
 
-[cols="2,3,3", options="header"]
+[cols="2,1,4",options="header"]
 |===
-| Metric | Value | Source
+| Component | Grade | Evidence and limits
 
-| Test count | _<N>_ | `.machine_readable/descriptiles/STATE.a2ml` or CI
-| Formal-verification posture | _<N `believe_me` / `sorry` / `Admitted` — irreducible only>_ | grep of proof dirs
-| Dangerous patterns (`assert_total`, `unsafeCoerce`, `Obj.magic`) | _<N>_ | grep 2026-08-07
-| Per-unit README coverage | _<M/N (percentage)>_ | filesystem scan of unit dirs
-| CI status | _<workflow name + last green run>_ | `.github/workflows/`
-| RSR mandatory workflows | _<N/17>_ | `.github/workflows/`
-| Third-party badges (if any) | _<e.g. Glama AAA; Scorecard N/10>_ | external
-| LIVE deployment (if any) | _<URL + last health check>_ | production
+| Internet-Drafts (`drafts/`)
+| E
+| Well-formed RFC-XML v3; structure asserted in CI. But `-00`, never submitted to
+  the datatracker, no working-group review, no independent reading. `draft-jewell-aibdp-00`
+  was RFC-XML v2 until 2026-08-07 and validated under no schema at all — that it went
+  unnoticed is itself evidence of how little review this has had.
+
+| JSON Schema (`schemas/`)
+| D
+| Valid draft-2020-12. Exercised in CI against four manifests, and the validator is
+  proven able to reject five distinct classes of invalid input. No third party has
+  written a manifest against it.
+
+| AIBDP declaration (`.well-known/aibdp.json`)
+| D
+| Exists, validates in CI, and its absence fails the build — so the dogfooding claim
+  is checked rather than asserted. Only meaningful as dogfooding once the protocol
+  has an external consumer.
+
+| Reference implementation (`examples/`)
+| D
+| Enforcement asserted by making requests and checking status codes, not by
+  inspection. Runtime-neutral core runs on Bun and Deno. No unit tests; glob scope
+  matching and exception precedence are untested at the unit level. Single
+  implementation, so "interoperable" is untested by construction.
+
+| CI gates (`spec-gates.yml`, `scripts/`)
+| D
+| Five jobs, each demonstrated to fail against a real historical defect before being
+  wired. `draft-validate` is partial — rendering is not checked, pending the
+  toolchain decision, and the gate states this rather than implying otherwise.
+
+| Documentation (`docs/`)
+| D
+| Converted to AsciiDoc, validates clean under asciidoctor. `claims-audit` enforces
+  that no governance document asserts a path that is not on disk. Four documents
+  had to be repaired at extraction (two were chat-transcript artefacts with the body
+  trapped in an unclosed code fence; two had lost all markup).
+
+| Formal proofs
+| n/a
+| No proof obligations. See `PROOF-NEEDS.adoc` — tier T5, with the reasoning.
 |===
 
-'''
+== 4. What would move the grade
 
-== 3. Component Assessment
+To *D* overall: a committed negative corpus and unit tests for the middleware's
+policy-resolution functions. Both are cheap.
 
-All components graded *as-is today*, per CRG v2.0 Principle 4. Stability
-posture reflects the component's state *within its home context only*
-unless noted.
+To *C*: an evidence window of dogfooding with no known failures, plus per-file and
+per-directory annotation.
 
-[cols="2,1,1,3,3,2", options="header"]
-|===
-| Component | Grade | Posture | Evidence Summary | Promotion blocker | Last Assessed
-
-| _<component 1>_ | X/F/E/D/C/B/A | _<shorthand>_ | _<what was checked + counts>_ | _<specific, actionable gap to next grade>_ | 2026-08-07
-| _<component 2>_ | … | … | … | … | 2026-08-07
-| _<component 3>_ | … | … | … | … | 2026-08-07
-|===
-
-*Rules of thumb for populating this table:*
-
-* One row per independently-gradable unit. If a subsystem can ship or break
-  independently, it gets its own row.
-* Evidence Summary must cite *numbers* (test counts, LOC, file counts) or
-  *paths* (e.g. `src/interface/Abi/Module.idr`), never vague claims.
-* Promotion blocker must be *actionable* — "add external consumer in home
-  context, then annotate" beats "needs more validation".
-* Re-assess every release cycle; date-stamp each row.
-
-'''
-
-== 4. What's Needed for D → C
-
-CRG v2.0 requires two new pieces of evidence on top of D:
-
-. *Active dogfooding in home context with no known home-context failures.*
-** Start date: _<date of first dogfood-log entry>_.
-** Home context: _<what "home" means for this project>_.
-** "No known failures" is a moving claim — must hold continuously across
-   the evidence window (recommended: 4 weeks, daily use).
-** Populate `STATE.a2ml [dogfooding-status]` with one entry per capability:
-   `capability = "done — <concrete evidence>"`.
-
-. *Deep code and folder annotation.*
-** Per-directory orientation READMEs in every non-trivial source subtree.
-** Per-file header comments: purpose, boundaries, invariants,
-   execution/test/proof surface.
-** Per-unit (cartridge/panel/plugin/module) README covering: purpose,
-   tools, architecture-at-a-glance, build steps. Overview-level alone is
-   not sufficient — depth is required where a reviewer would otherwise
-   have to read source to orient.
-
-*Minimum first-ring targets for C promotion:* list the trunk components
-here. If these aren't C, nothing else can be.
-
-'''
-
-== 5. What's Needed for C → B
-
-Six *genuinely diverse* external targets with feedback fed back into the
-component. Candidate diversity axes:
-
-* Different language runtime (not just variants of the same one).
-* Different OS family (at least one must not be Linux).
-* Different hardware class (cloud / server / desktop / embedded / mobile).
-* Different auth posture (unauthenticated, API-key, vault-brokered, mTLS).
-* Different topology (star, mesh, peer-to-peer).
-* Different trust model (same-org, federated, adversarial).
-
-Populate `STATE.a2ml`:
-
-* `[external-targets]` — target-id → `"<date> — <outcome> — <contact/URL>"`.
-* `[issues-fed-back]` — issue-id → `"<date> — <external reporter> — <resolution>"`.
-
-Six variations of the same use case do *not* count. Re-classify any items
-currently under `[grade-b-status]` (legacy) and move external-eligible ones
-into `[external-targets]`.
-
-'''
-
-== 6. What's Needed for B → A
-
-Real-world external feedback confirming value. Populate
-`STATE.a2ml [field-signal]` with multi-source entries:
-
-* External users beyond the six B-targets.
-* Third-party writeups, talks, papers, or testimonials.
-* No unresolved safety / correctness incidents in the last 90 days.
-
-'''
-
-== 7. Summary (2026-08-07)
-
-* Project grade: _<grade>_. Why: _<1-2 line justification>_.
-* Delta since last assessment: _<what changed; none if first assessment>_.
-* Next milestone: _<specific promotion target + timeline>_.
-* Machine-readable grade line present (§ header) for `just crg-grade` / `just crg-badge`.
-
-'''
-
-== 8. Companion Artefacts
-
-* `docs/governance/CRG-CRITERIA.adoc` — grade definitions (boilerplate).
-* `docs/governance/CRG-AUDIT-<DATE>.adoc` — formal audit (populate from
-  `consent-aware-web/docs/governance/CRG-AUDIT-TEMPLATE.adoc`).
-* `docs/practice/DOGFOOD-LOG.adoc` — dated dogfood evidence (required for C).
-* `.machine_readable/descriptiles/STATE.a2ml` — authoritative state (canonical keys
-  `[dogfooding-status]`, `[external-targets]`, `[issues-fed-back]`,
-  `[field-signal]`).
-
-_Run `just crg-badge` to generate the shields.io badge for your README._
+To *B*: the thing that actually matters — a conformance suite plus a second,
+independent implementation that passes it. Until a specification has been
+implemented by someone who did not write it, its readiness is unmeasured rather
+than high.

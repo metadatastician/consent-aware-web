@@ -1,101 +1,62 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-// Template: rsr-template-repo/docs/status/PROOF-STATUS.adoc
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
 // Tracks proof completion. Requirements defined in PROOF-NEEDS.adoc
-= Proof Status — CONSENT_AWARE_HTTP
+= Proof Status — consent-aware-web
+:toc: preamble
 
 == Summary
 
-[cols="2,1,1,1,1,1", options="header"]
+[cols="2,1,1,1,1,1",options="header"]
 |===
 | Category | Total | Done | In Progress | Blocked | Remaining
 
-| ABI/FFI (ABI) | 5 | 0 | 0 | 0 | 5
-| Typing (TP) | 2 | 0 | 0 | 0 | 2
+| ABI/FFI (ABI) | 0 | 0 | 0 | 0 | 0
+| Typing (TP) | 0 | 0 | 0 | 0 | 0
 | Invariant (INV) | 0 | 0 | 0 | 0 | 0
 | Security (SEC) | 0 | 0 | 0 | 0 | 0
 | Concurrency (CONC) | 0 | 0 | 0 | 0 | 0
 | Algorithm (ALG) | 0 | 0 | 0 | 0 | 0
 | Domain (DOM) | 0 | 0 | 0 | 0 | 0
-| *Total* | *7* | *0* | *0* | *0* | *7*
+| *Total* | *0* | *0* | *0* | *0* | *0*
 |===
 
-*Overall*: 0% proven
+*Overall*: not applicable — tier T5 (Exempt). See `PROOF-NEEDS.adoc` for why, and
+for the four obligations that would arise if the project acquires a second
+implementation or a conformance suite.
 
-== Proofs Done
+[IMPORTANT]
+====
+This table previously read *7 obligations, 0 proven, "0% proven"* — five ABI/FFI
+and two typing, inherited from the RSR template and referring to Idris2 and Zig
+trees this project never had. Those trees were removed at extraction.
 
-// Format:
-// | ID | Proof | Prover | File | Date | Verified By |
-// | ABI-1 | Non-null pointer proofs | Idris2 | verification/proofs/idris2/ABI/Pointers.idr | 2026-XX-XX | idris2 --check |
+"0 of 7 proven" and "0 of 0 obligations" look similar in a dashboard and mean
+opposite things. The first is debt; the second is a scope decision. This file now
+states the second.
+====
 
-[cols="1,3,1,3,1,2", options="header"]
+== Proofs done
+
+None. There are no obligations to discharge.
+
+== Verification that does exist
+
+Proof is not the only evidence. What this project asserts, it asserts in CI, and
+each gate was demonstrated to fail before being wired — see `TEST-NEEDS.adoc` for
+the failure evidence per gate.
+
+[cols="2,3",options="header"]
 |===
-| ID | Proof | Prover | File | Date | Verified By
+| Mechanism | Establishes
 
-| — | No proofs completed yet | — | — | — | —
-|===
-
-== Proofs In Progress
-
-[cols="1,3,1,2,1,2", options="header"]
-|===
-| ID | Proof | Prover | Assignee | Started | Blocker
-
-| — | — | — | — | — | —
-|===
-
-== Proofs Blocked
-
-[cols="1,3,2,3", options="header"]
-|===
-| ID | Proof | Blocked By | Notes
-
-| — | — | — | —
-|===
-
-== Proofs Remaining
-
-[cols="1,3,1,1,1,1", options="header"]
-|===
-| ID | Proof | Category | Prover | Priority | Est. Effort
-
-| ABI-1 | Non-null pointer proofs | ABI | Idris2 | P1 | 2h
-| ABI-2 | Memory layout correctness | ABI | Idris2 | P1 | 4h
-| ABI-3 | Platform type size proofs | ABI | Idris2 | P1 | 2h
-| ABI-4 | FFI function return type proofs | ABI | Idris2 | P1 | 2h
-| ABI-5 | C ABI compliance | ABI | Idris2 | P1 | 4h
-| TP-1 | Core data type well-formedness | TP | Idris2 | P1 | 4h
-| TP-2 | Public API type safety | TP | Lean4 | P2 | 4h
+| `spec-gates.yml` `draft-structure` | Both drafts are structurally valid RFC-XML v3 and free of v2 constructs
+| `spec-gates.yml` `schema-validate` | Every manifest in the tree, including this repository's own, satisfies the published schema
+| `spec-gates.yml` `claims-audit` | No governance document asserts a repository path that is absent
+| `spec-gates.yml` `enforcement` | The reference implementation returns 430 where the manifest refuses, and 200 where it permits
+| `spec-gates.yml` `draft-expiry` | No draft is being presented as current after its expiry date
 |===
 
-== Verification Commands
-
-[source,bash]
-----
-# Check all Idris2 proofs
-just proof-check-idris2
-
-# Check all Lean4 proofs
-just proof-check-lean4
-
-# Check all Agda proofs
-just proof-check-agda
-
-# Check all Coq proofs
-just proof-check-coq
-
-# Run all proof checks
-just proof-check-all
-
-# Scan for dangerous patterns
-panic-attack assail --proofs-only
-----
-
-== Changelog
-
-[cols="1,3,1", options="header"]
-|===
-| Date | Change | By
-
-| 2026-04-04 | Initial proof status tracking | Template
-|===
+None of these is a proof. They are falsifiable checks over concrete inputs, which
+is the appropriate standard of evidence for a document suite — and a considerably
+higher one than the tree had before extraction, when `just check-rsr` validated a
+`.well-known/` directory that existed only in a compliance document.
