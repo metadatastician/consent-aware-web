@@ -1,14 +1,14 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // Template: QUICKSTART-MAINTAINER.adoc — packaging, deploying, and maintaining
-// Replace consent-aware-http, UNASSIGNED, UNASSIGNED with actuals
-= consent-aware-http — Quick Start for Platform Maintainers
+// Replace consent-aware-web, UNASSIGNED, UNASSIGNED with actuals
+= consent-aware-web — Quick Start for Platform Maintainers
 :toc:
 :toclevels: 2
 
 == Overview
 
-This guide covers packaging, deploying, and maintaining consent-aware-http for
+This guide covers packaging, deploying, and maintaining consent-aware-web for
 distribution on your platform.
 
 == Runtime Dependencies
@@ -19,8 +19,8 @@ UNASSIGNED
 
 [source,bash]
 ----
-git clone https://github.com/metadatastician/consent-aware-http.git
-cd consent-aware-http
+git clone https://github.com/metadatastician/consent-aware-web.git
+cd consent-aware-web
 just build-release
 ----
 
@@ -40,7 +40,7 @@ guix build -f guix.scm
 [source,bash]
 ----
 just stapeln-export    # Generates Containerfile
-podman build -t consent-aware-http .
+podman build -t consent-aware-web .
 ----
 
 === Manual Package
@@ -119,5 +119,5 @@ Each instance has isolated config, data, and logs.
 
 == Reporting Issues
 
-* Upstream: https://github.com/metadatastician/consent-aware-http/issues
+* Upstream: https://github.com/metadatastician/consent-aware-web/issues
 * With diagnostic: `just help-me` (pre-fills context)

@@ -60,12 +60,12 @@
   },
 
   # --- ADJUST: accessibility/hygiene posture (advisory; never gates) ---
-  # The ANCHOR identity block still carries Consent-Aware HTTP; for the template
+  # The ANCHOR identity block still carries Consent-Aware Web; for the template
   # itself that is expected, but it is honestly a posture dip worth surfacing.
   "adjust.placeholder-drift" = {
     kind = "descriptile",
     witnesses = [ { fact = "anchor.project", op = 'not_contains, arg = "{{" } ],
-    note = "ANCHOR.identity.project is un-substituted (Consent-Aware HTTP) ⇒ posture dip",
+    note = "ANCHOR.identity.project is un-substituted (Consent-Aware Web) ⇒ posture dip",
   },
 
   # --- BUST: recognised break. For bust, a HOLDING witness means ALARM (active

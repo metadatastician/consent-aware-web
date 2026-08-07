@@ -64,8 +64,8 @@ let methodology_guard = {
       # out of the file (in this comment too) so init cannot match it, while
       # Nickel still evaluates the element back to the full token. Do not
       # "simplify" it to a plain string. (The PLACEHOLDER token and
-      # "consent-aware-http" are not init tokens, so they survive as-is.)
-      reject_patterns = ["{{PLACEHOLDER}}", "{{" ++ "PROJECT}}", "consent-aware-http"],
+      # "consent-aware-web" are not init tokens, so they survive as-is.)
+      reject_patterns = ["{{PLACEHOLDER}}", "{{" ++ "PROJECT}}", "consent-aware-web"],
     },
 
     coverage_updated = {

@@ -9,7 +9,7 @@ last-updated = "2026-08-07"
 
 [anchor]
 schema = "hyperpolymath.anchor/1"
-repo = "metadatastician/consent-aware-http"
+repo = "metadatastician/consent-aware-web"
 authority = "upstream-canonical"
 
 purpose = [
@@ -19,7 +19,7 @@ purpose = [
 ]
 
 [identity]
-project = "Consent-Aware HTTP"
+project = "Consent-Aware Web"
 kind = "UNASSIGNED"                # language | library | service | tool
 one-sentence = "IETF-track specifications for consent-aware HTTP: AIBDP manifests and the 430 Consent Required status code"
 domain = "UNASSIGNED"

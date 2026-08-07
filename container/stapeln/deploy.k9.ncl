@@ -1,6 +1,6 @@
 K9!
 # SPDX-License-Identifier: MPL-2.0
-# deploy.k9.ncl — Consent-Aware HTTP deployment component (Hunt level)
+# deploy.k9.ncl — Consent-Aware Web deployment component (Hunt level)
 #
 # k9-svc deployment specification with full pedigree (L1-L5).
 # Security Level: 'Hunt (requires cryptographic handshake for execution).
@@ -19,11 +19,11 @@ let component_pedigree = {
   # L1: The Snout — Identity
   # ─────────────────────────────────────────────────────────────
   metadata = {
-    name = "consent-aware-http-deploy",
+    name = "consent-aware-web-deploy",
     version = "0.1.0",
     breed = "application/vnd.k9+nickel",
     magic_number = "K9!",
-    description = "Consent-Aware HTTP deployment component (Hunt level)",
+    description = "Consent-Aware Web deployment component (Hunt level)",
   },
 
   # ─────────────────────────────────────────────────────────────
@@ -94,7 +94,7 @@ let deployment = {
 
   # Container configuration
   container = {
-    image = "ghcr.io/metadatastician/consent-aware-http",
+    image = "ghcr.io/metadatastician/consent-aware-web",
     port = 8080,
     health_check = "/health",
     readiness_check = "/ready",
@@ -114,7 +114,7 @@ let scripts = {
   pre_deploy = m%"
 #!/bin/sh
 set -eu
-echo "K9: Pre-deployment validation for consent-aware-http..."
+echo "K9: Pre-deployment validation for consent-aware-web..."
 cd container/stapeln && selur-compose verify || podman compose --file ../compose.yaml config
 echo "K9: Validation passed."
 "%,
@@ -124,7 +124,7 @@ echo "K9: Validation passed."
 #!/bin/sh
 set -eu
 ENV="${1:-dev}"
-echo "K9: Deploying consent-aware-http to $ENV environment..."
+echo "K9: Deploying consent-aware-web to $ENV environment..."
 cd container/stapeln
 ./ct-build.sh
 selur-compose up --detach || podman compose --file ../compose.yaml up --detach
@@ -135,7 +135,7 @@ echo "K9: Deployment to $ENV complete."
   rollback = m%"
 #!/bin/sh
 set -eu
-echo "K9: Rolling back consent-aware-http deployment..."
+echo "K9: Rolling back consent-aware-web deployment..."
 cd container/stapeln
 selur-compose down || podman compose --file ../compose.yaml down
 echo "K9: Rollback complete."
@@ -144,7 +144,7 @@ echo "K9: Rollback complete."
 
 # Export the component
 {
-  pedigree = component_pedigree & { name = "consent-aware-http-deploy" },
+  pedigree = component_pedigree & { name = "consent-aware-web-deploy" },
   deployment = deployment,
   scripts = scripts,
 

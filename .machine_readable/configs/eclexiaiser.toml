@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MPL-2.0
 
 [project]
-name = "consent-aware-http"
+name = "consent-aware-web"
 
 [[functions]]
 name = "build"

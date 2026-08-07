@@ -8,7 +8,7 @@ version = "0.1.0"
 last-updated = "2026-08-07"
 
 [project]
-name = "Consent-Aware HTTP"
+name = "Consent-Aware Web"
 purpose = "IETF-track specifications for consent-aware HTTP: AIBDP manifests and the 430 Consent Required status code"
 
 [ai-allocation]

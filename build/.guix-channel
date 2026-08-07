@@ -1,20 +1,20 @@
 ;; SPDX-License-Identifier: MPL-2.0
 ;; Copyright (c) 2026 Jonathan D.A. Jewell (metadatastician) <jonathan@metadatastician.art>
 ;;
-;; Guix channel definition for Consent-Aware HTTP
+;; Guix channel definition for Consent-Aware Web
 ;;
 ;; To use this channel, add to ~/.config/guix/channels.scm:
 ;;
 ;;   (channel
-;;     (name 'Consent-Aware HTTP)
-;;     (url "https://github.com/metadatastician/Consent-Aware HTTP")
+;;     (name 'Consent-Aware Web)
+;;     (url "https://github.com/metadatastician/Consent-Aware Web")
 ;;     (branch "main"))
 ;;
 ;; Then: guix pull
 
 (channel
   (version 0)
-  (url "https://github.com/metadatastician/Consent-Aware HTTP")
+  (url "https://github.com/metadatastician/Consent-Aware Web")
   (dependencies
    (channel
      (name 'guix)

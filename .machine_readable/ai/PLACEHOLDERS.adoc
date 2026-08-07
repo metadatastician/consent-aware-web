@@ -23,10 +23,10 @@ validates the result, and runs k9-svc checks if available.
 sed -i 's/Jonathan D.A. Jewell/Jane Doe/g' $(grep -rl 'Jonathan D.A. Jewell' .)
 sed -i 's/jonathan@metadatastician.art/jane@example.org/g' $(grep -rl 'jonathan@metadatastician.art' .)
 sed -i 's/metadatastician/my-org/g' $(grep -rl 'metadatastician' .)
-sed -i 's/Consent-Aware HTTP/my-project/g' $(grep -rl 'Consent-Aware HTTP' .)
+sed -i 's/Consent-Aware Web/my-project/g' $(grep -rl 'Consent-Aware Web' .)
 sed -i 's/CONSENT_AWARE_HTTP/MY_PROJECT/g' $(grep -rl 'CONSENT_AWARE_HTTP' .)
 sed -i 's/consent_aware_http/my_project/g' $(grep -rl 'consent_aware_http' .)
-sed -i 's/consent-aware-http/my-project/g' $(grep -rl 'consent-aware-http' .)
+sed -i 's/consent-aware-web/my-project/g' $(grep -rl 'consent-aware-web' .)
 sed -i 's/github.com/github.com/g' $(grep -rl 'github.com' .)
 sed -i "s/2026/$(date +%Y)/g" $(grep -rl '2026' .)
 sed -i "s/2026-08-07/$(date +%Y-%m-%d)/g" $(grep -rl '2026-08-07' .)
@@ -50,11 +50,11 @@ sed -i "s/2026-08-07/$(date +%Y-%m-%d)/g" $(grep -rl '2026-08-07' .)
 
 | Placeholder | Description | Example | Files |
 |---|---|---|---|
-| `Consent-Aware HTTP` | Human-readable project name | `My Project` | SECURITY.md, CODE_OF_CONDUCT.md, TOPOLOGY.md, STATE.a2ml, Justfile, GOVERNANCE.md, MAINTAINERS.md, devcontainer.json |
+| `Consent-Aware Web` | Human-readable project name | `My Project` | SECURITY.md, CODE_OF_CONDUCT.md, TOPOLOGY.md, STATE.a2ml, Justfile, GOVERNANCE.md, MAINTAINERS.md, devcontainer.json |
 | `IETF-track specifications for consent-aware HTTP: AIBDP manifests and the 430 Consent Required status code` | One-line description | `A tool for X` | README.adoc, container/Containerfile |
 | `CONSENT_AWARE_HTTP` | Uppercase identifier (for Idris2 modules, C macros) | `MY_PROJECT` | ABI-FFI-README.md, src/interface/abi/*.idr, src/interface/ffi/*.zig |
 | `consent_aware_http` | Lowercase identifier (for C symbols, filenames) | `my_project` | ABI-FFI-README.md, src/interface/ffi/*.zig |
-| `consent-aware-http` | Repository name (slug) | `my-project` | CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, cliff.toml |
+| `consent-aware-web` | Repository name (slug) | `my-project` | CONTRIBUTING.md, SECURITY.md, CODE_OF_CONDUCT.md, cliff.toml |
 | `metadatastician` | GitHub/GitLab org or username | `my-org` | SPDX headers, CONTRIBUTING.md, SECURITY.md, GOVERNANCE.md, MAINTAINERS.md, CODEOWNERS, mirror.yml, cliff.toml |
 | `github.com` | Git forge domain | `github.com` | CONTRIBUTING.md |
 
@@ -73,7 +73,7 @@ sed -i "s/2026-08-07/$(date +%Y-%m-%d)/g" $(grep -rl '2026-08-07' .)
 | `jonathan@metadatastician.art` | Security contact email | `security@example.org` | SECURITY.md |
 | `{{PGP_FINGERPRINT}}` | 40-char PGP fingerprint | `ABCD 1234 ...` | SECURITY.md |
 | `{{PGP_KEY_URL}}` | URL to public PGP key | `https://keys.openpgp.org/...` | SECURITY.md |
-| `https://github.com/metadatastician/consent-aware-http` | Project website | `https://example.org` | SECURITY.md |
+| `https://github.com/metadatastician/consent-aware-web` | Project website | `https://example.org` | SECURITY.md |
 | `jonathan@metadatastician.art` | Conduct reports email | `conduct@example.org` | CODE_OF_CONDUCT.md |
 | `Code of Conduct Committee` | Conduct committee name | `Code of Conduct Committee` | CODE_OF_CONDUCT.md |
 | `48 hours` | SLA for initial response | `48 hours` | CODE_OF_CONDUCT.md |

@@ -90,7 +90,7 @@ version = "1.0.0"
 # Example: a custom portfolio for this project
 # [[portfolios.custom]]
 # id = "consent_aware_http-dev"
-# name = "Consent-Aware HTTP Development"
-# description = "Panels for Consent-Aware HTTP development"
+# name = "Consent-Aware Web Development"
+# description = "Panels for Consent-Aware Web development"
 # panels = ["valence-shell", "editor-bridge", "build-dashboard"]
 # default-isolation = "native"

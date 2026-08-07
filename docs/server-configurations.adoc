@@ -870,8 +870,8 @@ chmod +x test-aibdp.sh
 
 These configurations implement:
 
-* https://github.com/Hyperpolymath/consent-aware-http[draft-jewell-aibdp-00] - AIBDP specification
-* https://github.com/Hyperpolymath/consent-aware-http[draft-jewell-http-430-consent-required-00] - HTTP 430 status code
+* https://github.com/Hyperpolymath/consent-aware-web[draft-jewell-aibdp-00] - AIBDP specification
+* https://github.com/Hyperpolymath/consent-aware-web[draft-jewell-http-430-consent-required-00] - HTTP 430 status code
 * https://www.rfc-editor.org/info/rfc8615[RFC 8615] - Well-Known URIs
 
 '''''

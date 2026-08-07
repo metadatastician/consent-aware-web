@@ -1,8 +1,8 @@
 {
   "aibdp_version": "0.2",
-  "canonical_uri": "https://github.com/metadatastician/consent-aware-http/blob/main/.well-known/aibdp.json",
+  "canonical_uri": "https://github.com/metadatastician/consent-aware-web/blob/main/.well-known/aibdp.json",
   "contact": "mailto:jonathan@metadatastician.art",
-  "policy_uri": "https://github.com/metadatastician/consent-aware-http/blob/main/docs/ethics.adoc",
+  "policy_uri": "https://github.com/metadatastician/consent-aware-web/blob/main/docs/ethics.adoc",
   "policies": {
     "indexing": {
       "status": "allowed",
@@ -79,8 +79,8 @@
     "created": "2026-08-07",
     "last_modified": "2026-08-07",
     "author": "Jonathan D.A. Jewell",
-    "project": "Consent-Aware HTTP",
-    "repository": "https://github.com/metadatastician/consent-aware-http",
+    "project": "Consent-Aware Web",
+    "repository": "https://github.com/metadatastician/consent-aware-web",
     "related_standards": [
       "draft-jewell-http-430-consent-required-00",
       "draft-jewell-aibdp-00",

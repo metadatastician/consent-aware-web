@@ -70,8 +70,8 @@ verify-template:
     fi
 
     # Check for template defaults still present
-    if grep -q 'consent-aware-http' Justfile 2>/dev/null; then
-        echo "⚠ Justfile still references 'consent-aware-http' — update project name"
+    if grep -q 'consent-aware-web' Justfile 2>/dev/null; then
+        echo "⚠ Justfile still references 'consent-aware-web' — update project name"
         FOUND=1
     fi
 

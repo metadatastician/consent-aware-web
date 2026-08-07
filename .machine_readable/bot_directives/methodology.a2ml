@@ -109,7 +109,7 @@ constraints = [
 # upper-snake token rather than the three anyone remembered to enumerate.
 # Enforced by scripts/check-no-placeholders.sh.
 reject-if-matches = ["\\{\\{[A-Z][A-Z0-9_]*\\}\\}"]
-reject-if-contains = ["consent-aware-http"]
+reject-if-contains = ["consent-aware-web"]
 reject-if-project-name-mismatch = true
 staleness-threshold-days = 90
 fallback-files = ["TODO.md", "TODO.adoc", "ROADMAP.adoc", "README.adoc"]

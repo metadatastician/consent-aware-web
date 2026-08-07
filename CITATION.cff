@@ -4,11 +4,11 @@ authors:
 - family-names: "Jewell"
   given-names: "Jonathan D.A."
   orcid: "https://orcid.org/0000-0000-0000-0000" # Placeholder
-title: "Consent-Aware HTTP"
+title: "Consent-Aware Web"
 version: 0.1.0
 date-released: "2026-08-07"
-url: "https://github.com/metadatastician/consent-aware-http"
-repository-code: "https://github.com/metadatastician/consent-aware-http"
+url: "https://github.com/metadatastician/consent-aware-web"
+repository-code: "https://github.com/metadatastician/consent-aware-web"
 license: MPL-2.0
 keywords:
   - "rsr"

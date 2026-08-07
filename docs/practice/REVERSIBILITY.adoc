@@ -5,7 +5,7 @@
 
 == Overview
 
-*Reversibility* is a core architectural principle: Every operation should be undoable. This document explains how reversibility is implemented in the Consent-Aware HTTP Standards project.
+*Reversibility* is a core architectural principle: Every operation should be undoable. This document explains how reversibility is implemented in the Consent-Aware Web Standards project.
 
 == Philosophy
 

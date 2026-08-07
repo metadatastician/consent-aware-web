@@ -1,9 +1,9 @@
 # SPDX-License-Identifier: MPL-2.0
 # Copyright (c) 2026 Jonathan D.A. Jewell (metadatastician) <jonathan@metadatastician.art>
 #
-# Dev Container image for Consent-Aware HTTP
+# Dev Container image for Consent-Aware Web
 # Base: Chainguard Wolfi (minimal, supply-chain-secure)
-# Build: podman build -t Consent-Aware HTTP-dev -f .devcontainer/Containerfile .
+# Build: podman build -t Consent-Aware Web-dev -f .devcontainer/Containerfile .
 # `:latest` suits a dev container (rebuilt daily); pin by digest
 # (...@sha256:<digest>) if you need a reproducible dev environment.
 
@@ -26,7 +26,7 @@ RUN groupadd -g 1000 nonroot || true \
     && useradd -m -u 1000 -g 1000 -s /bin/bash nonroot || true
 
 # Set workspace directory
-WORKDIR /workspaces/Consent-Aware HTTP
+WORKDIR /workspaces/Consent-Aware Web
 
 # Default shell
 ENV SHELL=/bin/bash

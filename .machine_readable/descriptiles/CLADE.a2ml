@@ -15,7 +15,7 @@
 # fact anyone can recompute and check — never copy one from another repo, and
 # never make one up. Recompute this one any time with:
 #
-#     uuidgen --sha1 --namespace @url --name "github.com/metadatastician/consent-aware-http"
+#     uuidgen --sha1 --namespace @url --name "github.com/metadatastician/consent-aware-web"
 #
 # Verify the method first by reproducing a known worked example:
 #     janus example -> e216170e-ff47-5a5c-bbdd-15e61c8190c8
@@ -23,11 +23,11 @@
 # The owner segment is part of the derived name, so it is part of the IDENTITY:
 # the same repo hosted under a different owner has a different uuid. Record the
 # owner that is TRUE TODAY, and re-derive if it ever moves.
-uuid = "1878b52a-ae9b-5b4f-aab6-920b477d47c1"
+uuid = "64449d4a-9d76-583b-b06d-37502e8c5034"
 primary-forge = "github"
 primary-owner = "metadatastician"
-canonical-name = "consent-aware-http"
-prefixed-name = "UNASSIGNED-consent-aware-http"   # becomes <primary>-consent-aware-http once the clade is chosen
+canonical-name = "consent-aware-web"
+prefixed-name = "UNASSIGNED-consent-aware-web"   # becomes <primary>-consent-aware-web once the clade is chosen
 
 [clade]
 # ---------------------------------------------------------------------------
@@ -83,7 +83,7 @@ assigned = "2026-08-07"
 rationale = ""                # why THIS category — in value-proposition terms
 
 [forges]
-github = "metadatastician/consent-aware-http"
+github = "metadatastician/consent-aware-web"
 gitlab = ""       # populated if/when mirrored
 bitbucket = ""    # populated if/when mirrored
 

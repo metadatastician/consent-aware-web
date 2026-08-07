@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://consent-aware-http.org/schemas/aibdp-v0.2.json",
+  "$id": "https://consent-aware-web.org/schemas/aibdp-v0.2.json",
   "title": "AI Boundary Declaration Protocol (AIBDP) Manifest Schema",
   "description": "JSON Schema for validating AIBDP manifests hosted at /.well-known/aibdp.json",
   "type": "object",

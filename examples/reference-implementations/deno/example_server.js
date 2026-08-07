@@ -45,10 +45,10 @@ const indexPage = () =>
   html(`
     <html>
       <head>
-        <title>Consent-Aware HTTP Example (Deno)</title>
+        <title>Consent-Aware Web Example (Deno)</title>
       </head>
       <body>
-        <h1>Welcome to Consent-Aware HTTP</h1>
+        <h1>Welcome to Consent-Aware Web</h1>
         <p>This Deno server implements HTTP 430 + AIBDP.</p>
 
         <h2>Try these requests:</h2>
@@ -141,7 +141,7 @@ function route(req) {
 
 const handler = middleware.wrap(route);
 
-console.log("🚀 Consent-Aware HTTP server (Deno) running on http://localhost:5000");
+console.log("🚀 Consent-Aware Web server (Deno) running on http://localhost:5000");
 console.log("📄 AIBDP manifest: http://localhost:5000/.well-known/aibdp.json");
 console.log("🛡️  HTTP 430 enforcement: ENABLED");
 console.log("");

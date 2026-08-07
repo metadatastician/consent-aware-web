@@ -75,7 +75,7 @@ Once your site includes both:
 * A valid AIBDP manifest
 * Refusal logic via 430
 
-You’re ready to adopt the Consent-Aware HTTP protocol.
+You’re ready to adopt the Consent-Aware Web protocol.
 
 Consider adding a badge, a disclaimer, or educational links to help others learn and follow your lead.
 

@@ -1,26 +1,26 @@
 # SPDX-License-Identifier: MPL-2.0
 #
-# Cerro Torre manifest for Consent-Aware HTTP .ctp bundle
+# Cerro Torre manifest for Consent-Aware Web .ctp bundle
 #
 # This manifest describes the container image for verified
 # container packaging. Used by `ct pack` to create .ctp bundles.
 
 [metadata]
-name = "consent-aware-http"
+name = "consent-aware-web"
 version = "0.1.0"
 revision = 1
 summary = "IETF-track specifications for consent-aware HTTP: AIBDP manifests and the 430 Consent Required status code"
 description = """
-Consent-Aware HTTP — containerised service packaged as a verified
+Consent-Aware Web — containerised service packaged as a verified
 cerro-torre .ctp bundle with Ed25519 signing and full provenance
 tracking.
 """
 license = "MPL-2.0"
-homepage = "https://github.com/metadatastician/consent-aware-http"
+homepage = "https://github.com/metadatastician/consent-aware-web"
 maintainer = "Jonathan D.A. Jewell <jonathan@metadatastician.art>"
 
 [provenance]
-upstream = "https://github.com/metadatastician/consent-aware-http"
+upstream = "https://github.com/metadatastician/consent-aware-web"
 import_date = 2026-08-07T00:00:00Z
 
 [dependencies]
@@ -35,7 +35,7 @@ APP_HOST = "[::]"
 APP_PORT = "8080"
 
 [outputs]
-primary = "consent-aware-http"
+primary = "consent-aware-web"
 split = []
 
 [attestations]

@@ -235,7 +235,7 @@ echo ""
 
 # Note: Template repo is allowed to have placeholders
 # For derived repos, we'd check that placeholders are replaced
-if [ "$(basename "$REPO_ROOT")" = "consent-aware-http" ]; then
+if [ "$(basename "$REPO_ROOT")" = "consent-aware-web" ]; then
     log_pass "Skipping placeholder check for template repo"
 else
     # Check that key files don't have unresolved placeholders

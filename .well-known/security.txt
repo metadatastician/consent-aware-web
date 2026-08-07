@@ -10,5 +10,5 @@
 Contact: mailto:jonathan@metadatastician.art
 Expires: 2026-12-31T23:59:59.000Z
 Preferred-Languages: en
-Canonical: https://github.com/metadatastician/consent-aware-http/.well-known/security.txt
-Policy: https://github.com/metadatastician/consent-aware-http/blob/main/SECURITY.md
+Canonical: https://github.com/metadatastician/consent-aware-web/.well-known/security.txt
+Policy: https://github.com/metadatastician/consent-aware-web/blob/main/SECURITY.md

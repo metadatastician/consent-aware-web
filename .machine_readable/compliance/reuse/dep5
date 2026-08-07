@@ -1,7 +1,7 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: Consent-Aware HTTP
+Upstream-Name: Consent-Aware Web
 Upstream-Contact: Jonathan D.A. Jewell <jonathan@metadatastician.art>
-Source: https://github.com/metadatastician/consent-aware-http
+Source: https://github.com/metadatastician/consent-aware-web
 
 # Default: all files are MPL-2.0
 Files: *

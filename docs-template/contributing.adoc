@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell (metadatastician) <jonathan@metadatastician.art>
-= Contributing — Consent-Aware HTTP
+= Contributing — Consent-Aware Web
 :revdate: 2026-MM-DD
 
 == Audience
 
-Developers working *on* `Consent-Aware HTTP`. For consumers (people calling
+Developers working *on* `Consent-Aware Web`. For consumers (people calling
 or depending on it) see link:./usage.adoc[usage.adoc].
 
 == Local-dev setup
@@ -23,8 +23,8 @@ One-shot setup:
 
 [source,bash]
 ----
-git clone git@github.com:metadatastician/Consent-Aware HTTP.git
-cd Consent-Aware HTTP
+git clone git@github.com:metadatastician/Consent-Aware Web.git
+cd Consent-Aware Web
 just setup       # installs deps, sets up hooks
 just test        # runs the full test suite
 ----
@@ -86,6 +86,6 @@ When you make a non-obvious design decision, write it down:
 
 == Reporting issues
 
-* Bugs in `Consent-Aware HTTP`: file at `metadatastician/Consent-Aware HTTP/issues`.
+* Bugs in `Consent-Aware Web`: file at `metadatastician/Consent-Aware Web/issues`.
 * Estate-wide concerns (policy, conventions, CI): file at
   `hyperpolymath/standards/issues`.

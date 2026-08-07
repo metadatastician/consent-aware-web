@@ -178,8 +178,8 @@ The middleware checks for these headers when enforcing conditional policies.
 
 ## Standards Compliance
 
-- [draft-jewell-aibdp-00](https://github.com/Hyperpolymath/consent-aware-http/blob/main/drafts/draft-jewell-aibdp-00.xml) — AIBDP specification
-- [draft-jewell-http-430-consent-required-00](https://github.com/Hyperpolymath/consent-aware-http/blob/main/draft-jewell-http-430-consent-required-00.xml) — HTTP 430 status code
+- [draft-jewell-aibdp-00](https://github.com/Hyperpolymath/consent-aware-web/blob/main/drafts/draft-jewell-aibdp-00.xml) — AIBDP specification
+- [draft-jewell-http-430-consent-required-00](https://github.com/Hyperpolymath/consent-aware-web/blob/main/draft-jewell-http-430-consent-required-00.xml) — HTTP 430 status code
 - [RFC 8615](https://www.rfc-editor.org/info/rfc8615) — Well-Known URIs
 - [RFC 8259](https://www.rfc-editor.org/info/rfc8259) — JSON format
 
@@ -189,7 +189,7 @@ MIT License — see LICENSE file for details.
 
 ## Related Projects
 
-- [AIBDP Specification](https://github.com/Hyperpolymath/consent-aware-http)
+- [AIBDP Specification](https://github.com/Hyperpolymath/consent-aware-web)
 - [Node.js Implementation](../nodejs/)
 
 ---

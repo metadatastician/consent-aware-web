@@ -1,34 +1,34 @@
-= consent-aware-http - Citation Guide
+= consent-aware-web - Citation Guide
 :toc:
 
 == BibTeX
 
 [source,bibtex]
 ----
-@software{consent-aware-http_2025,
+@software{consent-aware-web_2025,
   author = {Polymath, Hyper},
-  title = {consent-aware-http},
+  title = {consent-aware-web},
   year = {2025},
-  url = {https://github.com/hyperpolymath/consent-aware-http},
+  url = {https://github.com/hyperpolymath/consent-aware-web},
   license = {PMPL-1.0-or-later}
 }
 ----
 
 == Harvard Style
 
-Polymath, H. (2025) _consent-aware-http_ [Computer software]. Available at: https://github.com/hyperpolymath/consent-aware-http
+Polymath, H. (2025) _consent-aware-web_ [Computer software]. Available at: https://github.com/hyperpolymath/consent-aware-web
 
 == OSCOLA
 
-Hyper Polymath, 'consent-aware-http' (2025) <https://github.com/hyperpolymath/consent-aware-http>
+Hyper Polymath, 'consent-aware-web' (2025) <https://github.com/hyperpolymath/consent-aware-web>
 
 == MLA
 
-Polymath, Hyper. "consent-aware-http." 2025, github.com/hyperpolymath/consent-aware-http.
+Polymath, Hyper. "consent-aware-web." 2025, github.com/hyperpolymath/consent-aware-web.
 
 == APA 7
 
-Polymath, H. (2025). _consent-aware-http_ [Computer software]. GitHub. https://github.com/hyperpolymath/consent-aware-http
+Polymath, H. (2025). _consent-aware-web_ [Computer software]. GitHub. https://github.com/hyperpolymath/consent-aware-web
 
 == See Also
 

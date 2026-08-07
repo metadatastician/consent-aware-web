@@ -19,9 +19,9 @@ set positional-arguments := true
 import? "build/contractile.just"
 
 # Project metadata — customize these
-project := "consent-aware-http"
+project := "consent-aware-web"
 OWNER := "hyperpolymath"
-REPO := "consent-aware-http"
+REPO := "consent-aware-web"
 version := "0.1.0"
 tier := "infrastructure"  # 1 | 2 | infrastructure
 
@@ -543,7 +543,7 @@ assail:
 
 # Self-diagnostic — checks dependencies, permissions, paths
 doctor:
-    @echo "Running diagnostics for consent-aware-http..."
+    @echo "Running diagnostics for consent-aware-web..."
     @echo "Checking required tools..."
     @command -v just >/dev/null 2>&1 && echo "  [OK] just" || echo "  [FAIL] just not found"
     @command -v git >/dev/null 2>&1 && echo "  [OK] git" || echo "  [FAIL] git not found"
@@ -553,7 +553,7 @@ doctor:
 
 # Guided tour of key features
 tour:
-    @echo "=== consent-aware-http Tour ==="
+    @echo "=== consent-aware-web Tour ==="
     @echo ""
     @echo "1. Project structure:"
     @ls -la
@@ -568,12 +568,12 @@ tour:
 
 # Open feedback channel with diagnostic context
 help-me:
-    @echo "=== consent-aware-http Help ==="
+    @echo "=== consent-aware-web Help ==="
     @echo "Platform: $(uname -s) $(uname -m)"
     @echo "Shell: $SHELL"
     @echo ""
     @echo "To report an issue:"
-    @echo "  https://github.com/metadatastician/consent-aware-http/issues/new"
+    @echo "  https://github.com/metadatastician/consent-aware-web/issues/new"
     @echo ""
     @echo "Include the output of 'just doctor' in your report."
 

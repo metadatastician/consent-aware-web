@@ -114,7 +114,7 @@ K9!
       description = "Add RSR-compliant workflows",
       commands = [
         # This would copy workflow templates
-        # In a real implementation, would fetch from consent-aware-http
+        # In a real implementation, would fetch from consent-aware-web
         "echo '✓ Workflows configured'",
       ],
     },

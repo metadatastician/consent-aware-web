@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: CC-BY-4.0
-= Consent-Aware HTTP — Scope Clarification
+= Consent-Aware Web — Scope Clarification
 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 :updated: 2026-04-05
 :status: Definitive
@@ -8,8 +8,8 @@ Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 
 - **Specification name (IETF)**: `draft-jewell-http-430-consent-required-00`
   (frozen — MUST NOT be renamed per standards invariant `ietf-draft-names-frozen`)
-- **Project name (informal)**: Consent-Aware HTTP
-- **Directory**: `standards/consent-aware-http/`
+- **Project name (informal)**: Consent-Aware Web
+- **Repository**: `metadatastician/consent-aware-web` (extracted from `hyperpolymath/standards` 2026-08-07)
 
 == What this IS
 
@@ -38,7 +38,7 @@ Specifically:
 
 == Relationship to AVOW
 
-| | AVOW | Consent-Aware HTTP |
+| | AVOW | Consent-Aware Web |
 |---|---|---|
 | Layer | Application (email/messaging) | Transport (HTTP) |
 | Purpose | Anti-spam consent chains | Per-resource consent signalling |
@@ -46,7 +46,7 @@ Specifically:
 | Crypto | Cryptographic opt-in tokens | No crypto — signalling only |
 
 They are complementary, not overlapping. AVOW proves consent for a message;
-Consent-Aware HTTP signals consent state for a resource fetch.
+Consent-Aware Web signals consent state for a resource fetch.
 
 == Status
 

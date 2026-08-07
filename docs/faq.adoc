@@ -559,7 +559,7 @@ Many sites are adopting now to establish boundaries and demonstrate demand.
 
 === Who else is using this?
 
-(As of July 2025, this is a new protocol. Early adopters will be listed at https://consent-aware-http.org/adopters[https://consent-aware-http.org/adopters])
+(As of July 2025, this is a new protocol. Early adopters will be listed at https://consent-aware-web.org/adopters[https://consent-aware-web.org/adopters])
 
 *Target adopters:*
 
@@ -713,8 +713,8 @@ See reference implementations (Node.js, Python) for local testing.
 
 === Where can I ask questions?
 
-* *GitHub Discussions*: https://github.com/Hyperpolymath/consent-aware-http/discussions
-* *Issues*: https://github.com/Hyperpolymath/consent-aware-http/issues
+* *GitHub Discussions*: https://github.com/Hyperpolymath/consent-aware-web/discussions
+* *Issues*: https://github.com/Hyperpolymath/consent-aware-web/issues
 * *Email*: jonathan@metadatastician.art
 
 === Where can I find more information?

@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-License-Identifier: MPL-2.0
-# Consent-Aware HTTP container entrypoint
+# Consent-Aware Web container entrypoint
 #
 # Handles signal propagation, startup logging, and health check
 # preparation before exec-ing into the main application process.
@@ -15,7 +15,7 @@ set -e
 # when Podman sends stop signals (e.g. `podman stop`, `selur-compose down`).
 
 cleanup() {
-    echo "Received shutdown signal — stopping consent-aware-http..."
+    echo "Received shutdown signal — stopping consent-aware-web..."
     # If the main process is backgrounded, kill it here:
     # kill "$MAIN_PID" 2>/dev/null || true
     # wait "$MAIN_PID" 2>/dev/null || true
@@ -27,7 +27,7 @@ trap cleanup TERM INT
 # Startup logging
 # ---------------------------------------------------------------------------
 
-echo "Starting consent-aware-http..."
+echo "Starting consent-aware-web..."
 echo "  Host: ${APP_HOST:-[::]}"
 echo "  Port: ${APP_PORT:-8080}"
 echo "  Data: ${APP_DATA_DIR:-/data}"
@@ -56,8 +56,8 @@ fi
 #
 # TODO: Replace the command below with your application binary.
 # Examples:
-#   exec /app/consent-aware-http
-#   exec /app/release/bin/consent-aware-http start
-#   exec /app/consent-aware-http serve --host "${APP_HOST}" --port "${APP_PORT}"
+#   exec /app/consent-aware-web
+#   exec /app/release/bin/consent-aware-web start
+#   exec /app/consent-aware-web serve --host "${APP_HOST}" --port "${APP_PORT}"
 
 exec "$@"

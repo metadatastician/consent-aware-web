@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // Template: QUICKSTART-USER.adoc — 5-minute path to working software
-// Replace consent-aware-http, Rsr Template Repo — See README.adoc for details., just run, Rsr Template Repo started successfully. with actuals
-= consent-aware-http — Quick Start for Users
+// Replace consent-aware-web, Rsr Template Repo — See README.adoc for details., just run, Rsr Template Repo started successfully. with actuals
+= consent-aware-web — Quick Start for Users
 :toc:
 :toclevels: 2
 
-== What is consent-aware-http?
+== What is consent-aware-web?
 
 Rsr Template Repo — See README.adoc for details.
 
@@ -38,8 +38,8 @@ Before you begin, ensure you have:
 [source,bash]
 ----
 # Clone and set up
-git clone https://github.com/metadatastician/consent-aware-http.git
-cd consent-aware-http
+git clone https://github.com/metadatastician/consent-aware-web.git
+cd consent-aware-web
 just setup
 ----
 
@@ -62,7 +62,7 @@ just stapeln-run
 
 [source,bash]
 ----
-just install --portable --prefix=./consent-aware-http-portable
+just install --portable --prefix=./consent-aware-web-portable
 ----
 
 == First Run
@@ -103,7 +103,7 @@ just heal
 * **In-app**: `just run --help`
 * **Guided tour**: `just tour`
 * **Report a problem**: `just help-me` (pre-fills diagnostic context)
-* **Wiki**: https://github.com/metadatastician/consent-aware-http/wiki
+* **Wiki**: https://github.com/metadatastician/consent-aware-web/wiki
 
 == Uninstall
 

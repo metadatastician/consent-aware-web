@@ -1,5 +1,5 @@
-[[developer-explainer--implementing-consent-aware-http]]
-= Developer Explainer — Implementing Consent-Aware HTTP
+[[developer-explainer--implementing-consent-aware-web]]
+= Developer Explainer — Implementing Consent-Aware Web
 
 This document helps developers adopt HTTP 430 and AIBDP manifests with clarity and minimal overhead.
 

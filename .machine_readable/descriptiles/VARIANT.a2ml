@@ -11,7 +11,7 @@
 # repos until then.
 
 [metadata]
-project = "consent-aware-http"
+project = "consent-aware-web"
 schema_version = "0.1.0"
 last-updated = "2026-08-07"
 

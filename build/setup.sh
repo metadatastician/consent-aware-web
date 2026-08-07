@@ -1,6 +1,6 @@
 #!/bin/sh
 # SPDX-License-Identifier: MPL-2.0
-# setup.sh — Universal setup script for consent-aware-http
+# setup.sh — Universal setup script for consent-aware-web
 #
 # Detects your shell, platform, and installs prerequisites.
 # Then hands off to `just setup` for project-specific configuration.
@@ -11,7 +11,7 @@
 #   upstream just installer is a rolling script that cannot be checksum-pinned.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/metadatastician/consent-aware-http/main/setup.sh -o setup.sh && sh setup.sh
+#   curl -fsSL https://raw.githubusercontent.com/metadatastician/consent-aware-web/main/setup.sh -o setup.sh && sh setup.sh
 #   # or after cloning:
 #   ./setup.sh
 #
@@ -183,7 +183,7 @@ install_just() {
 
 # ── Main ──
 main() {
-    printf "%s=== consent-aware-http Setup ===%s\n\n" "$BOLD" "$RESET"
+    printf "%s=== consent-aware-web Setup ===%s\n\n" "$BOLD" "$RESET"
 
     # Detect environment
     SHELL_NAME=$(detect_shell)
@@ -214,8 +214,8 @@ main() {
     # Step 2: Check if we're in the repo directory
     if [ ! -f "Justfile" ] && [ ! -f "justfile" ]; then
         warn "Not in a repo directory (no Justfile found)"
-        info "Clone first: git clone https://github.com/metadatastician/consent-aware-http.git"
-        info "Then: cd consent-aware-http && ./setup.sh"
+        info "Clone first: git clone https://github.com/metadatastician/consent-aware-web.git"
+        info "Then: cd consent-aware-web && ./setup.sh"
         exit 1
     fi
 

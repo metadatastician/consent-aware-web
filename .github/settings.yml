@@ -12,10 +12,10 @@
 # It carries NO `name`, `description`, `homepage` or `private` key, and it must
 # never gain one. The reason is a real incident, not a hypothetical:
 #
-#   This file previously read `name: "consent-aware-http"`. probot/settings applies it on
+#   This file previously read `name: "consent-aware-web"`. probot/settings applies it on
 #   every push to the default branch, so it submitted the literal string
-#   `consent-aware-http` as the repository name. GitHub sanitises an invalid name by
-#   collapsing each run of illegal characters to a dash — `consent-aware-http` became
+#   `consent-aware-web` as the repository name. GitHub sanitises an invalid name by
+#   collapsing each run of illegal characters to a dash — `consent-aware-web` became
 #   `-REPO-`. The template renamed itself on every push, its old URL 404'd, and
 #   it was mistaken for a deleted repository. `description` was likewise left
 #   reading the literal `IETF-track specifications for consent-aware HTTP: AIBDP manifests and the 430 Consent Required status code` on the live repo.

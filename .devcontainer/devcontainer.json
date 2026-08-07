@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
 // Copyright (c) 2026 Jonathan D.A. Jewell (metadatastician) <jonathan@metadatastician.art>
 //
-// Dev Container configuration for Consent-Aware HTTP
+// Dev Container configuration for Consent-Aware Web
 // Works with: VS Code Dev Containers, GitHub Codespaces, Gitpod
 // Container runtime: Podman (recommended) or any OCI-compliant runtime
 {
-  "name": "Consent-Aware HTTP",
+  "name": "Consent-Aware Web",
 
   "build": {
     "dockerfile": "Containerfile",

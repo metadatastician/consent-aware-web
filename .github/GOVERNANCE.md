@@ -4,13 +4,13 @@ Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 -->
 # Project Governance
 
-This document describes the governance model for **Consent-Aware HTTP**.
+This document describes the governance model for **Consent-Aware Web**.
 
 ---
 
 ## Project Governance Model
 
-Consent-Aware HTTP follows a **Benevolent Dictator For Life (BDFL)** governance model.
+Consent-Aware Web follows a **Benevolent Dictator For Life (BDFL)** governance model.
 This model is well-suited for solo maintainers and small project teams where rapid,
 consistent decision-making is more valuable than formal consensus processes.
 
