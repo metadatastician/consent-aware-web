@@ -6,12 +6,28 @@
 
 This directory contains the source files for the project wiki. It is intended for long-form documentation, deep-dives, and community-maintained knowledge.
 
-== Structure
+== Pages
 
-* **Core Concepts:** Fundamental architectural ideas.
-* **Workflows:** Step-by-step guides for contributors.
-* **Glossary:** Definitions of project-specific terminology.
+link:Core-Concepts.adoc[Core Concepts]::
+Why the suite is shaped this way — declaration versus enforcement, why a new
+status code rather than 403/428/451, why purposes rather than identities, why
+silence is not refusal, and what failing open costs.
 
-== Wiki Synchronization
+link:Workflows.adoc[Workflows]::
+Adopting AIBDP on your own site; verifying that enforcement actually fires
+(the most important one, because misconfiguration is silent); working on the
+drafts; adding a gate; recording debt.
 
-Changes made here should be synchronised with the forge-hosted wiki (GitHub/GitLab) using the project's sync scripts.
+link:Glossary.adoc[Glossary]::
+Protocol terms, behaviour terms, and the estate vocabulary that appears
+throughout the repository.
+
+== Wiki synchronisation
+
+These files are the source. The forge-hosted wiki (a separate
+`<repo>.wiki.git`) is downstream of them.
+
+NOTE: No sync has run yet, and there is no sync script in this repository — the
+template's wording implied one exists. Until that is wired, treat the
+forge-hosted wiki as absent rather than stale, and read these files directly.
+Recorded in `docs/status/DEBT.adoc`.

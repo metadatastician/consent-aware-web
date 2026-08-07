@@ -1,0 +1,115 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= Glossary
+:toc: preamble
+
+Terms as this suite uses them. Where a term is also used elsewhere in the
+industry with a different sense, the difference is stated — that is usually the
+point of the entry.
+
+== Protocol terms
+
+AIBDP::
+AI Boundary Declaration Protocol. A JSON manifest at `/.well-known/aibdp.json`
+in which an *originator* declares which AI *purposes* are permitted, refused or
+conditional for which *paths*. Defined in `draft-jewell-aibdp-00`.
+
+430 Consent Required::
+A proposed HTTP status code returned when a request is refused because a
+declared AI boundary is unmet. Distinct from 403 (authorisation failed), 428
+(a precondition header is missing) and 451 (legally unavailable): 430 says
+*consent was never established*, which is a procedural fact rather than an
+authorisation or legal one. Defined in
+`draft-jewell-http-430-consent-required-00`.
+
+Originator::
+The party publishing content and declaring boundaries. Not necessarily the
+copyright holder and not necessarily the server operator — the term is
+deliberately about who is *declaring*, because that is who the manifest speaks
+for.
+
+Purpose::
+What an AI system intends to do with a resource: `training`, `indexing`,
+`summarization`, `question_answering`, `generation`, `fine_tuning`, `embedding`,
+`commercial_training`. A request's purpose is taken from the `AI-Purpose` header
+if present, otherwise inferred from the User-Agent.
++
+NOTE: A purpose with no matching key under `policies` is *not enforced*. Unknown
+traffic always passes. This is deliberate — the protocol declares boundaries it
+has thought about, and silence is not refusal.
+
+Policy::
+A declaration about one purpose: a `status`, optionally a `scope`, `conditions`,
+`exceptions` and human-readable `rationale`.
+
+Status::
+One of `allowed`, `refused`, `conditional`, `encouraged`. `conditional` means
+permitted *if* the stated conditions are met; a request that does not
+demonstrate them is refused with 430. `encouraged` is not merely `allowed` — it
+signals the originator actively wants this use.
+
+Scope::
+Either the literal `"all"`, or a list of path patterns the policy applies to. A
+policy whose scope does not match the request path does not apply, and the
+request proceeds.
++
+WARNING: This is the most common misconfiguration. A scope of `/article.html`
+does not match a server serving `/article`, and because the middleware fails
+open you get a 200 and no warning. See *Fail open*.
+
+Exception::
+A path-specific override inside a policy. Whether an exception may *widen* a
+policy (grant what the enclosing policy refuses) or only *narrow* it is
+currently unspecified — see `docs/status/PROOF-NEEDS.adoc` INV. Treat it as
+narrowing until the draft says otherwise.
+
+Manifest::
+The AIBDP JSON document itself. Served as `application/aibdp+json`.
+
+== Behaviour
+
+Fail open::
+The reference middleware returns `null` — meaning "no opinion, continue" — on
+any error loading or parsing the manifest. This is correct for production: a
+malformed manifest must not take a site down. The consequence is that
+*misconfiguration is silent*. A server can print "enforcement: ENABLED" and
+enforce nothing. This is why the CI gate makes real requests and asserts 430
+rather than checking that files exist.
+
+Dogfooding::
+This repository publishes its own AIBDP manifest at `.well-known/aibdp.json`,
+and `spec-gates.yml` fails the build if it is missing or invalid. The claim is
+checked, not asserted.
+
+== Estate terms
+
+These appear throughout the repository and are not specific to this protocol.
+
+RSR::
+Rhodium Standard Repository — the estate's repository standard. This repository
+was minted from `hyperpolymath/rsr-template-repo`; provenance is in
+`.machine_readable/descriptiles/VARIANT.a2ml`.
+
+Descriptiles::
+The `.machine_readable/descriptiles/` family (CLADE, ANCHOR, META, AGENTIC,
+ECOSYSTEM, NEUROSYM, PLAYBOOK, STATE) describing *what is*.
+
+Contractiles::
+The normative counterpart under `.machine_readable/contractiles/`: Intend
+(north star), Must (invariants), Trust (security), Adjust (accessibility), plus
+Dust (drift) and Bust (breakage).
+
+Clade::
+Identity classification registered in `gv-clade-index`. This repository is `pt`
+(Protocols & Interop), secondary `gv` (Governance & Standards) — the primary
+reflects the *value proposition* (a protocol), not the subject matter (AI).
+
+CRG::
+Component Readiness Grade. Graded X/F/E/D/C/B/A, worst component sets the
+repository's grade. This repository is *E*; see `docs/status/READINESS.adoc` for
+why not higher.
+
+Fake gate::
+An estate term of art: a check that cannot fail, or that passes without having
+run. Its inverse — a check that fails without having run — is equally a fake
+gate, and one example is recorded in `docs/status/DEBT.adoc`.

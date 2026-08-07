@@ -1,0 +1,120 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= Core Concepts
+:toc: preamble
+
+Why this suite is shaped the way it is. Terms are defined in the
+link:Glossary.adoc[Glossary]; this page is about the reasoning.
+
+== Declaration and enforcement are two different problems
+
+The web already has mechanisms for each, separately, and neither does both.
+
+`robots.txt` *declares* — it is a machine-readable statement of what a crawler
+should not fetch — but it enforces nothing. It is honoured by convention. It
+also predates the distinction that now matters: it can say "do not fetch this",
+but not "you may index this and may not train on it", because in 1994 those were
+the same act.
+
+`403` and `451` *enforce* — they refuse a request — but they declare nothing in
+advance. A client learns the boundary by hitting it, and learns nothing about
+what would have been permitted.
+
+AIBDP is the declaration half; 430 is the enforcement half. Neither is useful
+alone, which is why they are one suite and not two proposals.
+
+== Why a new status code
+
+The objection to a new 4xx code is reasonable: the space is not free, and
+existing codes are underused. The argument for 430 is that the existing codes
+misdescribe what happened.
+
+[cols="1,3",options="header"]
+|===
+| Code | What it means, and why it is wrong here
+
+| 403 Forbidden
+| The client's *authorisation* was evaluated and refused. But an AI crawler was
+  never authorised or unauthorised — it simply never established consent. 403
+  invites the client to try authenticating, which is not the remedy.
+
+| 428 Precondition Required
+| The request lacks a *conditional header*. Close, but 428 is about request
+  syntax; the missing thing here is agreement, not an `If-Match`.
+
+| 451 Unavailable For Legal Reasons
+| Refusal by *legal demand*. AIBDP boundaries are usually not legal demands —
+  they are the originator's stated preference. Conflating the two overstates the
+  claim and invites the response "then sue me".
+
+| 200 with a header
+| The most common suggestion. It fails because the content is still delivered:
+  the boundary is expressed but not enforced, which is `robots.txt` again.
+|===
+
+430 says: *the resource exists, you may well be entitled to it as a reader, and
+the specific use you declared is not one the originator has consented to.*
+
+== Purposes, not identities
+
+The protocol deliberately keys on *what you intend to do*, not *who you are*.
+
+Identity-based blocking is an arms race: user agents are trivially spoofed, IP
+ranges shift, and a blocklist is obsolete on publication. It also produces the
+wrong outcome — the same organisation may run a search crawler you want and a
+training crawler you do not.
+
+Purpose-based declaration degrades more gracefully. An honest agent declares
+`AI-Purpose` and gets an accurate answer. A dishonest one is in the same position
+it was in before the protocol existed — which is to say, the protocol does not
+make things worse, and it makes the honest case unambiguous.
+
+The User-Agent inference in the reference implementation is a convenience for
+today's crawlers, not the mechanism.
+
+== Silence is not refusal
+
+A purpose with no matching policy is not enforced. This is a design decision,
+not an oversight.
+
+The alternative — default deny — would mean every manifest implicitly refuses
+every AI use its author did not enumerate, including uses that do not exist yet.
+That makes manifests brittle and makes the protocol a blocklist, which is
+precisely what it is not (see `ECOSYSTEM.a2ml` `what-this-is-not`).
+
+The cost is that a manifest only constrains what it has thought about. The
+benefit is that a manifest means what it says.
+
+== Conditional is the interesting case
+
+`refused` and `allowed` are easy. `conditional` is where the protocol earns its
+place: it lets an originator say *yes, if* — attribution preserved, non-commercial,
+context retained — in a form a machine can check, rather than in a licence a
+crawler will not read.
+
+This repository's own manifest uses `conditional` for `training` rather than
+`refused`, with conditions that restate what its licences already require. That
+is the intended shape: AIBDP does not create new obligations, it makes existing
+ones legible.
+
+== Failing open is a deliberate trade
+
+The reference middleware treats any manifest error as "no opinion" and lets the
+request through. A protocol that can take a site offline through a JSON typo will
+not be adopted.
+
+The cost is real and worth stating plainly: *every misconfiguration is silent*.
+A wrong `scope` path produces 200s and no warning. This happened in this
+repository's own demo, where `scope: ["/article.html"]` faced a server serving
+`/article` and enforcement never fired while the banner said `ENABLED`.
+
+The mitigation is not to fail closed. It is to *test enforcement by observing a
+430*, which is what `spec-gates.yml` does.
+
+== What this is not
+
+Recorded in machine-readable form in
+`.machine_readable/descriptiles/ECOSYSTEM.a2ml`. In summary: not an AI blocker,
+not a `robots.txt` replacement, not authentication, not DRM, not cookie consent,
+and not AVOW — that is application-layer anti-spam consent with cryptographic
+tokens, whereas this is transport-layer signalling with no cryptography at all.

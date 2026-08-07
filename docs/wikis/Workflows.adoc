@@ -1,0 +1,100 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= Workflows
+:toc: preamble
+
+Step-by-step guides. Concepts are in link:Core-Concepts.adoc[Core Concepts];
+terms in link:Glossary.adoc[Glossary].
+
+== Adopt AIBDP on your own site
+
+. Copy `docs/example-aibdp.json` to `/.well-known/aibdp.json` on your origin.
+. Edit the `policies` block. Every key is one *purpose*; every value needs at
+  least a `status`. Give a `rationale` — it is read by humans deciding whether
+  to respect you.
+. Validate it before you publish:
++
+[source,bash]
+----
+bun run scripts/validate-manifests.ts schemas/aibdp-schema-v0.2.json /path/to/aibdp.json
+----
+. Serve it as `application/aibdp+json`.
+. Add 430 enforcement. `examples/reference-implementations/` shows one way; any
+  server that can inspect a request and return a status code can do it.
+. *Verify enforcement with a request, not by reading your config* — see below.
+
+== Verify that enforcement actually works
+
+The single most important workflow here, because the middleware fails open and
+a misconfigured deployment looks identical to a working one.
+
+[source,bash]
+----
+BASE=https://your-site.example
+curl -o /dev/null -w '%{http_code}\n' $BASE/some-protected-path -H 'User-Agent: GPTBot/1.0'
+----
+
+Expect *430*. If you get 200, work through these in order:
+
+. Does `/.well-known/aibdp.json` return 200 and parse as JSON?
+. Does it validate against the schema? An invalid manifest fails open.
+. Is there a `policies.training` key? `GPTBot` maps to purpose `training`; a
+  purpose with no policy is not enforced.
+. Does `policies.training.scope` match the path you requested *exactly*?
+  `/article.html` does not match `/article`. This is the usual cause.
+. Is the path covered by an `exceptions` entry that allows it?
+. Is `status` actually `refused` or `conditional`? `allowed` and `encouraged`
+  return 200 by design.
+
+Run the full four-request check from
+`examples/reference-implementations/README.adoc` after any manifest change.
+
+== Work on the drafts
+
+. Edit only under `drafts/`. *No `draft-*.xml` may exist at the repository root*
+  — `single-source` fails the build if one appears. See ADR-0005 for why.
+. Do not rename a draft. Names are frozen under the estate invariant
+  `ietf-draft-names-frozen`.
+. Keep RFC-XML *v3*: `<section anchor=…><name>…</name>`, `<ul>/<ol>/<dl>`,
+  `<sourcecode>`. Not `<section title=…>`, `<list>`, `hangText=` or an rfc2629
+  DOCTYPE — `no-v2` rejects all of those, because the AIBDP draft shipped as v2
+  while declaring v3 and validated under no schema at all.
+. Check before pushing:
++
+[source,bash]
+----
+bun run scripts/check-drafts.ts
+----
+. If you change normative behaviour, update the reference implementation *and*
+  the conformance expectations in the same change. They are meant to disagree
+  only when the draft is wrong.
+
+== Change a policy in this repository's own manifest
+
+`.well-known/aibdp.json` is not documentation — it is this repository's live
+declaration, and `schema-validate` fails the build if it is absent or invalid.
+
+Edit it, then `just test`. Keep the `rationale` fields honest: they are the part
+a human reads when deciding whether the declaration is made in good faith.
+
+== Add a gate
+
+The bar is that it must be *demonstrated to fail* before it is wired.
+
+. Write the check as a script under `scripts/`.
+. Construct an input that should fail, and run it. Keep the evidence — record it
+  in `docs/status/TEST-NEEDS.adoc` alongside the other gates.
+. Add the job to `.github/workflows/spec-gates.yml` with a stable job id.
+. Add the workflow's actions to `.github/workflows/actions.lock`.
+. Only after it has run green once on `main`, read the emitted context string
+  from the check-runs API and consider adding it to branch protection. Never
+  copy a context string out of a workflow file — a context that never reports
+  blocks the branch permanently.
+
+== Record debt
+
+Anything found and not fixed goes in `.machine_readable/bot_directives/debt.a2ml`
+with a category, an effort and an impact, and is summarised in
+`docs/status/DEBT.adoc`. Keep the two in step.
+
+Debt you introduced yourself counts, and is the kind most worth writing down.

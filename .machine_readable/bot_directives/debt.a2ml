@@ -201,7 +201,7 @@ discovered = "2026-08-07"
 [[debt.could]]
 category = "docs"
 component = "docs/wikis/"
-issue = "Scaffold only — a README describing an intended structure (Core Concepts, Workflows, Glossary) with no content, and a sync step to a forge-hosted wiki that has never run."
+issue = "Content now exists (Core-Concepts, Workflows, Glossary) but nothing syncs it to the forge-hosted wiki. The template's README implied a sync script exists; none is present in this repository. Until it is wired the GitHub wiki is absent rather than stale, and docs/wikis/ is the only copy."
 effort = "medium"
 impact = "low"
 discovered = "2026-08-07"
