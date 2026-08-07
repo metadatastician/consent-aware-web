@@ -170,13 +170,14 @@ effort = "easy"
 impact = "high"
 discovered = "2026-08-07"
 
-[[debt.should]]
-category = "upstream"
-component = "metadatastician org Actions policy"
-issue = "The organisation Actions allowlist (allowed_actions=selected, sha_pinning_required=true) has patterns_allowed containing 'denoland/*' but NOT 'oven-sh/*'. Any workflow referencing oven-sh/setup-bun is rejected with startup_failure, zero jobs and no explanatory log. This is the estate Bun ruling contradicting itself in a THIRD place, after governance-reusable.yml and the AI instruction files: the policy permits the Deno setup action and forbids the Bun one while LANGUAGE-POLICY.adoc section 1 makes Bun tier 1. Cannot be fixed per-repo (409 Conflict: 'already set at the organization or enterprise level'); needs an org admin. Worked around here with a local composite action at .github/actions/setup-bun that installs a pinned, checksum-verified Bun — which satisfies the policy rather than evading it, but every other repo adopting Bun will hit the same wall."
-effort = "easy"
-impact = "high"
-discovered = "2026-08-07"
+# RESOLVED 2026-08-07 — org Actions allowlist did not permit 'oven-sh/*', so any
+# workflow using oven-sh/setup-bun was rejected with startup_failure, zero jobs
+# and no log. 'oven-sh/*' was added to the organisation allowlist (19 -> 20
+# patterns, nothing removed, denoland/* retained) and verified to propagate to
+# both consent-aware-web and sr71-blackglider. Every repo in the org can now
+# adopt Bun. This repository keeps .github/actions/setup-bun anyway, now as a
+# deliberate choice: it pins the Bun release and verifies its SHA-256, which is
+# stronger than pinning an installer action.
 
 [[debt.should]]
 category = "cicd"

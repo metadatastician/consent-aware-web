@@ -5,21 +5,30 @@
 #
 # WHY THIS EXISTS INSTEAD OF oven-sh/setup-bun
 #
-# The organisation's Actions policy is `allowed_actions: selected` with
-# `sha_pinning_required: true`, and its `patterns_allowed` list includes
-# `denoland/*` but NOT `oven-sh/*`. Any workflow referencing oven-sh/setup-bun
-# is therefore rejected before a single job runs — startup_failure, zero jobs,
-# no log explaining why.
+# Originally a workaround. The organisation Actions policy is
+# `allowed_actions: selected` with `sha_pinning_required: true`, and its
+# `patterns_allowed` list contained `denoland/*` but NOT `oven-sh/*`. Any
+# workflow referencing oven-sh/setup-bun was rejected before a single job ran —
+# startup_failure, zero jobs, no log explaining why. That was the estate's Bun
+# ruling contradicting itself: the policy permitted the Deno setup action and
+# forbade the Bun one, while LANGUAGE-POLICY.adoc section 1 makes Bun tier 1.
 #
-# That is the estate's Bun ruling contradicting itself in a third place:
-# LANGUAGE-POLICY.adoc section 1 makes Bun tier 1 and Deno tier 2, while the
-# Actions allowlist permits the Deno setup action and forbids the Bun one. It
-# needs an org admin to fix; see docs/status/DEBT.adoc (upstream).
+# THAT IS NOW FIXED. `oven-sh/*` was added to the organisation allowlist on
+# 2026-08-07, so oven-sh/setup-bun would be accepted here today.
 #
-# A local composite action is referenced by path, so it is not subject to the
-# allowlist. This is not a workaround around the policy — it satisfies it. The
-# download is pinned to an exact release tag and verified against a SHA-256
-# recorded here, which is a stronger guarantee than a floating action tag.
+# This action is KEPT anyway, now as a deliberate choice rather than a
+# workaround:
+#
+#   * The organisation requires SHA pinning for third-party actions, so
+#     oven-sh/setup-bun would have to be pinned to a commit SHA regardless —
+#     and a pinned action SHA still resolves to whatever that action then
+#     downloads at runtime. Pinning the Bun RELEASE and verifying its SHA-256
+#     is a stronger guarantee than pinning the installer that fetches it.
+#   * It removes a third party from the trust chain entirely.
+#   * It is about twenty lines and has no dependencies.
+#
+# If you would rather use the upstream action, it is now permitted: pin it to a
+# commit SHA and add it to .github/workflows/actions.lock.
 #
 # To bump: change BUN_VERSION and BUN_SHA256 together. The checksum is published
 # at the release as SHASUMS256.txt and also appears as the asset `digest` in the

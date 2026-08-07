@@ -7,7 +7,8 @@ Machine-readable source: `.machine_readable/bot_directives/debt.a2ml`. That file
 is authoritative; this one is for reading. Keep them in step.
 
 *Baseline:* 2026-08-07, at extraction from `hyperpolymath/standards`.
-*Totals:* 22 should-fix, 8 could-fix, across seven categories.
+*Totals:* 21 should-fix, 9 could-fix, across seven categories.
+*Resolved since baseline:* 1 (org Actions allowlist — see below).
 
 Everything here was found by inspection or by a gate. Nothing is speculative, and
 nothing found has been left out — including items that reflect badly on the work
@@ -22,7 +23,7 @@ done in this session.
 | Spec     | 4 | 0 | The heaviest. Unsubmitted drafts, inconsistent authorship, and two genuinely unanswered semantic questions.
 | CI/CD    | 5 | 3 | Mostly "not yet observed", not "known broken". Required contexts are unpinned by design.
 | Code     | 3 | 1 | No unit tests; 41 KB of examples nothing validates.
-| Upstream | 6 | 0 | Estate-level; fixes belong in `standards` and `rsr-template-repo`, not here.
+| Upstream | 5 | 0 | Estate-level; fixes belong in `standards` and `rsr-template-repo`, not here.
 | Docs     | 1 | 4 | Mostly scaffolding never filled.
 | Licence  | 2 | 0 | Four licences coexisting, one carve-out pointing at a dead path. Owner-only.
 | Proof    | 0 | 1 | Correctly exempt today; three obligations deferred, not denied.
@@ -48,15 +49,29 @@ done in this session.
   estate language policy denies Python. The gate checks what it can and says so,
   which is honest but not sufficient — a draft can be structurally valid and still
   fail at the datatracker.
-. *The estate's Bun ruling is recorded but not in force, in three places.*
-  `LANGUAGE-POLICY.adoc §1` makes Bun tier 1, yet: `governance-reusable.yml` —
-  called estate-wide — fails any repository carrying a Bun lockfile; the four AI
-  instruction files in the template tell agents to migrate Bun *to* Deno; and the
-  organisation Actions allowlist permits `denoland/*` but not `oven-sh/*`, so a
-  workflow using the Bun setup action is rejected before any job runs. The third
-  one was found the hard way, by this repository's own CI. Each is worked around
-  here — a dependency-free validator, corrected rule files, a local composite
-  action — and none of the three is fixed at source.
+. *The estate's Bun ruling was recorded but not in force, in three places —
+  one now fixed at source.*
+  `LANGUAGE-POLICY.adoc §1` makes Bun tier 1, yet:
++
+--
+* `governance-reusable.yml`, called estate-wide, fails any repository carrying a
+  Bun lockfile *and* any `package.json` with runtime dependencies — which is
+  Bun's own model, so adopting tier 1 was impossible rather than awkward.
+  **Open:** `hyperpolymath/standards#592`.
+* The four AI instruction files in the template tell agents to migrate Bun *to*
+  Deno, and TypeScript to a language nobody uses. They propagate to every mint.
+  **Open:** `hyperpolymath/rsr-template-repo#25`.
+* The organisation Actions allowlist permitted `denoland/*` but not
+  `oven-sh/*`, so a workflow using the Bun setup action was rejected before any
+  job ran — `startup_failure`, zero jobs, no log. Found the hard way, by this
+  repository's own CI. **FIXED 2026-08-07**: `oven-sh/*` added to the
+  organisation allowlist (19 → 20 patterns, nothing removed), verified to
+  propagate to `consent-aware-web` and `sr71-blackglider`.
+--
++
+Two of the three remain worked around here rather than fixed — a
+dependency-free validator, and corrected rule files carried in this repository
+only. They are fixed at source only when those PRs land.
 
 == Debt introduced by this session
 
