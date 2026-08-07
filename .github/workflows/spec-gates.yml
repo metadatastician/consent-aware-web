@@ -1,3 +1,4 @@
+# This workflow is managed by gh actions-lock.
 # SPDX-License-Identifier: MPL-2.0
 # This workflow is managed by gh actions-lock.
 # Copyright (c) 2026 Jonathan D.A. Jewell (metadatastician) <jonathan@metadatastician.art>
@@ -37,7 +38,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: ./.github/actions/setup-bun
+        uses: $/.github/actions/setup-bun
       - name: Check drafts
         run: bun run scripts/check-drafts.ts
 
@@ -52,7 +53,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: ./.github/actions/setup-bun
+        uses: $/.github/actions/setup-bun
       - name: Repository manifest exists
         run: |
           test -f .well-known/aibdp.json || {
@@ -76,7 +77,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: ./.github/actions/setup-bun
+        uses: $/.github/actions/setup-bun
       - name: Every asserted path must exist
         run: bun run scripts/check-claims.ts
 
@@ -91,7 +92,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: ./.github/actions/setup-bun
+        uses: $/.github/actions/setup-bun
       - name: Start the reference server
         working-directory: examples/reference-implementations/bun
         run: |
@@ -131,6 +132,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: ./.github/actions/setup-bun
+        uses: $/.github/actions/setup-bun
       - name: No draft may be past its expiresDate
         run: bun run scripts/check-drafts.ts

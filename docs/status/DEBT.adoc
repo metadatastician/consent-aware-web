@@ -61,12 +61,24 @@ done in this session.
 * The four AI instruction files in the template tell agents to migrate Bun *to*
   Deno, and TypeScript to a language nobody uses. They propagate to every mint.
   **Open:** `hyperpolymath/rsr-template-repo#25`.
-* The organisation Actions allowlist permitted `denoland/*` but not
-  `oven-sh/*`, so a workflow using the Bun setup action was rejected before any
-  job ran — `startup_failure`, zero jobs, no log. Found the hard way, by this
-  repository's own CI. **FIXED 2026-08-07**: `oven-sh/*` added to the
-  organisation allowlist (19 → 20 patterns, nothing removed), verified to
-  propagate to `consent-aware-web` and `sr71-blackglider`.
+* A workflow using the Bun setup action was rejected before any job ran —
+  `startup_failure`, zero jobs, no log. **FIXED 2026-08-07**, and the
+  correction to the diagnosis is the more useful part. There were *two*
+  independent blockers, either sufficient alone:
++
+** *Allowlist* — permitted `denoland/*` but not `oven-sh/*`. `oven-sh` is not a
+   GitHub-verified creator, so `verified_allowed: true` did not cover it.
+   `oven-sh/*` added (19 → 20 patterns, nothing removed).
+** *Lockfile* — removing only the `oven-sh/setup-bun@v2.2.0` entry from
+   `actions.lock`'s `dependencies:` section, allowlist fixed and everything else
+   identical, reproduced `startup_failure`.
++
+Proven to run afterwards. **Method note worth keeping:** the API accepting the
+allowlist change, and reading the pattern back at both org and repo level, was
+*not* evidence a workflow would start. Only running one was. Two variables had
+changed between the failing and passing attempts; attributing to the first
+without isolating would have shipped a wrong cause into a PR body, this
+register, and a memory file — it very nearly did.
 --
 +
 Two of the three remain worked around here rather than fixed — a

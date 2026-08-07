@@ -14,7 +14,25 @@
 # forbade the Bun one, while LANGUAGE-POLICY.adoc section 1 makes Bun tier 1.
 #
 # THAT IS NOW FIXED. `oven-sh/*` was added to the organisation allowlist on
-# 2026-08-07, so oven-sh/setup-bun would be accepted here today.
+# 2026-08-07 and oven-sh/setup-bun was PROVEN to run (probe branch, run d6fe14c).
+#
+# There were TWO independent blockers, not one — established by isolation on
+# that probe branch, after the first diagnosis attributed it to the allowlist
+# alone:
+#
+#   1. The allowlist. `oven-sh` is not a GitHub-verified creator
+#      (`is_verified: false`), so `verified_allowed: true` did not cover it, and
+#      `github_owned_allowed` does not apply. With `allowed_actions: selected`
+#      and no `oven-sh/*` pattern, the action was not permitted.
+#   2. The lockfile. Removing ONLY the `oven-sh/setup-bun@v2.2.0` entry from the
+#      `dependencies:` section of .github/workflows/actions.lock — allowlist
+#      fixed, everything else identical — reproduced startup_failure.
+#
+# Note also that the lockfile model wants a TAG ref in the workflow
+# (`@v2.2.0`), with actions.lock recording the tag -> commit pin. A raw SHA in
+# the workflow has no tag to resolve, so `gh actions-lock` cannot create a
+# dependency entry for it and the workflow is rejected. That IS the estate's
+# SHA pinning; do not "improve" it by inlining SHAs.
 #
 # This action is KEPT anyway, now as a deliberate choice rather than a
 # workaround:

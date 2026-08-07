@@ -170,14 +170,42 @@ effort = "easy"
 impact = "high"
 discovered = "2026-08-07"
 
-# RESOLVED 2026-08-07 — org Actions allowlist did not permit 'oven-sh/*', so any
-# workflow using oven-sh/setup-bun was rejected with startup_failure, zero jobs
-# and no log. 'oven-sh/*' was added to the organisation allowlist (19 -> 20
-# patterns, nothing removed, denoland/* retained) and verified to propagate to
-# both consent-aware-web and sr71-blackglider. Every repo in the org can now
-# adopt Bun. This repository keeps .github/actions/setup-bun anyway, now as a
-# deliberate choice: it pins the Bun release and verifies its SHA-256, which is
-# stronger than pinning an installer action.
+# RESOLVED 2026-08-07 — but the first diagnosis was INCOMPLETE, and the
+# correction is the more useful record.
+#
+# oven-sh/setup-bun was rejected with startup_failure, zero jobs, no log. That
+# was attributed to the org Actions allowlist alone. 'oven-sh/*' was added
+# (19 -> 20 patterns, nothing removed, denoland/* retained) and verified to
+# propagate to consent-aware-web and sr71-blackglider.
+#
+# A probe branch then showed the action STILL rejected. Isolation established
+# TWO independent blockers, either sufficient on its own:
+#
+#   1. ALLOWLIST. 'oven-sh' is not a GitHub-verified creator (is_verified:
+#      false), so verified_allowed=true did not cover it and
+#      github_owned_allowed does not apply. Under allowed_actions=selected with
+#      no oven-sh/* pattern, the action was not permitted.
+#   2. LOCKFILE. Removing ONLY the oven-sh/setup-bun@v2.2.0 entry from the
+#      dependencies: section of actions.lock — allowlist fixed, everything else
+#      identical — reproduced startup_failure.
+#
+# Both fixed; oven-sh/setup-bun PROVEN to run (probe run d6fe14c).
+#
+# METHOD NOTE worth keeping: the API accepting the allowlist PUT, and the
+# read-back showing the pattern present at both org and repo level, was NOT
+# evidence the workflow would start. Only running one showed that. Two variables
+# had changed between the failing and passing attempts, and attributing to the
+# first without isolating would have shipped a wrong cause into a PR body, this
+# register and a memory file — it very nearly did.
+#
+# Also learned: the lockfile model wants a TAG ref in the workflow (@v2.2.0),
+# with actions.lock recording the tag -> commit pin. A raw SHA has no tag to
+# resolve, so gh actions-lock cannot create a dependency entry and the workflow
+# is rejected. That IS the estate's SHA pinning.
+#
+# This repository keeps .github/actions/setup-bun anyway, now as a deliberate
+# choice: it pins the Bun release and verifies its SHA-256, which is stronger
+# than pinning an installer action that fetches at runtime.
 
 [[debt.should]]
 category = "cicd"
