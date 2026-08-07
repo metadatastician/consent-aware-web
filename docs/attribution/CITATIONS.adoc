@@ -1,37 +1,36 @@
-// SPDX-License-Identifier: CC-BY-SA-4.0
-// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
-= Consent-Aware HTTP - Citation Guide
+= consent-aware-http - Citation Guide
 :toc:
 
 == BibTeX
 
 [source,bibtex]
 ----
-@software{Consent-Aware HTTP_2026,
-  author = {Jewell, Jonathan D.A.},
-  title = {Consent-Aware HTTP},
-  year = {2026},
-  url = {https://github.com/metadatastician/Consent-Aware HTTP},
-  license = {MPL-2.0}
+@software{consent-aware-http_2025,
+  author = {Polymath, Hyper},
+  title = {consent-aware-http},
+  year = {2025},
+  url = {https://github.com/hyperpolymath/consent-aware-http},
+  license = {PMPL-1.0-or-later}
 }
 ----
 
 == Harvard Style
 
-Jewell, J. (2026) _Consent-Aware HTTP_ [Computer software]. Available at: https://github.com/metadatastician/Consent-Aware HTTP
+Polymath, H. (2025) _consent-aware-http_ [Computer software]. Available at: https://github.com/hyperpolymath/consent-aware-http
 
 == OSCOLA
 
-Jonathan D.A. Jewell, 'Consent-Aware HTTP' (2026) <https://github.com/metadatastician/Consent-Aware HTTP>
+Hyper Polymath, 'consent-aware-http' (2025) <https://github.com/hyperpolymath/consent-aware-http>
 
 == MLA
 
-Jewell, Jonathan D.A. "Consent-Aware HTTP." 2026, github.com/metadatastician/Consent-Aware HTTP.
+Polymath, Hyper. "consent-aware-http." 2025, github.com/hyperpolymath/consent-aware-http.
 
 == APA 7
 
-Jewell, J. (2026). _Consent-Aware HTTP_ [Computer software]. GitHub. https://github.com/metadatastician/Consent-Aware HTTP
+Polymath, H. (2025). _consent-aware-http_ [Computer software]. GitHub. https://github.com/hyperpolymath/consent-aware-http
 
 == See Also
 
-* link:CITATION.cff[CITATION.cff]
+* link:../CITATION.cff[CITATION.cff]
+* link:../codemeta.json[codemeta.json]

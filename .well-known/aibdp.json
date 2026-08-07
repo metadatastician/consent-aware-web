@@ -1,0 +1,96 @@
+{
+  "aibdp_version": "0.2",
+  "canonical_uri": "https://github.com/metadatastician/consent-aware-http/blob/main/.well-known/aibdp.json",
+  "contact": "mailto:jonathan@metadatastician.art",
+  "policy_uri": "https://github.com/metadatastician/consent-aware-http/blob/main/docs/ethics.adoc",
+  "policies": {
+    "indexing": {
+      "status": "allowed",
+      "scope": "all",
+      "rationale": "This is a public specification suite intended for wide review and citation. Making it discoverable is the point."
+    },
+    "summarization": {
+      "status": "allowed",
+      "scope": "all",
+      "rationale": "Explaining a specification to a reader serves the specification. No boundary is crossed by describing what 430 and AIBDP do."
+    },
+    "question_answering": {
+      "status": "allowed",
+      "scope": "all",
+      "rationale": "Answering questions from these documents is equivalent to a reader consulting them directly."
+    },
+    "embedding": {
+      "status": "allowed",
+      "scope": "all",
+      "rationale": "Retrieval over public standards text supports the same discovery goal as indexing."
+    },
+    "training": {
+      "status": "conditional",
+      "scope": "all",
+      "conditions": [
+        "Attribution to the author and to this repository must be preserved and reproducible in outputs derived from this corpus.",
+        "Derived works reproducing substantial prose must honour CC-BY-SA-4.0 (documentation) and MPL-2.0 (source), the licences this repository is published under."
+      ],
+      "rationale": "Not a refusal. The condition is exactly what the repository's own licences already require of any other reuse; AIBDP restates it in a machine-readable form.",
+      "alternatives": "Cite the Internet-Drafts in drafts/ directly rather than training on the prose."
+    },
+    "generation": {
+      "status": "conditional",
+      "scope": "all",
+      "conditions": [
+        "Generated text presented as a statement of this protocol must not be attributed to the authors unless it quotes the Internet-Drafts verbatim.",
+        "Normative claims about HTTP 430 or AIBDP must cite the draft and section they derive from."
+      ],
+      "rationale": "A specification is defined by its exact wording. Paraphrase presented as the specification misrepresents it — this is the failure mode the protocol exists to name."
+    },
+    "fine_tuning": {
+      "status": "conditional",
+      "scope": "all",
+      "conditions": [
+        "Same attribution and licence conditions as training."
+      ],
+      "rationale": "Fine-tuning is training with a narrower objective; the same licence terms apply."
+    },
+    "commercial_training": {
+      "status": "conditional",
+      "scope": "all",
+      "conditions": [
+        "Contact the maintainer before incorporating this corpus into a commercially licensed model.",
+        "Attribution and licence conditions from 'training' continue to apply."
+      ],
+      "rationale": "Conditional rather than refused: the aim is a conversation and correct attribution, not exclusion. Consistent with the project's stated position that AIBDP is pro-boundary, not anti-AI."
+    }
+  },
+  "scope": {
+    "applies_to": [
+      "large language models",
+      "retrieval-augmented generation systems",
+      "search and indexing crawlers",
+      "embedding and vector-store pipelines"
+    ]
+  },
+  "enforcement": {
+    "mechanism": "http_430",
+    "note": "This repository is served from GitHub and cannot itself return 430. The manifest is normative; the status code is the enforcement mechanism specified for origins that can emit it.",
+    "contact_before_litigation": true,
+    "preferred_resolution": "Correspondence and correction. The intent is that boundaries are legible, not that they are litigated."
+  },
+  "metadata": {
+    "created": "2026-08-07",
+    "last_modified": "2026-08-07",
+    "author": "Jonathan D.A. Jewell",
+    "project": "Consent-Aware HTTP",
+    "repository": "https://github.com/metadatastician/consent-aware-http",
+    "related_standards": [
+      "draft-jewell-http-430-consent-required-00",
+      "draft-jewell-aibdp-00",
+      "RFC 9110",
+      "RFC 9309",
+      "RFC 8615"
+    ]
+  },
+  "philosophy": {
+    "statement": "Without refusal, permission is meaningless.",
+    "note": "This manifest is the repository dogfooding its own protocol: the specification for AIBDP is itself published with an AIBDP declaration."
+  }
+}

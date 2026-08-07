@@ -1,0 +1,95 @@
+= ADR-0005: `drafts/` is the single source for Internet-Drafts
+:toc: macro
+:sectnums:
+
+[cols="1,4"]
+|===
+| Status | Accepted
+| Date | 2026-08-07
+| Context | Extraction of `consent-aware-http` from `hyperpolymath/standards`
+|===
+
+== Context
+
+Before extraction, the HTTP 430 Internet-Draft existed **twice** in
+`hyperpolymath/standards`, with materially different normative text:
+
+* `consent-aware-http/draft-jewell-http-430-consent-required-00.xml` (root)
+* `consent-aware-http/drafts/draft-jewell-http-430-consent-required-00.xml`
+
+The estate scorecard
+(`standards/.machine_readable/scorecards/consent-aware-http.scorecard.a2ml`,
+assessed 2026-07-03) recorded this as MUST-failure **M2**: two copies, neither
+marked authoritative.
+
+The differences were not cosmetic:
+
+[cols="1,2,2",options="header"]
+|===
+| | root copy | `drafts/` copy
+
+| XML vocabulary | RFC 2629 hybrid (`+<!DOCTYPE>+`, `+<section title=>+`, `+<list>+`) | RFC-XML v3 (`+<name>+`, `+<xref sectionFormat=>+`)
+| `category` | `std` | `info`
+| `seriesInfo` | absent | present
+| `submissionType` / `expiresDate` | absent | `independent` / 2026-01-26
+| author | `J. D. A. Jewell`, NUJ Ethics Council | `Jonathan D.A. Jewell`, National Union of Journalists
+| date | 2025-07-20 | 2025-07-26
+| `Link` relation | `blocked-by-consent` | `blocked-by`
+|===
+
+A third copy existed at
+`standards/rhodium-standard-repositories/satellites/consent-aware-http/`, declared
+in `.gitmodules` as a submodule of `git@github.com:hyperpolymath/consent-aware-http.git`
+— a repository that did not exist.
+
+== Decision
+
+**`drafts/` is the single source of truth. No `draft-*.xml` may exist at the
+repository root.**
+
+Three independent lines of evidence:
+
+. The root copy is **byte-identical** to the satellites copy (verified with
+  `diff -q`), which makes it the older shared ancestor and the `drafts/` copy the
+  subsequent edit.
+. The `drafts/` copy is dated six days later.
+. Only the `drafts/` copy is valid RFC-XML v3 with `seriesInfo`. The root copy
+  would be rejected by the IETF datatracker.
+
+The root copy was **not** carried into this repository.
+
+=== `category` is restored to `std`
+
+Adopting the `drafts/` copy wholesale would have silently downgraded the 430
+proposal from Standards Track to Informational. A status-code allocation in the
+4xx registry normally requires Standards Track — an Informational draft cannot
+make 430 a requirement anyone can cite. The companion AIBDP draft already
+carried `category="std"`, so `info` was the anomaly, not the intent.
+
+Ruled by the repository owner during extraction: **Standards Track**.
+
+=== Dates refreshed rather than revised
+
+Neither draft was ever submitted to the IETF datatracker, so no `-01` revision is
+warranted. `date` and `expiresDate` were refreshed in place to 2026-08-07 and
+2027-02-08 respectively.
+
+== Consequences
+
+* The `single-source` CI job fails the build if any `draft-*.xml` appears at the
+  repository root, or if two files under `drafts/` share a base name. M2 cannot
+  silently reopen.
+* The `draft-expiry` job fails once `expiresDate` passes. This is intended: an
+  expired draft presented as current is the failure this repository exists to
+  name.
+* The author blocks of the two drafts still disagree
+  (`NUJ Ethics Council` / `j.d.a.jewell@open.ac.uk` versus
+  `National Union of Journalists` / `jonathan@metadatastician.art`). These are
+  different bodies and the difference is normatively visible in a published
+  Internet-Draft. **Left unresolved for the owner**; not decided here.
+
+== Related
+
+* ADR-0004 — Python to AffineScript migration
+* `docs/status/SCOPE.adoc` — what this suite is and is not
+* Estate invariant `ietf-draft-names-frozen` (`hyperpolymath/standards`)

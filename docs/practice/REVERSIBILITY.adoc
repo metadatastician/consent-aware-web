@@ -1,0 +1,360 @@
+= Reversibility
+
+*SPDX-License-Identifier*: CC-BY-SA-4.0
+*SPDX-FileCopyrightText*: 2025 Jonathan D.A. Jewell
+
+== Overview
+
+*Reversibility* is a core architectural principle: Every operation should be undoable. This document explains how reversibility is implemented in the Consent-Aware HTTP Standards project.
+
+== Philosophy
+
+____
+"Without the ability to undo, experimentation becomes risk."
+____
+
+Reversibility enables:
+
+* *Safe experimentation* - Try changes without fear
+* *Learning* - Mistakes become learning opportunities
+* *Collaboration* - Contributors can explore boldly
+* *Trust* - Lower stakes increase participation
+
+== Implementation
+
+=== Git Version Control
+
+*All changes are reversible via Git:*
+
+[source,bash]
+----
+# Undo last commit (keep changes)
+git reset --soft HEAD~1
+
+# Undo last commit (discard changes)
+git reset --hard HEAD~1
+
+# Revert a specific commit
+git revert <commit-hash>
+
+# Restore a file to previous version
+git checkout HEAD~1 -- path/to/file
+
+# View history and restore
+git log --oneline
+git checkout <commit-hash> -- path/to/file
+----
+
+=== Branch Protection
+
+*Main branch is protected:*
+
+* All changes via Pull Requests
+* Review required before merge
+* Failed experiments stay in feature branches
+* Easy to abandon without consequence
+
+=== Build System Reversibility
+
+*justfile recipes are non-destructive:*
+
+[source,bash]
+----
+# Build artifacts can be cleaned
+just clean
+
+# Validation doesn't modify files
+just validate
+
+# Tests don't change state
+just test
+----
+
+=== Documentation Reversibility
+
+*Markdown/AsciiDoc is plain text:*
+
+* Full Git history
+* Diffs show exactly what changed
+* Easy to revert specific sections
+* No binary lock-in
+
+=== Internet-Draft Versioning
+
+*IETF drafts are versioned:*
+
+* `-00`, `-01`, `-02` versions
+* Previous versions preserved
+* Can reference earlier designs
+* Mistakes documented, not hidden
+
+=== Reference Implementation Safety
+
+*Code includes rollback patterns:*
+
+[source,javascript]
+----
+// Middleware fails open (safe default)
+try {
+  enforceAIBDP(req);
+} catch (error) {
+  console.error('AIBDP error:', error);
+  next(); // Allow request through on error
+}
+----
+
+[source,python]
+----
+# Manifest loading with fallback
+manifest = load_manifest()
+if not manifest:
+    return None  # No enforcement if manifest missing
+----
+
+=== AIBDP Manifest Updates
+
+*Manifests can be updated anytime:*
+
+* Change `status` from `refused` to `allowed`
+* Add/remove conditions
+* Update `expires` to force re-fetch
+* AI systems pick up changes on next check
+
+*Example reversal:*
+
+[source,json]
+----
+// Before: Too restrictive
+{
+  "training": { "status": "refused" }
+}
+
+// After: Changed mind
+{
+  "training": {
+    "status": "conditional",
+    "conditions": ["Attribution required"]
+  }
+}
+----
+
+=== Configuration Reversibility
+
+*Server configs are declarative:*
+
+[source,nginx]
+----
+# nginx: Comment out to disable
+# return 430;
+
+# Apache: Remove .htaccess rule
+# RewriteRule ^ - [R=430,L]
+
+# Caddy: Remove handle block
+# handle @ai_bots { respond 430 }
+----
+
+=== Community Governance Reversibility
+
+*Governance decisions can be revisited:*
+
+* Governance amendments process (GOVERNANCE.adoc)
+* Community appeals for major decisions
+* Fork rights preserved (ultimate reversibility)
+
+== What's NOT Reversible
+
+=== Immutable by Design
+
+[arabic]
+. *Git commit history*
+* Commits are permanent (can hide, but not delete from history)
+* This is a feature: Accountability and audit trail
+. *IETF submission*
+* Once submitted, Internet-Drafts are archived
+* Can withdraw or supersede, but not erase
+. *Public communications*
+* Blog posts, announcements, public discussions
+* Can retract or update, but internet never forgets
+. *Data already collected by AI systems*
+* If AI systems already trained on your content before you added AIBDP
+* Reversibility is _prospective_, not _retroactive_
+
+=== Acceptable Irreversibility
+
+These are irreversible for good reason:
+
+* *Security fixes*: Immediate merge, post-hoc notification
+* *Code of Conduct enforcement*: Documented outcomes (transparency)
+* *Published standards*: RFC permanence (stability)
+
+== Emergency Reversibility
+
+=== Project-Level Undo
+
+If the entire project needs to be reversed:
+
+[arabic]
+. *Archive repository* (don't delete - preserve history)
+. *Withdraw Internet-Drafts* formally
+. *Update website* with clear status
+. *Notify community* via all channels
+. *Preserve data* (forks, downloads)
+
+=== Personal Reversibility
+
+If you adopted AIBDP and want to undo:
+
+[source,bash]
+----
+# Remove AIBDP manifest
+rm .well-known/aibdp.json
+
+# Remove HTTP 430 enforcement
+# (reverse server config changes)
+
+# Announce change
+# (optional but recommended for AI systems)
+----
+
+== Reversibility Best Practices
+
+=== For Contributors
+
+[arabic]
+. *Use feature branches* - Keep main clean
+. *Commit frequently* - Small, reversible steps
+. *Write clear commit messages* - Makes reverting easier
+. *Test before merge* - Less likely to need reversal
+
+=== For Adopters
+
+[arabic]
+. *Start permissive* - Easier to restrict than to loosen
+. *Document rationale* - Future you will thank you
+. *Monitor impact* - Adjust based on data
+. *Communicate changes* - Tell AI systems when policies shift
+
+=== For Maintainers
+
+[arabic]
+. *Preserve history* - Don't force-push to main
+. *Document decisions* - CHANGELOG and governance
+. *Enable community input* - Catch issues before they're permanent
+. *Plan for succession* - Reversibility includes project continuity
+
+== Philosophical Grounding
+
+=== Reversibility as Care
+
+____
+"The ability to undo is an expression of care - for yourself, your collaborators, and your future self who might disagree with present-you."
+____
+
+=== Reversibility Enables Consent
+
+Just as AIBDP allows content creators to declare and revise boundaries, reversibility allows:
+
+* *Contributors* to experiment without permanent commitment
+* *Adopters* to try consent-aware protocols without lock-in
+* *Standards* to evolve based on implementation experience
+
+[[reversibility--instability]]
+=== Reversibility ≠ Instability
+
+Reversibility doesn't mean constantly changing:
+
+* Thoughtful decisions are stable
+* Reversibility is *insurance*, not a *plan*
+* Git history shows most changes stick
+
+== Examples of Successful Reversibility
+
+=== In This Project
+
+[arabic]
+. *Documentation structure* - Reorganized 3 times, Git preserved all versions
+. *License choice* - Evaluated multiple, settled on dual MIT/GPL {plus} Palimpsest option
+. *Manifest format* - Iterated from v0.1 to v0.2 based on feedback
+. *Reference implementations* - Refactored without losing previous working versions
+
+=== In Web Standards
+
+[arabic]
+. *HTTP/2 Server Push* - Removed in HTTP/3 after implementation experience
+. *TLS versions* - Deprecated older versions as weaknesses found
+. *HTML tags* - and deprecated but documented
+
+== Monitoring Reversibility
+
+[source,bash]
+----
+# Check what's changed recently
+git log --oneline --since="2 weeks ago"
+
+# See uncommitted changes
+git status
+git diff
+
+# Preview impact before reverting
+git diff HEAD~5..HEAD
+
+# Dry-run of clean
+just clean --dry-run  # (if supported)
+----
+
+== Reversibility Checklist
+
+*Before Major Changes:*
+
+* [ ] Create feature branch
+* [ ] Commit current state
+* [ ] Document rationale in commit message
+* [ ] Test thoroughly
+* [ ] Get review/feedback
+* [ ] Merge with clear description
+
+*If Something Goes Wrong:*
+
+* [ ] Assess impact (how broken is it?)
+* [ ] Check Git history (`git log`)
+* [ ] Identify good commit (`git log --oneline`)
+* [ ] Revert or reset (`git revert` or `git reset`)
+* [ ] Test that reversal worked
+* [ ] Document what happened (learning)
+
+*Periodic Reviews:*
+
+* [ ] Quarterly: Review major decisions
+* [ ] Annual: Assess if governance still serves project
+* [ ] Per release: Evaluate if changes worked as intended
+
+== Resources
+
+* *Git documentation*: https://git-scm.com/doc
+* *Reversibility in software design*: https://martinfowler.com/
+* *IETF process for withdrawing drafts*: https://www.ietf.org/
+
+== Conclusion
+
+Reversibility is not just a technical feature - it's an ethical stance.
+
+____
+"The right to undo preserves the right to try."
+____
+
+This project models the consent-aware principles it standardizes:
+
+* *Declare boundaries* (AIBDP)
+* *Enforce procedurally* (HTTP 430)
+* *Allow revision* (Reversibility)
+* *Respect autonomy* (Fork rights, community governance)
+
+'''''
+
+*Questions about reversibility?*
+Open a GitHub Discussion or email jonathan@metadatastician.art
+
+*Version*: 1.0
+*Last Updated*: 2025-07-20
+*Next Review*: 2026-07-20

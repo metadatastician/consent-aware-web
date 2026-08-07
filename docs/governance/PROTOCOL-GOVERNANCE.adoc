@@ -1,0 +1,42 @@
+[[governance-implications--consent-in-institutional-systems]]
+= Governance Implications — Consent in Institutional Systems
+
+[[newspaper-journalism--union-frameworks]]
+== 📰 Journalism {plus} Union Frameworks
+
+AIBDP can support:
+
+* Editorial boundaries
+* Memory preservation
+* Consent protocols for archive access
+
+[[jigsaw-organizational-integration]]
+== 🧩 Organizational Integration
+
+Use manifest layering to:
+
+* Declare content rules
+* Signal refusal across federated platforms
+* Preserve ethical perimeter
+
+[[-policy-threads]]
+== 🏛 Policy Threads
+
+Aligned with:
+
+* Whistleblowing frameworks
+* Safeguarding protocols
+* Privacy signaling
+* Consent-aware data architecture
+
+[[arrows_counterclockwise-strategic-applications]]
+== 🔄 Strategic Applications
+
+* Server integration
+* Committee policies
+* Public publishing standards
+* Educational outreach
+
+'''''
+
+Boundary isn’t only technical. It’s procedural governance.

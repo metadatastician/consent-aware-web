@@ -1,0 +1,41 @@
+[[consent-aware-ethics--framing-the-refusal]]
+= Consent-Aware Ethics — Framing the Refusal
+
+[[brain-core-beliefs]]
+== 🧠 Core Beliefs
+
+* Refusal is a form of authorship
+* Consent must be machine-readable and human-respectful
+* AI agents require declared boundaries, not implicit harvest
+
+[[-literary-influences]]
+== 🕊 Literary Influences
+
+* bell hooks — refusal as poise
+* Audre Lorde — refusal as renewal
+* Ursula Franklin — technology as structure
+* Virginia Woolf — architecture as metaphor
+
+[[-federated-ethics]]
+== 🛡 Federated Ethics
+
+This project upholds:
+
+* Solidarity over centralization
+* Federation over capture
+* Declaration over default
+
+[[handshake-societal-touchpoints]]
+== 🤝 Societal Touchpoints
+
+Relevant to:
+
+* Journalism
+* Education
+* Federated identity
+* Consent tech
+* Whistleblowing systems
+
+'''''
+
+Refusal is not resistance — it's the shaping of space.

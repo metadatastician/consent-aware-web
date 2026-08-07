@@ -1,0 +1,35 @@
+[[conformance-guide--what-counts-as-compliant]]
+= Conformance Guide — What Counts as Compliant?
+
+[[scroll-http-430]]
+== 📜 HTTP 430
+
+* Returns 430 when AI-specific consent is refused
+* Communicates clearly in headers or body
+* Avoids fallback to generic 403/451
+
+[[compass-aibdp-manifest]]
+== 🧭 AIBDP Manifest
+
+* Served at `/.well-known/aibdp.json`
+* Declares version, contact, and policy terms
+* Machine-readable and interpretable
+
+[[-optional-enhancements]]
+== 🛠 Optional Enhancements
+
+* Cryptographic binding (COSE/JWS)
+* Consent caching
+* Manifest diff tracking
+* Visual icons for 430-aware participation
+
+[[placard-interoperability]]
+== 🪧 Interoperability
+
+* IndieWeb-compatible
+* CDN-friendly
+* Can integrate into browser-level refusal signaling
+
+'''''
+
+_Compliance isn’t about rigidity — it’s about architectural honesty._

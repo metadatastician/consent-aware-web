@@ -1,0 +1,38 @@
+{
+  "aibdp_version": "0.2",
+  "canonical_uri": "https://example.org/.well-known/aibdp.json",
+  "contact": "mailto:editor@example.org",
+  "policies": {
+    "indexing": {
+      "status": "allowed",
+      "scope": "all"
+    },
+    "summarization": {
+      "status": "allowed",
+      "scope": "all"
+    },
+    "training": {
+      "status": "refused",
+      "scope": "all",
+      "rationale": "This site does not permit its content to be used as model training data.",
+      "alternatives": "Link to the source rather than reproducing it."
+    },
+    "generation": {
+      "status": "refused",
+      "scope": "all"
+    },
+    "commercial_training": {
+      "status": "refused",
+      "scope": "all"
+    }
+  },
+  "enforcement": {
+    "mechanism": "http_430",
+    "contact_before_litigation": true
+  },
+  "metadata": {
+    "created": "2026-08-07",
+    "last_modified": "2026-08-07",
+    "organization": "Example Organisation"
+  }
+}

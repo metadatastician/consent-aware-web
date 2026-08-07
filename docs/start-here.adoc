@@ -1,0 +1,90 @@
+[[quickstart--make-your-site-consent-aware]]
+= Quickstart — Make Your Site Consent-Aware
+
+[[white_check_mark-step-1-declare-your-boundary]]
+== ✅ Step 1: Declare Your Boundary
+
+Create a file at:
+
+[source,text]
+----
+/.well-known/aibdp.json
+----
+
+Add the following content:
+
+[source,json]
+----
+{
+  "aibdp_version": "0.1",
+  "contact": "mailto:editor@sinople.pub",
+  "indexing": "allowed",
+  "training": "refused",
+  "regeneration": "refused"
+}
+----
+
+You may include additional fields such as "summary", "policy++_++url", or "signature" depending on your implementation.
+
+[[white_check_mark-step-2-respond-with-http-430]]
+== ✅ Step 2: Respond with HTTP 430
+
+Configure your server to return:
+
+[source,http]
+----
+HTTP/1.1 430 Consent Required
+----
+
+Use this response when:
+
+* The manifest is missing
+* The manifest explicitly refuses the declared intent
+* AI-related requests do not honor declared boundaries
+
+You can include a brief message in the body such as:
+
+[source,text]
+----
+Consent manifest unavailable or denied.
+See /.well-known/aibdp.json for declared boundaries.
+----
+
+[[white_check_mark-step-3-link-your-policy]]
+== ✅ Step 3: Link Your Policy
+
+Link to your AIBDP manifest for transparency:
+
+* In your site footer
+* In robots.txt
+* In HTTP headers (e.g. Link: or X-AIBDP-Policy:)
+
+Example addition to robots.txt:
+
+[source,text]
+----
+# Consent-aware manifest:
+Allow: /.well-known/aibdp.json
+----
+
+[[white_check_mark-step-4-publish-with-integrity]]
+== ✅ Step 4: Publish with Integrity
+
+Once your site includes both:
+
+* A valid AIBDP manifest
+* Refusal logic via 430
+
+You’re ready to adopt the Consent-Aware HTTP protocol.
+
+Consider adding a badge, a disclaimer, or educational links to help others learn and follow your lead.
+
+[[-maintenance-suggestions]]
+== 🛡 Maintenance Suggestions
+
+* Validate your manifest with a JSON linter
+* Consider adding a JWS or COSE signature
+* Check headers using browser dev tools or curl
+* Use /docs/technical.adoc and /docs/conformance.adoc to go deeper
+
+Consent isn’t just a checkbox. It’s a perimeter. Declare yours. For full documentation, see: README.adoc

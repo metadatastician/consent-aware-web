@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
+     category="std"
+     ipr="trust200902"
+     docName="draft-jewell-aibdp-00"
+     submissionType="independent"
+     xml:lang="en"
+     version="3"
+     expiresDate="2027-02-08">
+
+  <front>
+    <title abbrev="AIBDP">AI Boundary Declaration Protocol (AIBDP)</title>
+    <seriesInfo name="Internet-Draft" value="draft-jewell-aibdp-00"/>
+    <author fullname="J. D. A. Jewell" initials="J.D.A." surname="Jewell">
+      <organization>NUJ Ethics Council</organization>
+      <address>
+        <email>j.d.a.jewell@open.ac.uk</email>
+      </address>
+    </author>
+    <date year="2026" month="8" day="7"/>
+    <abstract>
+      <t>This document defines the AI Boundary Declaration Protocol (AIBDP), a machine-readable manifest format for declaring acceptable and prohibited uses of content by AI systems. AIBDP enables content originators to express consent boundaries for training, indexing, generation, and other AI engagement modes via a standardized JSON manifest hosted at /.well-known/aibdp.json. It supports enforcement through HTTP status codes such as 430 (Consent Required) and provides a foundation for consent-aware web architecture.</t>
+    </abstract>
+  </front>
+
+  <middle>
+    <section anchor="introduction">
+      <name>Introduction</name>
+      <t>AI systems routinely ingest, process, and regenerate web content without explicit consent from originators. Existing mechanisms like robots.txt were designed for crawling and indexing, not for the nuanced boundaries required in the age of generative AI. AIBDP addresses this gap by providing:</t>
+      <ul>
+        <li>Declarative consent framework for AI-specific uses (training, generation, summarization, etc.)</li>
+        <li>Standardized manifest format (JSON) at a well-known URI</li>
+        <li>Integration with HTTP enforcement mechanisms (e.g., status code 430)</li>
+        <li>Support for federated and self-sovereign publishing</li>
+        <li>Optional cryptographic verification (COSE signatures)</li>
+      </ul>
+
+      <t>AIBDP is designed to work alongside existing protocols (robots.txt, HTTP headers, TDM Reservation Protocol) while providing granular control over AI-specific boundary declarations.</t>
+    </section>
+
+    <section anchor="terminology">
+      <name>Terminology</name>
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.</t>
+
+      <t>Additionally, this document uses the following terms:</t>
+      <dl>
+        <dt>AI System:</dt>
+<dd>Any computational system that processes content for training, inference, generation, or augmentation purposes, including but not limited to large language models (LLMs), computer vision systems, and retrieval-augmented generation (RAG) systems.</dd>
+        <dt>Originator:</dt>
+<dd>The entity publishing content and declaring usage boundaries via AIBDP.</dd>
+        <dt>Manifest:</dt>
+<dd>The AIBDP JSON document hosted at /.well-known/aibdp.json.</dd>
+        <dt>Policy:</dt>
+<dd>A declared permission or prohibition for a specific AI usage mode.</dd>
+        <dt>Scope:</dt>
+<dd>The set of resources to which a policy applies (file patterns, paths, etc.).</dd>
+      </dl>
+    </section>
+
+    <section anchor="overview">
+      <name>Protocol Overview</name>
+      <t>AIBDP operates through the following mechanism:</t>
+      <ol>
+        <li>Content originators publish a JSON manifest at /.well-known/aibdp.json</li>
+        <li>AI systems retrieve and parse the manifest before accessing content</li>
+        <li>Systems respect declared boundaries or indicate inability to comply</li>
+        <li>Servers MAY enforce boundaries by responding with HTTP 430 (Consent Required) when violations are detected</li>
+        <li>Manifests MAY include cryptographic signatures for integrity verification</li>
+      </ol>
+
+      <section anchor="robots-relationship">
+        <name>Relationship to robots.txt</name>
+        <t>AIBDP complements robots.txt rather than replacing it:</t>
+        <ul>
+          <li>robots.txt controls crawling and indexing behavior</li>
+          <li>AIBDP declares boundaries for AI-specific uses (training, generation, etc.)</li>
+          <li>When both exist, AI systems SHOULD honor both</li>
+          <li>AIBDP provides finer-grained control for modern AI use cases</li>
+        </ul>
+      </section>
+
+      <section anchor="discovery">
+        <name>Discovery and Caching</name>
+        <t>AI systems SHOULD:</t>
+        <ul>
+          <li>Fetch /.well-known/aibdp.json before initial content access</li>
+          <li>Cache manifests according to "expires" field</li>
+          <li>Respect "canonical_uri" for cross-domain manifests</li>
+          <li>Re-fetch on HTTP 430 responses with Link header to manifest</li>
+        </ul>
+      </section>
+    </section>
+
+    <section anchor="format">
+      <name>Manifest Format</name>
+      <t>AIBDP manifests are JSON documents conforming to the following structure:</t>
+
+      <section anchor="required-fields">
+        <name>Required Fields</name>
+        <dl>
+          <dt>aibdp_version:</dt>
+<dd>String indicating protocol version (e.g., "0.2")</dd>
+          <dt>contact:</dt>
+<dd>String with contact URI (mailto:, https:, etc.) for policy inquiries</dd>
+          <dt>policies:</dt>
+<dd>Object containing policy declarations (see Section 4.2)</dd>
+        </dl>
+      </section>
+
+      <section anchor="policy-declarations">
+        <name>Policy Declarations</name>
+        <t>The "policies" object contains keys for different AI usage modes:</t>
+        <ul>
+          <li>training: Use of content for model training</li>
+          <li>indexing: Building searchable indices</li>
+          <li>summarization: Generating summaries or abstracts</li>
+          <li>question_answering: RAG systems responding to queries</li>
+          <li>generation: Synthetic content creation based on corpus</li>
+          <li>fine_tuning: Specialized model adaptation</li>
+          <li>embedding: Creating vector representations</li>
+          <li>commercial_training: Training for commercial AI products</li>
+        </ul>
+
+        <t>Each policy MAY contain:</t>
+        <dl>
+          <dt>status:</dt>
+<dd>REQUIRED. One of: "allowed", "refused", "conditional", "encouraged"</dd>
+          <dt>conditions:</dt>
+<dd>Array of strings describing requirements when status is "conditional"</dd>
+          <dt>scope:</dt>
+<dd>Array of path patterns this policy applies to</dd>
+          <dt>exceptions:</dt>
+<dd>Array of exception objects with path, status, and note</dd>
+          <dt>rationale:</dt>
+<dd>Human-readable explanation of policy</dd>
+          <dt>alternatives:</dt>
+<dd>Suggested alternative approaches</dd>
+        </dl>
+      </section>
+
+      <section anchor="optional-fields">
+        <name>Optional Fields</name>
+        <dl>
+          <dt>canonical_uri:</dt>
+<dd>Authoritative location of this manifest</dd>
+          <dt>expires:</dt>
+<dd>ISO 8601 timestamp when manifest should be re-fetched</dd>
+          <dt>policy_uri:</dt>
+<dd>Link to human-readable policy document</dd>
+          <dt>scope:</dt>
+<dd>Object describing what AI systems this manifest addresses</dd>
+          <dt>special_provisions:</dt>
+<dd>Object with provisions for specific use cases (academic research, education, etc.)</dd>
+          <dt>enforcement:</dt>
+<dd>Object describing enforcement mechanisms</dd>
+          <dt>metadata:</dt>
+<dd>Object with authorship, creation date, related standards</dd>
+          <dt>signature:</dt>
+<dd>COSE signature object for cryptographic verification (see Section 6)</dd>
+        </dl>
+      </section>
+
+      <section anchor="example">
+        <name>Example Manifest</name>
+        <sourcecode type="json"><![CDATA[
+{
+  "aibdp_version": "0.2",
+  "canonical_uri": "https://example.org/.well-known/aibdp.json",
+  "contact": "mailto:policy@example.org",
+  "expires": "2026-07-20T23:59:59Z",
+  "policy_uri": "https://example.org/ai-policy",
+
+  "policies": {
+    "training": {
+      "status": "conditional",
+      "conditions": [
+        "Attribution required",
+        "Non-commercial use only",
+        "Preserve ethical context"
+      ],
+      "scope": ["/articles/**", "/docs/**"]
+    },
+
+    "indexing": {
+      "status": "allowed",
+      "scope": "all"
+    },
+
+    "generation": {
+      "status": "refused",
+      "rationale": "Content should not be synthetically replicated",
+      "alternatives": "Link to original with attribution"
+    },
+
+    "question_answering": {
+      "status": "allowed",
+      "conditions": ["Cite source with URL"]
+    }
+  },
+
+  "enforcement": {
+    "mechanism": "http_430",
+    "contact_before_litigation": true
+  },
+
+  "metadata": {
+    "created": "2025-07-20",
+    "author": "Example Organization"
+  }
+}
+        ]]></sourcecode>
+      </section>
+    </section>
+
+    <section anchor="scoping">
+      <name>Path Scoping</name>
+      <t>Policies MAY specify scope using path patterns:</t>
+      <ul>
+        <li>Exact paths: "/about.html"</li>
+        <li>Directory wildcards: "/blog/**" (all files under /blog/)</li>
+        <li>File patterns: "/docs/*.pdf"</li>
+        <li>Special value "all" applies to entire domain</li>
+      </ul>
+
+      <t>When multiple policies apply to the same resource, the most restrictive policy SHOULD take precedence unless exceptions are specified.</t>
+    </section>
+
+    <section anchor="crypto">
+      <name>Cryptographic Verification</name>
+      <t>Manifests MAY include a "signature" field containing a COSE (RFC 9052) signature:</t>
+
+      <ul>
+        <li>Ensures manifest integrity and authenticity</li>
+        <li>Prevents tampering by intermediaries (CDNs, proxies)</li>
+        <li>Enables audit trails for consent verification</li>
+      </ul>
+
+      <t>AI systems capable of signature verification SHOULD validate signatures when present and reject manifests with invalid signatures.</t>
+
+      <section anchor="signature-format">
+        <name>Signature Format</name>
+        <sourcecode type="json"><![CDATA[
+{
+  "signature": {
+    "algorithm": "ES256",
+    "public_key_uri": "https://example.org/.well-known/aibdp-key.jwk",
+    "value": "base64-encoded-cose-signature"
+  }
+}
+        ]]></sourcecode>
+      </section>
+    </section>
+
+    <section anchor="enforcement">
+      <name>Enforcement Integration</name>
+      <t>AIBDP is designed to integrate with HTTP enforcement mechanisms:</t>
+
+      <section anchor="http-430">
+        <name>HTTP 430 Consent Required</name>
+        <t>Servers detecting AIBDP violations SHOULD respond with HTTP 430 (see draft-jewell-http-430-consent-required):</t>
+        <sourcecode type="message"><![CDATA[
+HTTP/1.1 430 Consent Required
+Content-Type: application/json
+Link: <https://example.org/.well-known/aibdp.json>; rel="blocked-by-consent"
+Retry-After: 86400
+
+{
+  "error": "AI usage boundaries declared in AIBDP manifest not satisfied",
+  "manifest": "https://example.org/.well-known/aibdp.json",
+  "violated_policy": "training",
+  "required_conditions": ["Attribution required", "Non-commercial use only"]
+}
+        ]]></sourcecode>
+      </section>
+
+      <section anchor="detection">
+        <name>Detection Mechanisms</name>
+        <t>Servers MAY detect AI systems through:</t>
+        <ul>
+          <li>User-Agent headers (e.g., "GPTBot", "Claude-Web")</li>
+          <li>Request patterns (high-volume sequential access)</li>
+          <li>Missing consent headers when required</li>
+          <li>Client identification via API keys or authentication</li>
+        </ul>
+      </section>
+
+      <section anchor="consent-headers">
+        <name>Consent Headers</name>
+        <t>AI systems MAY include headers indicating consent compliance:</t>
+        <sourcecode type="message"><![CDATA[
+GET /article.html HTTP/1.1
+Host: example.org
+User-Agent: ResearchBot/1.0
+AI-Purpose: indexing
+AI-Consent-Reviewed: https://example.org/.well-known/aibdp.json
+AI-Consent-Conditions: attribution,non-commercial
+        ]]></sourcecode>
+      </section>
+    </section>
+
+    <section anchor="federation">
+      <name>Federated and Cross-Domain Policies</name>
+      <t>AIBDP supports federated scenarios:</t>
+
+      <section anchor="canonical">
+        <name>Canonical URIs</name>
+        <t>The "canonical_uri" field enables:</t>
+        <ul>
+          <li>CDN-hosted content pointing to origin manifest</li>
+          <li>Mirrored sites sharing a single policy</li>
+          <li>Federated identity systems declaring unified boundaries</li>
+        </ul>
+
+        <t>AI systems encountering "canonical_uri" SHOULD fetch and respect the referenced manifest.</t>
+      </section>
+
+      <section anchor="multi-domain">
+        <name>Multi-Domain Policies</name>
+        <t>Organizations managing multiple domains MAY:</t>
+        <ul>
+          <li>Host a single canonical manifest referenced by all domains</li>
+          <li>Use DNS TXT records to indicate manifest location</li>
+          <li>Employ cryptographic signatures to verify cross-domain authenticity</li>
+        </ul>
+      </section>
+    </section>
+
+    <section anchor="privacy">
+      <name>Privacy Considerations</name>
+      <t>AIBDP manifests are public declarations. Implementers should consider:</t>
+      <ul>
+        <li>Manifests SHOULD NOT contain private information</li>
+        <li>Contact information SHOULD be organizational, not personal</li>
+        <li>Detailed scope patterns MAY reveal site structure</li>
+        <li>Manifests do not track or log AI system access (use server logs for auditing)</li>
+      </ul>
+
+      <t>The protocol itself does not create new privacy risks beyond existing web publication models.</t>
+    </section>
+
+    <section anchor="security">
+      <name>Security Considerations</name>
+      <section anchor="integrity">
+        <name>Manifest Integrity</name>
+        <t>Servers SHOULD:</t>
+        <ul>
+          <li>Serve manifests over HTTPS to prevent tampering</li>
+          <li>Use COSE signatures for high-value content</li>
+          <li>Validate JSON schema to prevent malformed manifests</li>
+          <li>Set appropriate cache headers to balance freshness and load</li>
+        </ul>
+      </section>
+
+      <section anchor="dos">
+        <name>Denial of Service</name>
+        <t>AI systems fetching manifests SHOULD:</t>
+        <ul>
+          <li>Cache manifests according to "expires" field</li>
+          <li>Implement exponential backoff on errors</li>
+          <li>Respect Retry-After headers</li>
+          <li>Limit manifest size (RECOMMENDED: 1MB maximum)</li>
+        </ul>
+      </section>
+
+      <section anchor="spoofing">
+        <name>Spoofing and Substitution</name>
+        <t>Attackers might attempt to:</t>
+        <ul>
+          <li>Serve fake manifests via DNS hijacking (mitigated by HTTPS + signatures)</li>
+          <li>Inject permissive manifests via MITM (mitigated by HTTPS)</li>
+          <li>Exploit manifest parsing vulnerabilities (mitigated by schema validation)</li>
+        </ul>
+
+        <t>Implementations MUST validate manifest structure and SHOULD verify signatures when present.</t>
+      </section>
+
+      <section anchor="limitations">
+        <name>Enforcement Limitations</name>
+        <t>AIBDP is a declarative protocol, not a technical enforcement mechanism:</t>
+        <ul>
+          <li>Non-compliant AI systems MAY ignore manifests</li>
+          <li>Detection of violations requires active monitoring</li>
+          <li>Legal or reputational consequences provide primary enforcement</li>
+          <li>HTTP 430 responses signal boundary violations but cannot prevent initial access</li>
+        </ul>
+
+        <t>AIBDP establishes procedural clarity for consent, not cryptographic access control.</t>
+      </section>
+    </section>
+
+    <section anchor="iana">
+      <name>IANA Considerations</name>
+      <section anchor="well-known-registration">
+        <name>Well-Known URI Registration</name>
+        <t>This document requests registration of the "aibdp.json" well-known URI:</t>
+        <dl>
+          <dt>URI suffix:</dt>
+<dd>aibdp.json</dd>
+          <dt>Change controller:</dt>
+<dd>IETF</dd>
+          <dt>Specification document:</dt>
+<dd>This RFC</dd>
+          <dt>Related information:</dt>
+<dd>AI Boundary Declaration Protocol manifest</dd>
+        </dl>
+      </section>
+
+      <section anchor="media-type">
+        <name>Media Type Registration</name>
+        <t>This document requests registration of the "application/aibdp+json" media type:</t>
+        <dl>
+          <dt>Type name:</dt>
+<dd>application</dd>
+          <dt>Subtype name:</dt>
+<dd>aibdp+json</dd>
+          <dt>Required parameters:</dt>
+<dd>None</dd>
+          <dt>Optional parameters:</dt>
+<dd>None</dd>
+          <dt>Encoding considerations:</dt>
+<dd>Binary (UTF-8 JSON)</dd>
+          <dt>Security considerations:</dt>
+<dd>See Section 11</dd>
+          <dt>Interoperability considerations:</dt>
+<dd>Follows JSON RFC 8259</dd>
+          <dt>Published specification:</dt>
+<dd>This RFC</dd>
+          <dt>Applications that use this media type:</dt>
+<dd>AI systems, web servers, content management systems</dd>
+        </dl>
+      </section>
+    </section>
+
+    <section anchor="extensibility">
+      <name>Extensibility</name>
+      <t>AIBDP is designed for future extension:</t>
+      <ul>
+        <li>New policy keys MAY be added for emerging AI use cases</li>
+        <li>Implementations SHOULD ignore unknown fields (forward compatibility)</li>
+        <li>Version negotiation via "aibdp_version" field</li>
+        <li>Custom fields SHOULD use reverse-DNS prefixing (e.g., "com.example.custom_policy")</li>
+      </ul>
+
+      <t>Future versions MAY define:</t>
+      <ul>
+        <li>Dynamic policy updates via Server-Sent Events or WebSockets</li>
+        <li>Per-user consent declarations for authenticated systems</li>
+        <li>Tiered access levels based on AI system reputation</li>
+        <li>Integration with decentralized identity systems (DIDs)</li>
+      </ul>
+    </section>
+
+    <section anchor="implementation">
+      <name>Implementation Guidance</name>
+      <section anchor="publishers">
+        <name>For Content Publishers</name>
+        <t>Publishers implementing AIBDP SHOULD:</t>
+        <ol>
+          <li>Define clear AI usage boundaries aligned with organizational values</li>
+          <li>Create manifest at /.well-known/aibdp.json with appropriate policies</li>
+          <li>Set "expires" field to balance freshness and caching (recommended: 30-90 days)</li>
+          <li>Provide contact information for policy questions</li>
+          <li>Consider cryptographic signatures for high-value content</li>
+          <li>Monitor access patterns and respond with HTTP 430 when violations detected</li>
+          <li>Document policy rationale in human-readable form (policy_uri)</li>
+        </ol>
+      </section>
+
+      <section anchor="ai-operators">
+        <name>For AI System Operators</name>
+        <t>AI systems SHOULD:</t>
+        <ol>
+          <li>Fetch /.well-known/aibdp.json before initial content access</li>
+          <li>Parse and validate manifest structure</li>
+          <li>Respect declared boundaries or skip content if unable to comply</li>
+          <li>Cache manifests according to "expires" field</li>
+          <li>Verify signatures when present and validation is supported</li>
+          <li>Include User-Agent identifying system and purpose</li>
+          <li>Consider using consent headers (AI-Purpose, AI-Consent-Reviewed)</li>
+          <li>Log compliance decisions for audit purposes</li>
+          <li>Contact publishers via provided contact URI when clarification needed</li>
+        </ol>
+      </section>
+    </section>
+
+    <section anchor="acknowledgments">
+      <name>Acknowledgments</name>
+      <t>This protocol draws inspiration from:</t>
+      <ul>
+        <li>robots.txt (Martijn Koster, et al.)</li>
+        <li>RFC 9116 (security.txt - Edwin Foudil, Yakov Shafranovich)</li>
+        <li>TDM Reservation Protocol (Text and Data Mining)</li>
+        <li>IndieWeb community (federated publishing standards)</li>
+        <li>National Union of Journalists Ethics Council</li>
+        <li>Consent theory and boundary ethics (bell hooks, journalism ethics traditions)</li>
+      </ul>
+    </section>
+  </middle>
+
+  <back>
+    <references>
+      <name>Normative References</name>
+      <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119">
+        <front>
+          <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+          <author><organization>IETF</organization></author>
+          <date year="1997" month="March"/>
+        </front>
+      </reference>
+
+      <reference anchor="RFC8259" target="https://www.rfc-editor.org/info/rfc8259">
+        <front>
+          <title>The JavaScript Object Notation (JSON) Data Interchange Format</title>
+          <author><organization>IETF</organization></author>
+          <date year="2017" month="December"/>
+        </front>
+      </reference>
+
+      <reference anchor="RFC9052" target="https://www.rfc-editor.org/info/rfc9052">
+        <front>
+          <title>CBOR Object Signing and Encryption (COSE)</title>
+          <author><organization>IETF</organization></author>
+          <date year="2021" month="August"/>
+        </front>
+      </reference>
+
+      <reference anchor="RFC8615" target="https://www.rfc-editor.org/info/rfc8615">
+        <front>
+          <title>Well-Known Uniform Resource Identifiers (URIs)</title>
+          <author><organization>IETF</organization></author>
+          <date year="2019" month="May"/>
+        </front>
+      </reference>
+
+      <reference anchor="HTTP-430" target="draft-jewell-http-430-consent-required">
+        <front>
+          <title>HTTP Status Code 430: Consent Required</title>
+          <author initials="J.D.A." surname="Jewell"/>
+          <date year="2025" month="July"/>
+        </front>
+      </reference>
+    </references>
+
+    <references>
+      <name>Informative References</name>
+      <reference anchor="RFC9116" target="https://www.rfc-editor.org/info/rfc9116">
+        <front>
+          <title>A File Format to Aid in Security Vulnerability Disclosure</title>
+          <author><organization>IETF</organization></author>
+          <date year="2022" month="April"/>
+        </front>
+      </reference>
+
+      <reference anchor="ROBOTSTXT" target="https://www.robotstxt.org/orig.html">
+        <front>
+          <title>A Standard for Robot Exclusion</title>
+          <author initials="M." surname="Koster"/>
+          <date year="1994"/>
+        </front>
+      </reference>
+    </references>
+  </back>
+</rfc>
