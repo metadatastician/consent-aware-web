@@ -27,7 +27,7 @@ uuid = "64449d4a-9d76-583b-b06d-37502e8c5034"
 primary-forge = "github"
 primary-owner = "metadatastician"
 canonical-name = "consent-aware-web"
-prefixed-name = "UNASSIGNED-consent-aware-web"   # becomes <primary>-consent-aware-web once the clade is chosen
+prefixed-name = "pt-consent-aware-web"   # becomes <primary>-consent-aware-web once the clade is chosen
 
 [clade]
 # ---------------------------------------------------------------------------
@@ -76,9 +76,9 @@ prefixed-name = "UNASSIGNED-consent-aware-web"   # becomes <primary>-consent-awa
 # looking default here is exactly how every repo built from this template ended
 # up silently claiming "rm".
 # ---------------------------------------------------------------------------
-primary = "UNASSIGNED"
-primary-name = "UNASSIGNED"
-secondary = []                # [] unless there is a genuine SECOND core value proposition
+primary = "pt"
+primary-name = "Protocols & Interop"
+secondary = ["gv"]                # [] unless there is a genuine SECOND core value proposition
 assigned = "2026-08-07"
 rationale = ""                # why THIS category — in value-proposition terms
 
@@ -115,3 +115,19 @@ note = "created from rsr-template-repo; clade not yet chosen; not yet registered
 # repo. Registration means an entry in gv-clade-index verisim/seed/repos.a2ml,
 # it is outward-facing, and it is the OWNER's act — an agent must not do it.
 # ---------------------------------------------------------------------------
+
+# CLADE RATIONALE (recorded 2026-08-07, extraction)
+#
+# primary = "pt" — the deliverables are two IETF Internet-Drafts and a JSON
+#   Schema: literally "internet standards, protocol implementations". The clade
+#   spec says the primary clade reflects the project's core VALUE PROPOSITION,
+#   not its subject matter, so "ax" (AI & Neurosymbolic, which lists "AI
+#   governance") is the wrong read — AI is what the protocol is ABOUT; a
+#   protocol is what it IS.
+#
+# secondary = ["gv"] — Governance & Standards ("policy enforcement") is a
+#   genuine second axis rather than a restatement: AIBDP is a policy-declaration
+#   format and 430 is its enforcement mechanism. Not merely descriptive of the
+#   subject.
+#
+# Registration in gv-clade-index is the OWNER's act and has NOT been performed.

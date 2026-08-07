@@ -17,47 +17,108 @@ image:https://sonarcloud.io/api/project_badges/measure?project=metadatastician_c
 image:https://archive.softwareheritage.org/badge/origin/https://github.com/metadatastician/consent-aware-web/[Archived in Software Heritage,link="https://archive.softwareheritage.org/browse/origin/?origin_url=https://github.com/metadatastician/consent-aware-web"]
 
 // ── Provenance & ecosystem ──────────────────────────────────────────────────
-image:https://img.shields.io/badge/Idris-Inside-5E5086?logo=idris&logoColor=white[Idris Inside,link="https://github.com/hyperpolymath/proven"]
-image:https://img.shields.io/badge/Zig-Zero--overhead-F7A41D?logo=zig&logoColor=black[Zig Zero-overhead FFI,link="https://github.com/hyperpolymath/typed-wasm"]
 image:https://api.thegreenwebfoundation.org/greencheckimage/github.com[Green Web,link="https://www.thegreenwebfoundation.org/green-web-check/?url=github.com"]
 
 IETF-track specifications for consent-aware HTTP: AIBDP manifests and the 430 Consent Required status code
 
-[IMPORTANT]
-====
-*This file is a template.* You are reading `README.adoc` from the *RSR template repo*
-(or a freshly-cloned copy of it). Run `just repo-init` to replace every `{{PLACEHOLDER}}`
-token with your project's details, then delete this admonition. Until you do, the
-`{{...}}` markers below are intentional placeholders, not content.
-====
+== Overview
 
-== What this is
+Consent-Aware Web is a specification suite for ethical AI governance on the web:
+a way for content originators to declare what AI systems may and may not do with
+their content, and for origins to enforce those declarations at the HTTP layer.
 
-A new repository scaffolded from the *Rhodium Standard Repository (RSR)* template:
-a batteries-included starting point that ships with CI/CD, machine-readable project
-metadata, an AI-agent gatekeeper protocol, a formally-typed ABI/FFI seam
-(Idris2 + Zig), container and reproducible-build scaffolding, and governance
-infrastructure — all wired and passing the RSR validators on day one.
+It began as a `robots.txt`-shaped idea and grew into a consent model — because
+`robots.txt` governs *crawling*, and the question that matters now is *use*.
 
-Replace this section with a description of *your* project once initialised.
+== Problem
+
+The web has no standard way to express, or enforce, any of the following:
+
+* machine-readable AI usage boundaries
+* transparent identification of AI agents
+* enforceable consent
+* verifiable content provenance
+* standardised compliance reporting
+
+== Architecture — and what is actually specified
+
+The full framing is six layers. *Two are specified today.* The remaining four are
+intended, not drafted, and are listed here as direction rather than deliverable.
+
+[cols="1,2,3,1",options="header"]
+|===
+| Layer | Protocol | Purpose | Status
+
+| Declaration
+| AI Boundary Declaration Protocol (AIBDP)
+| Declares permitted and prohibited AI uses of content
+| *`draft-jewell-aibdp-00`*
+
+| Enforcement
+| HTTP Status Code 430 (Consent Required)
+| Runtime enforcement of consent requirements
+| *`draft-jewell-http-430-consent-required-00`*
+
+| Identity
+| AI Agent Identification Protocol
+| AI systems declare who they are and what they do
+| not drafted
+
+| Consent Flow
+| Web Consent Management Protocol
+| How consent is requested, granted and tokenised
+| not drafted
+
+| Provenance
+| Content Provenance Protocol
+| Origin and AI involvement in content
+| not drafted
+
+| Accountability
+| AI Compliance Reporting Framework
+| Monitoring, audit and violation reporting
+| not drafted
+|===
+
+Both drafts are `-00` and have *not* been submitted to the IETF datatracker. See
+`.machine_readable/descriptiles/STATE.a2ml` for the current position and blockers.
+
+== How it works
+
+An origin publishes a manifest at `/.well-known/aibdp.json` declaring its
+policies. When a request arrives whose declared or inferred AI purpose violates
+one of those policies, the origin answers *430 Consent Required* rather than 200
+or 403 — a distinct code, because the refusal is procedural (consent was never
+established) rather than authorisation (403) or legal (451).
+
+This repository publishes its own manifest at `.well-known/aibdp.json`. That is
+not decoration: the `dogfood-gate` and `schema-validate` jobs fail if it is
+missing or invalid.
 
 == Quick start
 
 [source,bash]
 ----
-# 1. Create a repo from this template (or clone it), then from the repo root:
-just repo-init                # interactive bootstrap: fills every {{PLACEHOLDER}}
+just test                   # validate drafts, manifests, links, expiry
+just build-drafts           # render drafts/*.xml
 
-# 2. See the available tasks:
-just                     # lists all phases (build, test, validate, audit, ...)
-
-# 3. Check the repo still satisfies the RSR shape:
-just validate            # structure + metadata checks
+cd examples/reference-implementations/bun && bun run example_server.js
+curl -o /dev/null -w '%{http_code}\n' localhost:5000/article -H 'User-Agent: GPTBot/1.0'   # 430
 ----
 
-`just repo-init` prompts for the project name, owner, author, licence contact, and the
-other values listed in `.machine_readable/ai/PLACEHOLDERS.adoc`, substitutes them
-across the tree, validates the result, and (if available) runs the `k9-svc` checks.
+== Repository layout
+
+[cols="1,3"]
+|===
+| Path | Contents
+
+| `drafts/` | The Internet-Drafts. Single source of truth — see ADR-0005; no `draft-*.xml` may exist at the root.
+| `schemas/` | `aibdp-schema-v0.2.json` (JSON Schema draft-2020-12)
+| `.well-known/aibdp.json` | This repository's own AIBDP declaration
+| `examples/reference-implementations/` | Runtime-neutral middleware; Bun (tier 1) and Deno (tier 2) servers
+| `docs/` | Explainer, FAQ, conformance, ethics, server configurations, ADRs
+| `src/*.affine` | AffineScript sources
+|===
 
 == What you get
 

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // Template: QUICKSTART-MAINTAINER.adoc — packaging, deploying, and maintaining
-// Replace consent-aware-web, UNASSIGNED, UNASSIGNED with actuals
+
 = consent-aware-web — Quick Start for Platform Maintainers
 :toc:
 :toclevels: 2
@@ -13,7 +13,12 @@ distribution on your platform.
 
 == Runtime Dependencies
 
-UNASSIGNED
+None. The deliverables are documents and a JSON Schema; there is nothing to
+install or run in production.
+
+Build-time only: `just`, a draft renderer (xml2rfc or the author-tools.ietf.org
+API — see STATE.a2ml blockers), a JSON Schema validator, and `lychee` for link
+checking. The reference implementations need Bun (tier 1) or Deno (tier 2).
 
 == Build from Source
 
@@ -21,10 +26,10 @@ UNASSIGNED
 ----
 git clone https://github.com/metadatastician/consent-aware-web.git
 cd consent-aware-web
-just build-release
+just build-drafts
 ----
 
-Output: `UNASSIGNED`
+Output: `build/drafts/` — rendered `.txt` and `.html` for each Internet-Draft (gitignored).
 
 == Packaging
 
@@ -59,10 +64,10 @@ Files installed:
 | `$PREFIX/bin/`
 | Executables
 
-| `$PREFIX/share/UNASSIGNED/`
+| `$PREFIX/share/consent-aware-web/`
 | Data files, assets
 
-| `$PREFIX/share/doc/UNASSIGNED/`
+| `$PREFIX/share/doc/consent-aware-web/`
 | Documentation
 
 | `$PREFIX/share/applications/`
@@ -72,50 +77,54 @@ Files installed:
 | Man pages
 |===
 
+NOTE: This suite installs nothing. The table above is retained from the RSR
+template for repositories that ship an executable; for this one, packaging means
+distributing the rendered Internet-Drafts and the JSON Schema.
+
 == Configuration
 
-Default config location: `$XDG_CONFIG_HOME/UNASSIGNED/config.toml`
+None. There is no installed program and therefore no configuration file.
 
-Fallback: `$HOME/.config/UNASSIGNED/config.toml`
+The only file a *consumer* configures is their own `/.well-known/aibdp.json`,
+published on their origin. `docs/example-aibdp.json` is the starting point and
+`schemas/aibdp-schema-v0.2.json` is what it must validate against.
 
 == Health Checks
 
+There is no daemon to health-check. What can go wrong here is that a *claim*
+stops matching the tree, so the checks are assertions about the repository:
+
 [source,bash]
 ----
-just doctor            # Full diagnostic
-just run --version   # Version check
-just run --selftest  # Built-in self-test
+just test                              # drafts valid, manifests valid, links live, drafts unexpired
+bash scripts/check-root-shape.sh .     # root contents match the allowlist
+bash scripts/check-no-md-in-docs.sh .  # no .md under docs/
 ----
+
+To check a *deployment* of the protocol rather than this repository, run the
+four-request enforcement check in
+`examples/reference-implementations/README.adoc`. A server that reports
+"enforcement: ENABLED" has not demonstrated anything; only a 430 has.
 
 == Updating
 
 [source,bash]
 ----
 git pull
-just build-release
-just install --prefix=/usr/local
+just build-drafts     # re-render drafts/*.xml
+just test             # confirm the claims still hold
 ----
-
-Or via OPSM: `opsm update UNASSIGNED`
 
 == Security Notes
 
 * License: MPL-2.0 (code) / CC-BY-SA-4.0 (docs)
-* All dependencies SHA-pinned
+* No runtime dependencies; GitHub Actions are SHA-pinned
 * `panic-attacker` scan results: link:INSTALL-SECURITY-REPORT.adoc[]
 * OpenSSF Scorecard: see badge in README
 
 == Multi-Instance Deployment
 
-For deploying multiple instances (e.g., different users or tenants):
-
-[source,bash]
-----
-just install --prefix=/opt/UNASSIGNED-instance1 --config=/etc/UNASSIGNED/instance1.toml
-just install --prefix=/opt/UNASSIGNED-instance2 --config=/etc/UNASSIGNED/instance2.toml
-----
-
-Each instance has isolated config, data, and logs.
+Not applicable. Nothing is deployed from this repository.
 
 == Reporting Issues
 

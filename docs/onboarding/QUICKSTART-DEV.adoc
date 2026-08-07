@@ -1,14 +1,20 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
 // Template: QUICKSTART-DEV.adoc — clone → build → test → PR
-// Replace consent-aware-web, UNASSIGNED, UNASSIGNED, UNASSIGNED with actuals
+
 = consent-aware-web — Quick Start for Developers
 :toc:
 :toclevels: 2
 
 == Tech Stack
 
-UNASSIGNED
+* *Specifications* — RFC-XML v3 (xml2rfc vocabulary), in `drafts/`
+* *Schema* — JSON Schema draft-2020-12, in `schemas/`
+* *Documentation* — AsciiDoc. `.md` is not permitted under `docs/` (see `scripts/check-no-md-in-docs.sh`)
+* *Reference implementations* — JavaScript on Bun (estate tier 1); Deno kept as grandfathered tier 2
+* *Build* — `just`
+
+There is no compiler and no package manifest. This is a specification suite.
 
 == Set Up Development Environment
 
@@ -32,15 +38,19 @@ just setup-dev
 
 [source,bash]
 ----
-UNASSIGNED
+just build-drafts     # render drafts/*.xml to text and HTML under build/drafts/
 ----
 
 == Test
 
 [source,bash]
 ----
-UNASSIGNED
+just test             # validate drafts, validate manifests against the schema,
+                      # check draft expiry, check links
 ----
+
+`just test` must be able to fail. If you change it, do not replace it with an
+echo — a gate that cannot fail is worse than no gate.
 
 == Project Structure
 
@@ -84,7 +94,17 @@ just panic-scan     # No new security issues
 Read `.machine_readable/MUST.contractile` before making changes.
 Key invariants that must never be violated:
 
-UNASSIGNED
+. *One authoritative copy of each Internet-Draft.* `drafts/` is the single
+  source; no `draft-*.xml` may exist at the repository root. See ADR-0005 — this
+  invariant exists because the draft previously existed twice with different
+  normative text.
+. *Every example manifest validates* against `schemas/aibdp-schema-v0.2.json`.
+. *`.well-known/aibdp.json` exists and validates.* The repository dogfoods its
+  own protocol; if this file is absent the README's central claim is false.
+. *No compliance document asserts a file that is not on disk.* The predecessor
+  shipped an `RSR-COMPLIANCE.md` claiming Gold against files that did not exist.
+. *IETF draft names are frozen* (estate invariant `ietf-draft-names-frozen`).
+  Renaming the repository does not rename the drafts.
 
 == LLM/AI Agent Development
 

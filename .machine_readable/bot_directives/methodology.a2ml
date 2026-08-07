@@ -55,7 +55,7 @@ perfective = 10   # % for SPDX headers, doc updates, formatting, style
 # Customise this per project — the template default is generic.
 
 [methodology.unique-strength]
-description = "UNASSIGNED"
+description = "The only proposal that pairs a machine-checkable declaration format (AIBDP, JSON Schema draft-2020-12) with a matching HTTP enforcement code (430) in one IETF-track suite. Robots.txt declares without enforcing; 403/451 enforce without declaring. Deepen the declaration/enforcement pairing; do not broaden into authentication, DRM or cookie consent."
 deepen-not-broaden = true
 
 # ============================================================================

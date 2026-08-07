@@ -8,6 +8,10 @@
 version = "1.0.0"
 spec = "rsr-criteria-v2"
 declares-against = "2.0.0-draft"
-# UNASSIGNED: declare capabilities (or a preset) — see standards
-# .machine_readable/template-capability-gates.toml
+# Deliberately empty, and this is the honest declaration rather than an
+# unfilled one. This repository is a specification suite: it has no build
+# artefact, no test binary, no proof obligations and no container. Declaring a
+# capability it does not have would make the RSR oracle score absent modules —
+# the na-honesty failure. Capabilities are declared here when they become real.
+# Reference: standards/.machine_readable/template-capability-gates.toml
 capabilities = []
