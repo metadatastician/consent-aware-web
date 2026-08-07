@@ -194,6 +194,14 @@ effort = "medium"
 impact = "high"
 discovered = "2026-08-07"
 
+[[debt.should]]
+category = "upstream"
+component = "hyperpolymath/rsr-template-repo .github/workflows/codeql.yml"
+issue = "The template ships an advanced CodeQL workflow, but GitHub's default CodeQL setup is enabled on new metadatastician repositories. When default setup is configured, an advanced CodeQL workflow is rejected outright: startup_failure, every push, forever. Measured here 2026-08-07 — default setup covers actions/javascript/javascript-typescript/typescript and was already producing results (103 and 23 rules) while the advanced workflow, whose matrix is 'actions' ONLY, could not start. The template's workflow is therefore both non-running and narrower than what runs anyway. Removed from this repository. The template should either drop it or document that default setup must be disabled first."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
 # ============================================================================
 # COULD — would fix eventually
 # ============================================================================

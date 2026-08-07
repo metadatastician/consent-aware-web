@@ -7,7 +7,7 @@ Machine-readable source: `.machine_readable/bot_directives/debt.a2ml`. That file
 is authoritative; this one is for reading. Keep them in step.
 
 *Baseline:* 2026-08-07, at extraction from `hyperpolymath/standards`.
-*Totals:* 21 should-fix, 8 could-fix, across seven categories.
+*Totals:* 22 should-fix, 8 could-fix, across seven categories.
 
 Everything here was found by inspection or by a gate. Nothing is speculative, and
 nothing found has been left out — including items that reflect badly on the work
@@ -22,7 +22,7 @@ done in this session.
 | Spec     | 4 | 0 | The heaviest. Unsubmitted drafts, inconsistent authorship, and two genuinely unanswered semantic questions.
 | CI/CD    | 5 | 3 | Mostly "not yet observed", not "known broken". Required contexts are unpinned by design.
 | Code     | 3 | 1 | No unit tests; 41 KB of examples nothing validates.
-| Upstream | 5 | 0 | Estate-level; fixes belong in `standards` and `rsr-template-repo`, not here.
+| Upstream | 6 | 0 | Estate-level; fixes belong in `standards` and `rsr-template-repo`, not here.
 | Docs     | 1 | 4 | Mostly scaffolding never filled.
 | Licence  | 2 | 0 | Four licences coexisting, one carve-out pointing at a dead path. Owner-only.
 | Proof    | 0 | 1 | Correctly exempt today; three obligations deferred, not denied.
