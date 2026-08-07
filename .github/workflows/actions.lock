@@ -37,7 +37,6 @@ workflows:
         - 'sonarsource/sonarqube-scan-action@v8.2.1'
     '.github/workflows/spec-gates.yml':
         - 'actions/checkout@v7.0.1'
-        - 'oven-sh/setup-bun@v2.2.0'
     '.github/workflows/static-analysis-gate.yml':
         - 'actions/checkout@v7.0.1'
         - 'actions/download-artifact@v8.0.1'

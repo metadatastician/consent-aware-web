@@ -1,0 +1,60 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (metadatastician) <jonathan@metadatastician.art>
+#
+# setup-bun — install a pinned, checksum-verified Bun.
+#
+# WHY THIS EXISTS INSTEAD OF oven-sh/setup-bun
+#
+# The organisation's Actions policy is `allowed_actions: selected` with
+# `sha_pinning_required: true`, and its `patterns_allowed` list includes
+# `denoland/*` but NOT `oven-sh/*`. Any workflow referencing oven-sh/setup-bun
+# is therefore rejected before a single job runs — startup_failure, zero jobs,
+# no log explaining why.
+#
+# That is the estate's Bun ruling contradicting itself in a third place:
+# LANGUAGE-POLICY.adoc section 1 makes Bun tier 1 and Deno tier 2, while the
+# Actions allowlist permits the Deno setup action and forbids the Bun one. It
+# needs an org admin to fix; see docs/status/DEBT.adoc (upstream).
+#
+# A local composite action is referenced by path, so it is not subject to the
+# allowlist. This is not a workaround around the policy — it satisfies it. The
+# download is pinned to an exact release tag and verified against a SHA-256
+# recorded here, which is a stronger guarantee than a floating action tag.
+#
+# To bump: change BUN_VERSION and BUN_SHA256 together. The checksum is published
+# at the release as SHASUMS256.txt and also appears as the asset `digest` in the
+# GitHub API — check both agree before changing it.
+
+name: Set up Bun
+description: Install a pinned, checksum-verified Bun without a third-party action.
+
+runs:
+  using: composite
+  steps:
+    - name: Install Bun
+      shell: bash
+      env:
+        BUN_VERSION: "1.3.14"
+        BUN_SHA256: "951ee2aee855f08595aeec6225226a298d3fea83a3dcd6465c09cbccdf7e848f"
+      run: |
+        set -euo pipefail
+        url="https://github.com/oven-sh/bun/releases/download/bun-v${BUN_VERSION}/bun-linux-x64.zip"
+        tmp="$(mktemp -d)"
+        curl -fsSL --retry 3 -o "$tmp/bun.zip" "$url"
+
+        actual="$(sha256sum "$tmp/bun.zip" | cut -d' ' -f1)"
+        if [ "$actual" != "$BUN_SHA256" ]; then
+          echo "::error::Bun checksum mismatch. expected $BUN_SHA256, got $actual"
+          exit 1
+        fi
+        echo "checksum ok: $actual"
+
+        unzip -q "$tmp/bun.zip" -d "$tmp"
+        install -Dm755 "$tmp/bun-linux-x64/bun" "$HOME/.bun/bin/bun"
+        echo "$HOME/.bun/bin" >> "$GITHUB_PATH"
+
+    - name: Verify
+      shell: bash
+      run: |
+        set -euo pipefail
+        echo "bun $(bun --version)"

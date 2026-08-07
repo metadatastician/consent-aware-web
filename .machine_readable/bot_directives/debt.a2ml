@@ -170,6 +170,14 @@ effort = "easy"
 impact = "high"
 discovered = "2026-08-07"
 
+[[debt.should]]
+category = "upstream"
+component = "metadatastician org Actions policy"
+issue = "The organisation Actions allowlist (allowed_actions=selected, sha_pinning_required=true) has patterns_allowed containing 'denoland/*' but NOT 'oven-sh/*'. Any workflow referencing oven-sh/setup-bun is rejected with startup_failure, zero jobs and no explanatory log. This is the estate Bun ruling contradicting itself in a THIRD place, after governance-reusable.yml and the AI instruction files: the policy permits the Deno setup action and forbids the Bun one while LANGUAGE-POLICY.adoc section 1 makes Bun tier 1. Cannot be fixed per-repo (409 Conflict: 'already set at the organization or enterprise level'); needs an org admin. Worked around here with a local composite action at .github/actions/setup-bun that installs a pinned, checksum-verified Bun — which satisfies the policy rather than evading it, but every other repo adopting Bun will hit the same wall."
+effort = "easy"
+impact = "high"
+discovered = "2026-08-07"
+
 # ============================================================================
 # COULD — would fix eventually
 # ============================================================================

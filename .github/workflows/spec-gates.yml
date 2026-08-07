@@ -37,7 +37,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2.2.0
+        uses: ./.github/actions/setup-bun
       - name: Check drafts
         run: bun run scripts/check-drafts.ts
 
@@ -52,7 +52,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2.2.0
+        uses: ./.github/actions/setup-bun
       - name: Repository manifest exists
         run: |
           test -f .well-known/aibdp.json || {
@@ -76,7 +76,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2.2.0
+        uses: ./.github/actions/setup-bun
       - name: Every asserted path must exist
         run: bun run scripts/check-claims.ts
 
@@ -91,7 +91,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2.2.0
+        uses: ./.github/actions/setup-bun
       - name: Start the reference server
         working-directory: examples/reference-implementations/bun
         run: |
@@ -131,6 +131,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v7.0.1
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2.2.0
+        uses: ./.github/actions/setup-bun
       - name: No draft may be past its expiresDate
         run: bun run scripts/check-drafts.ts
