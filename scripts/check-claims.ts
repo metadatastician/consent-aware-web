@@ -34,6 +34,8 @@ const EXTERNAL = [
   /^\/(article|public|protected|health)$/, // demo routes
   /^\$/,                   // shell/env expansions
   /^[A-Z_]+$/,             // env var names
+  /^[A-Za-z0-9_.-]+\/\*$/, // Actions allowlist patterns (denoland/*, oven-sh/*)
+  /^[A-Za-z0-9_.-]+\/[A-Za-z0-9_.-]+@/, // pinned action refs (owner/repo@ref)
 ];
 
 // Root files whose absence would be a real claim failure.

@@ -178,6 +178,22 @@ effort = "easy"
 impact = "high"
 discovered = "2026-08-07"
 
+[[debt.should]]
+category = "cicd"
+component = "governance-reusable.yml 'Check SHA-pinned actions' vs .github/workflows/actions.lock"
+issue = "Two incompatible pinning models collide, and this repository fails both Governance and Workflow Security Linter because of it. The RSR template pins via actions.lock (tag refs in workflows, SHAs in the lockfile); the standards linter demands inline SHAs in the workflow files. Satisfying the linter naively is known to be WORSE — inline SHAs remove actions from lockfile coverage, measured at 14 startup_failures in a single commit elsewhere in the estate. Six inherited template workflows are flagged (static-analysis-gate, dependabot-automerge, quality, rhodibot, estate-rules, workflow-linter), none of them authored here. Two further hits are false positives: the linter greps for 'uses:' and matches the dependencies section INSIDE actions.lock itself (lines 55 and 102). Needs an estate ruling on which model is canonical, not a per-repo fix."
+effort = "hard"
+impact = "high"
+discovered = "2026-08-07"
+
+[[debt.should]]
+category = "cicd"
+component = ".github/dependabot.yml + actions.lock"
+issue = "Dependabot bumped github/codeql-action to v4.37.6 in codeql.yml on the first day but did not update actions.lock, which still said v4.37.4. The mismatch made CodeQL Security Analysis startup_failure. Dependabot has no awareness of the lockfile, so every future action bump reintroduces this. Either dependabot must be taught to update actions.lock, or a gate must fail when workflow refs and lockfile entries disagree."
+effort = "medium"
+impact = "high"
+discovered = "2026-08-07"
+
 # ============================================================================
 # COULD — would fix eventually
 # ============================================================================
