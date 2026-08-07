@@ -1,0 +1,37 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+= Consent-Aware HTTP - Citation Guide
+:toc:
+
+== BibTeX
+
+[source,bibtex]
+----
+@software{Consent-Aware HTTP_2026,
+  author = {Jewell, Jonathan D.A.},
+  title = {Consent-Aware HTTP},
+  year = {2026},
+  url = {https://github.com/metadatastician/Consent-Aware HTTP},
+  license = {MPL-2.0}
+}
+----
+
+== Harvard Style
+
+Jewell, J. (2026) _Consent-Aware HTTP_ [Computer software]. Available at: https://github.com/metadatastician/Consent-Aware HTTP
+
+== OSCOLA
+
+Jonathan D.A. Jewell, 'Consent-Aware HTTP' (2026) <https://github.com/metadatastician/Consent-Aware HTTP>
+
+== MLA
+
+Jewell, Jonathan D.A. "Consent-Aware HTTP." 2026, github.com/metadatastician/Consent-Aware HTTP.
+
+== APA 7
+
+Jewell, J. (2026). _Consent-Aware HTTP_ [Computer software]. GitHub. https://github.com/metadatastician/Consent-Aware HTTP
+
+== See Also
+
+* link:CITATION.cff[CITATION.cff]
