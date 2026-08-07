@@ -5,6 +5,19 @@
 
 This document describes the governance model for this repository.
 
+[NOTE]
+====
+A fuller, project-specific governance framework —- Tri-Perimeter Contribution
+Framework, decision authority by perimeter, funding principles and IETF
+coordination —- is preserved at
+`docs/governance/PROJECT-GOVERNANCE.adoc`. It was recovered during extraction
+from a divergent copy in `hyperpolymath/standards` that was scheduled for
+deletion; it is 418 lines of authored work that exists nowhere else.
+
+Where the two disagree, that document is the more considered statement and this
+one is the RSR template's default.
+====
+
 == Overview
 
 This repository follows a **Benevolent Dictator (BDFL) Governance Model**:
