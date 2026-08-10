@@ -3,7 +3,7 @@
      category="std"
      docName="draft-jewell-http-430-consent-required-00"
      ipr="trust200902"
-     submissionType="independent"
+     submissionType="IETF"
      xml:lang="en"
      version="3"
      expiresDate="2027-02-08">
@@ -11,123 +11,282 @@
   <front>
     <title abbrev="Consent Required">HTTP Status Code 430: Consent Required</title>
     <seriesInfo name="Internet-Draft" value="draft-jewell-http-430-consent-required-00"/>
-    <author fullname="Jonathan D.A. Jewell" initials="JDAJ" surname="Jewell">
+    <author fullname="Jonathan D.A. Jewell" initials="J.D.A." surname="Jewell">
       <organization>National Union of Journalists</organization>
       <address>
         <email>jonathan@metadatastician.art</email>
       </address>
     </author>
     <date year="2026" month="8" day="7"/>
+    <area>Web and Internet Transport</area>
+    <keyword>AI preferences</keyword>
+    <keyword>consent</keyword>
+    <keyword>status code</keyword>
     <abstract>
-      <t>This document defines HTTP status code 430 (Consent Required), intended for use when access to a resource is denied due to the absence of a valid AI usage consent declaration. It supports machine-readable governance frameworks such as the AI Boundary Declaration Protocol, enabling declarative boundaries that prevent unauthorized indexing, training, or generative reuse of online content.</t>
+      <t>This document defines the HTTP status code 430 (Consent Required). A server
+      returns 430 when it declines a request because the usage the client declared, or
+      that the server inferred, conflicts with a usage preference expressed for the
+      requested content.</t>
+      <t>Mechanisms for expressing such preferences are defined elsewhere, notably by
+      <xref target="AIPREF-VOCAB"/> and <xref target="AIPREF-ATTACH"/>. Those documents
+      deliberately provide no enforcement mechanism. This document supplies one, without
+      constraining how preferences are expressed or attached.</t>
     </abstract>
   </front>
 
   <middle>
-    <section numbered="true" toc="default">
+    <section anchor="introduction">
       <name>Introduction</name>
-      <t>Current HTTP status codes such as 403 (Forbidden), 428 (Precondition Required), and 451 (Unavailable for Legal Reasons) do not adequately reflect denial scenarios based on missing or invalid AI consent declarations. As declarative perimeter protocols (e.g., <xref target="AIBDP"/>) become more prevalent, a distinct status code is required to denote procedural consent failure prior to content access.</t>
-      <t>HTTP status code 430 (Consent Required) is proposed to signal that the requesting entity has failed to verify or respect the declared boundaries associated with AI ingestion, training, or derivative generation. This complements existing semantics defined in <xref target="RFC9110" sectionFormat="of" section="15.5.3"/> and expands ethical enforcement beyond legal constraints described in <xref target="RFC7725"/>.</t>
+      <t>Machine-readable expressions of preference about how content may be used by
+      automated systems are being standardised. <xref target="AIPREF-VOCAB"/> defines a
+      vocabulary for such preferences, and <xref target="AIPREF-ATTACH"/> describes ways of
+      attaching them to content. Both are explicit that they do not provide enforcement:
+      "Enforcement is not provided by this specification. Preferences do not themselves
+      create rights, obligations, or prohibitions."</t>
+      <t>That leaves a gap. A server that has published a preference, and that receives a
+      request conflicting with it, has no status code whose semantics match what has
+      happened. The existing codes each describe something else:</t>
+      <dl>
+        <dt>403 (Forbidden), <xref target="RFC9110" sectionFormat="of" section="15.5.4"/></dt>
+        <dd>The server understood the request and refuses to authorise it. This invites the
+        client to authenticate, which is not the remedy: the client is not unauthorised, it
+        has declared a usage the origin has not consented to.</dd>
+        <dt>428 (Precondition Required), <xref target="RFC6585"/></dt>
+        <dd>The request is missing a conditional header field. This is about request syntax,
+        not about agreement.</dd>
+        <dt>451 (Unavailable For Legal Reasons), <xref target="RFC7725"/></dt>
+        <dd>Access is denied as a result of a legal demand. A usage preference is ordinarily
+        not a legal demand, and conflating the two overstates the claim.</dd>
+      </dl>
+      <t>430 (Consent Required) says something none of these say: the resource exists, the
+      client may well be entitled to retrieve it, and the specific use it declared is one
+      the origin has not consented to.</t>
+
+      <section anchor="conventions">
+        <name>Conventions and Definitions</name>
+        <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
+        "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this
+        document are to be interpreted as described in BCP 14 <xref target="RFC2119"/>
+        <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown
+        here.</t>
+        <t>The terms "usage preference", "usage category" and "asset" are used as defined in
+        <xref target="AIPREF-VOCAB"/>.</t>
+      </section>
     </section>
 
-    <section>
-      <name>Definition</name>
-      <t>Status Code: 430</t>
-      <t>Phrase: Consent Required</t>
-      <t>The server denies access because the client failed to verify or satisfy AI-specific consent declarations associated with the requested content. This denial applies in cases where a <tt>.well-known/aibdp.json</tt> manifest is present or expected, and no sufficient verification or compliance has occurred.</t>
+    <section anchor="semantics">
+      <name>430 Consent Required</name>
+      <t>The 430 (Consent Required) status code indicates that the server declines to
+      fulfil the request because the usage associated with it conflicts with a usage
+      preference expressed for the target resource.</t>
+      <t>A server MAY return 430 when both of the following hold:</t>
+      <ul>
+        <li>a usage preference applying to the target resource disallows a usage category,
+        by any mechanism including those in <xref target="AIPREF-ATTACH"/>; and</li>
+        <li>the server determines that the request is associated with that usage category,
+        whether from a usage declaration made by the client or by other means.</li>
+      </ul>
+      <t>A server MUST NOT return 430 solely because a request originates from an automated
+      client. The status code reports a conflict with a declared preference, not the
+      identity or nature of the requester.</t>
+      <t>A server that returns 430 SHOULD include a representation explaining which usage
+      category was refused, so that a client can distinguish a refused usage from a
+      malformed request. A server MUST NOT include in that explanation any information it
+      would not disclose to an unauthenticated client.</t>
+      <t>A response carrying 430 SHOULD include a Link header field
+      <xref target="RFC8288"/> whose relation type is "usage-preferences" and whose target
+      identifies the preference expression the server applied. This allows a client to
+      retrieve the preference and determine whether a compliant request is possible.</t>
+      <t>A 430 response is heuristically cacheable by default, as described in
+      <xref target="RFC9110" sectionFormat="of" section="15.5"/>. A server SHOULD send
+      explicit cache directives where the preference is expected to change.</t>
+      <t>Because a preference is not an authorisation decision, a client SHOULD NOT retry a
+      430 response with credentials. A client MAY retry if it can declare a usage that the
+      preference permits.</t>
     </section>
 
-    <section>
-      <name>Response Examples</name>
-      <sourcecode type="http">
+    <section anchor="example">
+      <name>Example</name>
+      <t>A client declares a training usage for a resource whose origin has expressed a
+      preference disallowing that category:</t>
+      <sourcecode type="http-message"><![CDATA[
+GET /article HTTP/1.1
+Host: example.org
+Content-Usage: train-ai=n
+]]></sourcecode>
+      <t>The origin declines:</t>
+      <sourcecode type="http-message"><![CDATA[
 HTTP/1.1 430 Consent Required
 Content-Type: application/json
-Link: &lt;https://example.org/.well-known/aibdp.json&gt;; rel="blocked-by"
-Retry-After: 86400
+Link: <https://example.org/.well-known/aibdp.json>; rel="usage-preferences"
+Content-Usage: train-ai=n
 
 {
-  "error": "Consent declaration missing or invalid.",
-  "reference": "https://example.org/.well-known/aibdp.json"
+  "refused-category": "train-ai",
+  "preferences": "https://example.org/.well-known/aibdp.json"
 }
-      </sourcecode>
+]]></sourcecode>
+      <t>The representation format shown is illustrative; this document does not define
+      one.</t>
     </section>
 
-    <section>
-      <name>Use Cases</name>
-      <ul>
-        <li>AI crawlers and bots accessing content without checking for declarative usage terms</li>
-        <li>Autonomous agents initiating training operations on hosted data without pre-verification</li>
-        <li>Content Delivery Networks (CDNs) enforcing perimeter logic via manifest signals</li>
-        <li>Infrastructure providers enabling rate-limiting or denial logic based on absence of consent</li>
-      </ul>
+    <section anchor="relationship">
+      <name>Relationship to Preference Expression</name>
+      <t>This document is deliberately independent of how preferences are expressed or
+      attached. It applies equally to preferences conveyed by the Content-Usage header
+      field or the robots.txt rule of <xref target="AIPREF-ATTACH"/>, and to richer
+      declaration formats such as <xref target="AIBDP"/>, which expresses conditional
+      permissions and per-path scope that the base vocabulary does not.</t>
+      <t>Where a declaration format distinguishes a conditional permission from a refusal,
+      a server SHOULD return 430 for a request that does not satisfy the stated conditions,
+      and SHOULD indicate the unmet conditions in the response.</t>
     </section>
 
-    <section>
-      <name>Comparison to Existing Status Codes</name>
-      <dl>
-        <dt>403 (Forbidden)</dt>
-        <dd>Generic denial; lacks boundary intent or procedural context.</dd>
-        <dt>428 (Precondition Required)</dt>
-        <dd>Designed for conditional requests; not consent-specific.</dd>
-        <dt>451 (Unavailable for Legal Reasons)</dt>
-        <dd>Legal enforcement only; not suited for declarative publisher-led refusals.</dd>
-        <dt>430 (Consent Required)</dt>
-        <dd>Represents non-legal, machine-readable perimeter logic. Expresses absence of verified permission, rather than technical or legal failure.</dd>
-      </dl>
-    </section>
-
-    <section>
+    <section anchor="security">
       <name>Security Considerations</name>
-      <t>Use of 430 Consent Required does not reveal sensitive internal logic or compromise user data. It enforces publisher-defined AI boundaries while preserving public accessibility of the perimeter declaration. This status code supports structured denial without over-identification of request origin.</t>
+      <t>430 reports the outcome of applying a published preference. It therefore discloses
+      only information the origin has already published, and servers MUST NOT use the
+      explanation permitted in <xref target="semantics"/> to disclose more.</t>
+      <t>A server that returns 430 discloses that a preference applies to the resource.
+      Where the existence of a preference is itself sensitive, a server SHOULD return 404
+      or 403 as appropriate instead.</t>
+      <t>Neither this status code nor the preferences it enforces are authenticated. A
+      client can disregard a 430 response, and a server can return 430 without any
+      preference having been published. Deployments requiring assurance beyond a
+      cooperating client's good faith need mechanisms outside the scope of this document.</t>
+      <t>Because 430 responses may be cached, a server that changes a preference SHOULD
+      invalidate affected responses; a stale 430 refuses a usage the origin now permits.</t>
     </section>
 
-    <section>
+    <section anchor="iana">
       <name>IANA Considerations</name>
-      <t>This document requests that IANA register the status code 430 (Consent Required) in the HTTP Status Code Registry.</t>
+      <section anchor="iana-status">
+        <name>HTTP Status Code Registration</name>
+        <t>IANA is requested to register the following entry in the "HTTP Status Codes"
+        registry, following the procedure of
+        <xref target="RFC9110" sectionFormat="of" section="16.2.1"/>:</t>
+        <dl>
+          <dt>Value:</dt>
+          <dd>430</dd>
+          <dt>Description:</dt>
+          <dd>Consent Required</dd>
+          <dt>Reference:</dt>
+          <dd><xref target="semantics"/> of this document</dd>
+        </dl>
+      </section>
+      <section anchor="iana-relation">
+        <name>Link Relation Type Registration</name>
+        <t>IANA is requested to register the following entry in the "Link Relation Types"
+        registry, following the procedure of
+        <xref target="RFC8288" sectionFormat="of" section="2.1.1"/>:</t>
+        <dl>
+          <dt>Relation Name:</dt>
+          <dd>usage-preferences</dd>
+          <dt>Description:</dt>
+          <dd>Identifies a resource expressing usage preferences that apply to the link
+          context.</dd>
+          <dt>Reference:</dt>
+          <dd><xref target="semantics"/> of this document</dd>
+        </dl>
+        <t>This relation is distinct from "blocked-by" <xref target="RFC7725"/>, which
+        identifies the entity implementing a legal block rather than a preference
+        expression.</t>
+      </section>
     </section>
   </middle>
 
   <back>
     <references>
       <name>Normative References</name>
+      <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119">
+        <front>
+          <title>Key words for use in RFCs to Indicate Requirement Levels</title>
+          <author initials="S." surname="Bradner" fullname="S. Bradner"/>
+          <date year="1997" month="3"/>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="2119"/>
+      </reference>
+      <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174">
+        <front>
+          <title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title>
+          <author initials="B." surname="Leiba" fullname="B. Leiba"/>
+          <date year="2017" month="5"/>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="8174"/>
+      </reference>
       <reference anchor="RFC9110" target="https://www.rfc-editor.org/info/rfc9110">
         <front>
           <title>HTTP Semantics</title>
-          <author>
-            <organization>IETF</organization>
-          </author>
+          <author initials="R." surname="Fielding" fullname="R. Fielding" role="editor"/>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham" role="editor"/>
+          <author initials="J." surname="Reschke" fullname="J. Reschke" role="editor"/>
           <date year="2022" month="6"/>
         </front>
+        <seriesInfo name="STD" value="97"/>
         <seriesInfo name="RFC" value="9110"/>
       </reference>
-
-      <reference anchor="AIBDP" target="https://datatracker.ietf.org/doc/draft-jewell-aibdp/">
+      <reference anchor="RFC8288" target="https://www.rfc-editor.org/info/rfc8288">
         <front>
-          <title>AI Boundary Declaration Protocol</title>
-          <author fullname="Jonathan D.A. Jewell"/>
-          <date year="2025"/>
+          <title>Web Linking</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham"/>
+          <date year="2017" month="10"/>
         </front>
-        <seriesInfo name="Internet-Draft" value="draft-jewell-aibdp-00"/>
+        <seriesInfo name="RFC" value="8288"/>
+      </reference>
+      <reference anchor="AIPREF-VOCAB" target="https://datatracker.ietf.org/doc/draft-ietf-aipref-vocab/">
+        <front>
+          <title>A Vocabulary For Expressing AI Usage Preferences</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham"/>
+          <date year="2026" month="4"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-aipref-vocab-06"/>
       </reference>
     </references>
 
     <references>
       <name>Informative References</name>
+      <reference anchor="RFC6585" target="https://www.rfc-editor.org/info/rfc6585">
+        <front>
+          <title>Additional HTTP Status Codes</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham"/>
+          <author initials="R." surname="Fielding" fullname="R. Fielding"/>
+          <date year="2012" month="4"/>
+        </front>
+        <seriesInfo name="RFC" value="6585"/>
+      </reference>
       <reference anchor="RFC7725" target="https://www.rfc-editor.org/info/rfc7725">
         <front>
           <title>An HTTP Status Code to Report Legal Obstacles</title>
-          <author>
-            <organization>IETF</organization>
-          </author>
+          <author initials="T." surname="Bray" fullname="T. Bray"/>
           <date year="2016" month="2"/>
         </front>
         <seriesInfo name="RFC" value="7725"/>
       </reference>
+      <reference anchor="AIPREF-ATTACH" target="https://datatracker.ietf.org/doc/draft-ietf-aipref-attach/">
+        <front>
+          <title>Associating AI Usage Preferences with Content in HTTP</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham"/>
+          <date year="2025" month="10"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-aipref-attach-04"/>
+      </reference>
+      <reference anchor="AIBDP" target="https://datatracker.ietf.org/doc/draft-jewell-aibdp/">
+        <front>
+          <title>AI Boundary Declaration Protocol (AIBDP)</title>
+          <author initials="J.D.A." surname="Jewell" fullname="Jonathan D.A. Jewell"/>
+          <date year="2026" month="8"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-jewell-aibdp-00"/>
+      </reference>
     </references>
 
-    <section>
+    <section anchor="acknowledgements" numbered="false">
       <name>Acknowledgements</name>
-      <t>This proposal builds on ethical governance efforts in journalism, computing, and infrastructure architecture. Thanks to contributors from the NUJ, the IETF HTTPAPI and ART areas, and transparency coalitions engaging in boundary-aware standards formation.</t>
+      <t>This proposal builds on work in the IETF AIPREF working group, whose vocabulary
+      and attachment documents define the preferences this status code enforces, and on
+      RFC 7725, whose structure it follows.</t>
     </section>
   </back>
 </rfc>
