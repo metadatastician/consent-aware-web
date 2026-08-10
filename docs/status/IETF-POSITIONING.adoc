@@ -165,9 +165,21 @@ Honest differential after mapping — narrower than previously claimed:
   lighter-weight mechanism. Do not both claim it and leave the crypto section incoherent.
 . Rewrite the 430 draft's normative core on the RFC 7725 model, with real RFC 2119 language
   and the §16.2.1 registration template.
-. Read the AIPREF list archive for `well-known`, `JSON`, `conditional`, `path`,
-  `status code` before pitching — AIPREF's minimalism may be considered consensus rather
-  than oversight.
+. Read the AIPREF list archive (`ai-control@ietf.org`) for `well-known`, `JSON`,
+  `conditional`, `path`, `status code` before pitching — AIPREF's minimalism may be
+  considered consensus rather than oversight.
++
+*Partially done, and the limit matters.* The list is live and actively extending the
+vocabulary: the top thread as of 2026-08-10 is "Proposed 'AI System Inference' and 'AI User
+Input' categories", with a parallel thread on §3.2 language. That corroborates §4's
+no-consensus note — the category set is in flux, which favours engaging now.
++
+*But*: only recent subject lines were visible; the archive search endpoint returned 403.
+Absence of `well-known` / `status code` from one page of recent subjects is *not* evidence
+they were never raised. Treating it as such would be a bounded-observation error. This item
+stays open, and it is the one most likely to change the AIBDP pitch — if a JSON manifest at
+a well-known URI was proposed and rejected on the list, §6.6's invitation is narrower in
+practice than it reads.
 
 == Decisions for the owner
 
