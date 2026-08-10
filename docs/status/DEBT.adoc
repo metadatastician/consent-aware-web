@@ -7,8 +7,9 @@ Machine-readable source: `.machine_readable/bot_directives/debt.a2ml`. That file
 is authoritative; this one is for reading. Keep them in step.
 
 *Baseline:* 2026-08-07, at extraction from `hyperpolymath/standards`.
-*Totals:* 21 should-fix, 9 could-fix, across seven categories.
-*Resolved since baseline:* 1 (org Actions allowlist — see below).
+*Totals:* 19 should-fix, 9 could-fix, across seven categories.
+*Resolved since baseline:* 3 — org Actions allowlist, plus both AIBDP spec-semantics
+items (resolution order and exception direction), closed normatively in the draft.
 
 Everything here was found by inspection or by a gate. Nothing is speculative, and
 nothing found has been left out — including items that reflect badly on the work
@@ -20,7 +21,7 @@ done in this session.
 |===
 | Category | Should | Could | Weight of it
 
-| Spec     | 4 | 0 | The heaviest. Unsubmitted drafts, inconsistent authorship, and two genuinely unanswered semantic questions.
+| Spec     | 2 | 0 | Now the two that only the owner can close: unsubmitted drafts, and inconsistent authorship. The semantic questions were answered normatively.
 | CI/CD    | 5 | 3 | Mostly "not yet observed", not "known broken". Required contexts are unpinned by design.
 | Code     | 3 | 1 | No unit tests; 41 KB of examples nothing validates.
 | Upstream | 5 | 0 | Estate-level; fixes belong in `standards` and `rsr-template-repo`, not here.
@@ -35,11 +36,15 @@ done in this session.
   written by the specification's author, tested against a manifest written by the
   same author, is self-consistency rather than validation. This is why
   `READINESS.adoc` grades E and not D — and no amount of internal work moves it.
-. *Policy resolution is not normative.* The order
-  `policies[purpose]` → `scope` → `exceptions` exists in code and in prose, not in
-  the draft. Two conforming implementations can disagree about exception
-  precedence. Related and unanswered: may an exception *grant* what the enclosing
-  policy refuses, or only narrow it?
+. *AIBDP is a competing vocabulary until its AIPREF mapping lands.* `vocab-06`
+  §6.6 permits alternative serializations only where the alternative defines the
+  mapping in both directions. That mapping now exists in the draft — but it is
+  untested against the working group, and §4.3's subset-not-superset rule may yet
+  force some AIBDP purposes to be re-expressed or dropped.
++
+(*Resolved 2026-08-07, previously item 2:* policy resolution order and exception
+direction are now normative — exceptions narrow and MUST NOT grant what the
+enclosing policy refuses; cross-source conflicts defer to `vocab-06` §5.1.)
 . *41 KB of manifest scenarios that no gate can validate.* They live as prose
   inside `examples/manifest-scenarios/README.md`; there are no `.json` files. This
   is precisely how the demo manifest came to declare `scope: ["/article.html"]`

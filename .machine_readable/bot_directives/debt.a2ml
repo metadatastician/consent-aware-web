@@ -43,22 +43,6 @@ impact = "high"
 discovered = "2026-08-07"
 
 [[debt.should]]
-category = "spec"
-component = "draft-jewell-aibdp-00.xml"
-issue = "Policy resolution order (policies[purpose] -> scope -> exceptions) is specified only in the reference implementation and in prose. It is not normative text. Two implementations can disagree about exception precedence and both claim conformance."
-effort = "medium"
-impact = "high"
-discovered = "2026-08-07"
-
-[[debt.should]]
-category = "spec"
-component = "draft-jewell-aibdp-00.xml"
-issue = "Unanswered: can an `exceptions` entry GRANT a permission the enclosing policy refuses, or only narrow it? A manifest whose plain reading and machine reading differ is the failure mode this protocol exists to prevent. See PROOF-NEEDS.adoc INV."
-effort = "medium"
-impact = "high"
-discovered = "2026-08-07"
-
-[[debt.should]]
 category = "cicd"
 component = ".github/workflows/spec-gates.yml"
 issue = "draft-structure validates structure only. No rendering validation, because xml2rfc is Python-only and the estate language policy denies Python. Options: IETF external-standards carve-out (precedent at standards/.machine_readable/licensing-policy.toml:61 for this very project), the author-tools.ietf.org API, or accepting an unrendered build. The gate states its own limit rather than implying full validation."
@@ -230,6 +214,16 @@ issue = "The template ships an advanced CodeQL workflow, but GitHub's default Co
 effort = "easy"
 impact = "high"
 discovered = "2026-08-07"
+
+# RESOLVED 2026-08-07 — both spec-semantics items closed in
+# draft-jewell-aibdp-00 §Path Scoping/Precedence:
+#   * resolution order is now normative (exceptions narrow; longest literal
+#     prefix wins ties; cross-source conflicts defer to AIPREF vocab-06 §5.1
+#     with an explicit 4-status-to-3-state mapping)
+#   * an exceptions entry MUST NOT grant what the enclosing policy refuses —
+#     answered in the narrowing direction, so a manifest's plain reading and
+#     its machine evaluation agree
+# Path-pattern grammar, previously undefined, is normative in the same section.
 
 # ============================================================================
 # COULD — would fix eventually
