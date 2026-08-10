@@ -43,7 +43,7 @@ milestones = [
 
 [blockers-and-issues]
 blockers = [
-  "Author identity is inconsistent across the two drafts: draft-jewell-aibdp-00 names 'J. D. A. Jewell' / 'NUJ Ethics Council' / j.d.a.jewell@open.ac.uk, while draft-jewell-http-430-consent-required-00 names 'Jonathan D.A. Jewell' / 'National Union of Journalists' / jonathan@metadatastician.art. These are different bodies and the difference is normatively visible in a published I-D. Owner decision required before submission.",
+  "RESOLVED 2026-08-07: author identity ruled by the owner as j.d.a.jewell@open.ac.uk; both drafts now carry an identical author block. One mailbox confirms both submissions.",
   "Draft validation toolchain undecided. xml2rfc is Python-only, which the estate language policy denies; options are an IETF external-standards carve-out (precedent exists in standards/.machine_readable/licensing-policy.toml for this project), the author-tools.ietf.org API, or accepting an unvalidated build.",
   "Repository name (consent-aware-web) claims broader scope than the two drafts deliver. docs/status/SCOPE.adoc is marked Definitive and still scopes the suite to HTTP 430 + AIBDP.",
 ]

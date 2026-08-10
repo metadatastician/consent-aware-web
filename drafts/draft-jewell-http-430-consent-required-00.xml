@@ -12,9 +12,9 @@
     <title abbrev="Consent Required">HTTP Status Code 430: Consent Required</title>
     <seriesInfo name="Internet-Draft" value="draft-jewell-http-430-consent-required-00"/>
     <author fullname="Jonathan D.A. Jewell" initials="J.D.A." surname="Jewell">
-      <organization>National Union of Journalists</organization>
+      <organization>NUJ Ethics Council</organization>
       <address>
-        <email>jonathan@metadatastician.art</email>
+        <email>j.d.a.jewell@open.ac.uk</email>
       </address>
     </author>
     <date year="2026" month="8" day="7"/>

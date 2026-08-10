@@ -26,13 +26,11 @@ baseline = "extraction from hyperpolymath/standards, 2026-08-07"
 # SHOULD — would fix next wave
 # ============================================================================
 
-[[debt.should]]
-category = "spec"
-component = "drafts/"
-issue = "Author identity differs between the two drafts: draft-jewell-aibdp-00 names 'J. D. A. Jewell' / 'NUJ Ethics Council' / j.d.a.jewell@open.ac.uk; draft-jewell-http-430-consent-required-00 names 'Jonathan D.A. Jewell' / 'National Union of Journalists' / jonathan@metadatastician.art. Different bodies; normatively visible in a published I-D. Owner decision, not an agent's."
-effort = "easy"
-impact = "high"
-discovered = "2026-08-07"
+# RESOLVED 2026-08-07 — owner ruled j.d.a.jewell@open.ac.uk. Both drafts now carry
+# an identical author block (Jonathan D.A. Jewell / J.D.A. / NUJ Ethics Council /
+# j.d.a.jewell@open.ac.uk). This also settles the submission mechanics: one
+# mailbox confirms both drafts, and a logged-in datatracker submitter needs no
+# email round-trip at all.
 
 [[debt.should]]
 category = "spec"
