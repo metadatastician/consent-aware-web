@@ -3,7 +3,7 @@
      category="std"
      ipr="trust200902"
      docName="draft-jewell-aibdp-00"
-     submissionType="independent"
+     submissionType="IETF"
      xml:lang="en"
      version="3"
      expiresDate="2027-02-08">
@@ -11,7 +11,7 @@
   <front>
     <title abbrev="AIBDP">AI Boundary Declaration Protocol (AIBDP)</title>
     <seriesInfo name="Internet-Draft" value="draft-jewell-aibdp-00"/>
-    <author fullname="J. D. A. Jewell" initials="J.D.A." surname="Jewell">
+    <author fullname="Jonathan D.A. Jewell" initials="J.D.A." surname="Jewell">
       <organization>NUJ Ethics Council</organization>
       <address>
         <email>j.d.a.jewell@open.ac.uk</email>
@@ -32,15 +32,14 @@
         <li>Standardized manifest format (JSON) at a well-known URI</li>
         <li>Integration with HTTP enforcement mechanisms (e.g., status code 430)</li>
         <li>Support for federated and self-sovereign publishing</li>
-        <li>Optional cryptographic verification (COSE signatures)</li>
       </ul>
 
-      <t>AIBDP is designed to work alongside existing protocols (robots.txt, HTTP headers, TDM Reservation Protocol) while providing granular control over AI-specific boundary declarations.</t>
+      <t>AIBDP is designed to work alongside existing protocols — the Robots Exclusion Protocol <xref target="RFC9309"/> and the preference-attachment mechanisms of <xref target="AIPREF-VOCAB"/> — while providing granular control over AI-specific boundary declarations.</t>
     </section>
 
     <section anchor="terminology">
       <name>Terminology</name>
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.</t>
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <xref target="RFC2119"/> <xref target="RFC8174"/> when, and only when, they appear in all capitals, as shown here.</t>
 
       <t>Additionally, this document uses the following terms:</t>
       <dl>
@@ -65,18 +64,70 @@
         <li>AI systems retrieve and parse the manifest before accessing content</li>
         <li>Systems respect declared boundaries or indicate inability to comply</li>
         <li>Servers MAY enforce boundaries by responding with HTTP 430 (Consent Required) when violations are detected</li>
-        <li>Manifests MAY include cryptographic signatures for integrity verification</li>
       </ol>
 
       <section anchor="robots-relationship">
         <name>Relationship to robots.txt</name>
-        <t>AIBDP complements robots.txt rather than replacing it:</t>
+        <t>AIBDP complements the Robots Exclusion Protocol
+        <xref target="RFC9309"/> rather than replacing it:</t>
         <ul>
-          <li>robots.txt controls crawling and indexing behavior</li>
-          <li>AIBDP declares boundaries for AI-specific uses (training, generation, etc.)</li>
-          <li>When both exist, AI systems SHOULD honor both</li>
-          <li>AIBDP provides finer-grained control for modern AI use cases</li>
+          <li>robots.txt governs whether a resource may be fetched</li>
+          <li>AIBDP declares what may be done with a resource once fetched</li>
+          <li>When both exist, AI systems SHOULD honour both</li>
         </ul>
+      </section>
+
+      <section anchor="aipref">
+        <name>Relationship to AIPREF</name>
+        <t><xref target="AIPREF-VOCAB"/> defines a vocabulary of usage preferences and a
+        data model for statements about them. This document defines an alternative
+        serialization of that model, as permitted by Section 6.6 of that document, which
+        states that "the data model described in Section 3 can be used without this
+        serialization" provided an alternative format defines the mapping in both
+        directions.</t>
+        <t>AIBDP is not a competing vocabulary. Where the two overlap, the AIPREF
+        definitions govern.</t>
+
+        <section anchor="mapping">
+          <name>Mapping to and from the AIPREF Data Model</name>
+          <t>Usage categories map as follows:</t>
+          <table>
+            <thead>
+              <tr><th>AIPREF category</th><th>AIBDP policy key</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>train-ai</td><td>training</td></tr>
+              <tr><td>search</td><td>indexing</td></tr>
+            </tbody>
+          </table>
+          <t>Preference values map as follows. The mapping is deliberately lossy in one
+          direction, which Section 6.6 of <xref target="AIPREF-VOCAB"/> permits:</t>
+          <table>
+            <thead>
+              <tr><th>AIBDP status</th><th>AIPREF preference</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>allowed</td><td>y</td></tr>
+              <tr><td>encouraged</td><td>y</td></tr>
+              <tr><td>refused</td><td>n</td></tr>
+              <tr><td>conditional</td><td>n, unless the conditions are satisfied, in which case y</td></tr>
+            </tbody>
+          </table>
+          <t>In the reverse direction, an AIPREF preference of "y" maps to a status of
+          "allowed" and "n" to "refused". An absent or unknown AIPREF preference does not
+          produce an AIBDP policy.</t>
+          <t>AIBDP policy keys with no AIPREF counterpart — including "summarization",
+          "question_answering", "generation", "fine_tuning", "embedding" and
+          "commercial_training" — map to an unknown preference for every AIPREF category,
+          as Section 6.6 of <xref target="AIPREF-VOCAB"/> expressly contemplates. Where such
+          a key denotes a subset of an existing AIPREF category, it MUST be understood as a
+          narrowing of that category and never as a superset, consistent with Section 4.3 of
+          <xref target="AIPREF-VOCAB"/>.</t>
+          <t>AIBDP's "scope", "exceptions" and "rationale" have no counterpart in the AIPREF
+          data model and are not carried across the mapping. A recipient that understands
+          only AIPREF therefore sees a correct but coarser statement, never a contradictory
+          one.</t>
+        </section>
       </section>
 
       <section anchor="discovery">
@@ -155,8 +206,6 @@
 <dd>Object describing enforcement mechanisms</dd>
           <dt>metadata:</dt>
 <dd>Object with authorship, creation date, related standards</dd>
-          <dt>signature:</dt>
-<dd>COSE signature object for cryptographic verification (see Section 6)</dd>
         </dl>
       </section>
 
@@ -167,7 +216,7 @@
   "aibdp_version": "0.2",
   "canonical_uri": "https://example.org/.well-known/aibdp.json",
   "contact": "mailto:policy@example.org",
-  "expires": "2026-07-20T23:59:59Z",
+  "expires": "2027-02-08T23:59:59Z",
   "policy_uri": "https://example.org/ai-policy",
 
   "policies": {
@@ -214,41 +263,64 @@
 
     <section anchor="scoping">
       <name>Path Scoping</name>
-      <t>Policies MAY specify scope using path patterns:</t>
-      <ul>
-        <li>Exact paths: "/about.html"</li>
-        <li>Directory wildcards: "/blog/**" (all files under /blog/)</li>
-        <li>File patterns: "/docs/*.pdf"</li>
-        <li>Special value "all" applies to entire domain</li>
-      </ul>
+      <t>A policy MAY specify a "scope" as either the string "all", meaning every path on
+      the origin, or an array of path patterns.</t>
+      <t>A path pattern is matched against the request path, which MUST be normalised as
+      described in <xref target="RFC3986" sectionFormat="of" section="6.2.2"/> before
+      matching. Matching is case-sensitive. A pattern consists of literal characters and
+      the following wildcards, which have no special meaning elsewhere:</t>
+      <dl>
+        <dt>*</dt>
+        <dd>Matches zero or more characters within a single path segment. It MUST NOT match
+        the "/" separator. Example: "/docs/*.pdf" matches "/docs/a.pdf" but not
+        "/docs/x/a.pdf".</dd>
+        <dt>**</dt>
+        <dd>Matches zero or more characters including "/", and therefore spans path
+        segments. Example: "/blog/**" matches "/blog/", "/blog/a" and "/blog/x/y".</dd>
+      </dl>
+      <t>A pattern matches only if it matches the entire path. Implementations MUST NOT
+      treat a pattern as a prefix unless it ends in "**".</t>
 
-      <t>When multiple policies apply to the same resource, the most restrictive policy SHOULD take precedence unless exceptions are specified.</t>
+      <section anchor="precedence">
+        <name>Precedence</name>
+        <t>Where more than one declaration applies to the same request, they are resolved in
+        this order:</t>
+        <ol>
+          <li>An "exceptions" entry whose path pattern matches takes precedence over the
+          enclosing policy. Where several match, the entry with the longest literal prefix
+          wins; if still tied, the first in document order wins.</li>
+          <li>Otherwise, the policy for the requested usage category applies.</li>
+        </ol>
+        <t>An "exceptions" entry MUST NOT grant a usage that the enclosing policy refuses.
+        An exception may only narrow. This makes the plain reading of a manifest and its
+        machine evaluation agree, which is the property this protocol exists to provide.</t>
+        <t>Where declarations from different sources conflict — for example an AIBDP
+        manifest and a Content-Usage header field — the rule of
+        <xref target="AIPREF-VOCAB"/>, Section 5.1 applies: a disallowed preference from any
+        source results in the usage being disallowed. For the purposes of that rule,
+        "refused" maps to disallowed; "allowed" and "encouraged" map to allowed; and
+        "conditional" maps to disallowed unless its conditions are satisfied.</t>
+      </section>
     </section>
 
     <section anchor="crypto">
-      <name>Cryptographic Verification</name>
-      <t>Manifests MAY include a "signature" field containing a COSE (RFC 9052) signature:</t>
-
-      <ul>
-        <li>Ensures manifest integrity and authenticity</li>
-        <li>Prevents tampering by intermediaries (CDNs, proxies)</li>
-        <li>Enables audit trails for consent verification</li>
-      </ul>
-
-      <t>AI systems capable of signature verification SHOULD validate signatures when present and reject manifests with invalid signatures.</t>
-
-      <section anchor="signature-format">
-        <name>Signature Format</name>
-        <sourcecode type="json"><![CDATA[
-{
-  "signature": {
-    "algorithm": "ES256",
-    "public_key_uri": "https://example.org/.well-known/aibdp-key.jwk",
-    "value": "base64-encoded-cose-signature"
-  }
-}
-        ]]></sourcecode>
-      </section>
+      <name>Manifest Integrity</name>
+      <t>This document defines no signature format. An earlier revision described a
+      "signature" field, but specified it inconsistently — naming COSE
+      <xref target="RFC9052"/> while giving a JOSE algorithm identifier and a JWK key
+      reference, and never defining what byte sequence was signed. Signing a JSON document
+      requires a canonicalisation such as <xref target="RFC8785"/>; none was specified.
+      Rather than repair an under-specified mechanism, this revision removes it.</t>
+      <t>Integrity of the manifest in transit is provided by HTTPS. Where an origin needs to
+      demonstrate to a third party that a particular permission was granted, that is the
+      problem addressed by verifiable grant credentials such as
+      <xref target="GRANT-BINDING"/>, which are cryptographically signed, offline-verifiable
+      and revocable. That mechanism is complementary to this one: a manifest states a
+      standing preference, whereas a grant proves a specific party was permitted a specific
+      use.</t>
+      <t>A future revision MAY define a signature format if a need arises that grant
+      credentials do not meet. Any such definition MUST specify the canonicalisation, the
+      exact signing input, and a single coherent signature format.</t>
     </section>
 
     <section anchor="enforcement">
@@ -261,7 +333,7 @@
         <sourcecode type="message"><![CDATA[
 HTTP/1.1 430 Consent Required
 Content-Type: application/json
-Link: <https://example.org/.well-known/aibdp.json>; rel="blocked-by-consent"
+Link: <https://example.org/.well-known/aibdp.json>; rel="usage-preferences"
 Retry-After: 86400
 
 {
@@ -320,7 +392,7 @@ AI-Consent-Conditions: attribution,non-commercial
         <ul>
           <li>Host a single canonical manifest referenced by all domains</li>
           <li>Use DNS TXT records to indicate manifest location</li>
-          <li>Employ cryptographic signatures to verify cross-domain authenticity</li>
+          <li>Verify that a cross-domain manifest is served over HTTPS from the canonical origin</li>
         </ul>
       </section>
     </section>
@@ -345,7 +417,7 @@ AI-Consent-Conditions: attribution,non-commercial
         <t>Servers SHOULD:</t>
         <ul>
           <li>Serve manifests over HTTPS to prevent tampering</li>
-          <li>Use COSE signatures for high-value content</li>
+          <li>Where a specific permission must be provable to a third party, use verifiable grant credentials <xref target="GRANT-BINDING"/> rather than relying on the manifest alone</li>
           <li>Validate JSON schema to prevent malformed manifests</li>
           <li>Set appropriate cache headers to balance freshness and load</li>
         </ul>
@@ -420,7 +492,7 @@ AI-Consent-Conditions: attribution,non-commercial
           <dt>Encoding considerations:</dt>
 <dd>Binary (UTF-8 JSON)</dd>
           <dt>Security considerations:</dt>
-<dd>See Section 11</dd>
+<dd>See <xref target="security"/> of this document</dd>
           <dt>Interoperability considerations:</dt>
 <dd>Follows JSON RFC 8259</dd>
           <dt>Published specification:</dt>
@@ -460,7 +532,7 @@ AI-Consent-Conditions: attribution,non-commercial
           <li>Create manifest at /.well-known/aibdp.json with appropriate policies</li>
           <li>Set "expires" field to balance freshness and caching (recommended: 30-90 days)</li>
           <li>Provide contact information for policy questions</li>
-          <li>Consider cryptographic signatures for high-value content</li>
+          <li>For content where a specific grant must be provable, see <xref target="GRANT-BINDING"/></li>
           <li>Monitor access patterns and respond with HTTP 430 when violations detected</li>
           <li>Document policy rationale in human-readable form (policy_uri)</li>
         </ol>
@@ -500,6 +572,37 @@ AI-Consent-Conditions: attribution,non-commercial
   <back>
     <references>
       <name>Normative References</name>
+      <reference anchor="RFC8174" target="https://www.rfc-editor.org/info/rfc8174">
+        <front>
+          <title>Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words</title>
+          <author initials="B." surname="Leiba" fullname="B. Leiba"/>
+          <date year="2017" month="5"/>
+        </front>
+        <seriesInfo name="BCP" value="14"/>
+        <seriesInfo name="RFC" value="8174"/>
+      </reference>
+
+      <reference anchor="AIPREF-VOCAB" target="https://datatracker.ietf.org/doc/draft-ietf-aipref-vocab/">
+        <front>
+          <title>A Vocabulary For Expressing AI Usage Preferences</title>
+          <author initials="M." surname="Nottingham" fullname="M. Nottingham"/>
+          <date year="2026" month="4"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-ietf-aipref-vocab-06"/>
+      </reference>
+
+      <reference anchor="RFC3986" target="https://www.rfc-editor.org/info/rfc3986">
+        <front>
+          <title>Uniform Resource Identifier (URI): Generic Syntax</title>
+          <author initials="T." surname="Berners-Lee" fullname="T. Berners-Lee"/>
+          <author initials="R." surname="Fielding" fullname="R. Fielding"/>
+          <author initials="L." surname="Masinter" fullname="L. Masinter"/>
+          <date year="2005" month="1"/>
+        </front>
+        <seriesInfo name="STD" value="66"/>
+        <seriesInfo name="RFC" value="3986"/>
+      </reference>
+
       <reference anchor="RFC2119" target="https://www.rfc-editor.org/info/rfc2119">
         <front>
           <title>Key words for use in RFCs to Indicate Requirement Levels</title>
@@ -551,12 +654,34 @@ AI-Consent-Conditions: attribution,non-commercial
         </front>
       </reference>
 
-      <reference anchor="ROBOTSTXT" target="https://www.robotstxt.org/orig.html">
+      <reference anchor="RFC9309" target="https://www.rfc-editor.org/info/rfc9309">
         <front>
-          <title>A Standard for Robot Exclusion</title>
-          <author initials="M." surname="Koster"/>
-          <date year="1994"/>
+          <title>Robots Exclusion Protocol</title>
+          <author initials="M." surname="Koster" fullname="M. Koster"/>
+          <author initials="G." surname="Illyes" fullname="G. Illyes"/>
+          <author initials="H." surname="Zeller" fullname="H. Zeller"/>
+          <author initials="L." surname="Sassman" fullname="L. Sassman"/>
+          <date year="2022" month="9"/>
         </front>
+        <seriesInfo name="RFC" value="9309"/>
+      </reference>
+
+      <reference anchor="GRANT-BINDING" target="https://datatracker.ietf.org/doc/draft-wallace-aipref-grant-binding/">
+        <front>
+          <title>Verifiable Grants for AI Usage Preferences</title>
+          <author surname="Wallace"/>
+          <date year="2026" month="8"/>
+        </front>
+        <seriesInfo name="Internet-Draft" value="draft-wallace-aipref-grant-binding-01"/>
+      </reference>
+
+      <reference anchor="RFC8785" target="https://www.rfc-editor.org/info/rfc8785">
+        <front>
+          <title>JSON Canonicalization Scheme (JCS)</title>
+          <author initials="A." surname="Rundgren" fullname="A. Rundgren"/>
+          <date year="2020" month="6"/>
+        </front>
+        <seriesInfo name="RFC" value="8785"/>
       </reference>
     </references>
   </back>
