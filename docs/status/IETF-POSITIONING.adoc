@@ -1,0 +1,180 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell <jonathan@metadatastician.art>
+= IETF Positioning — where each draft goes, and why
+:toc: preamble
+
+*Assessed 2026-08-07* against the live IETF record. Every claim below was read from the
+primary source (draft text or datatracker), not from a summary. Supersedes the assumption
+that these two drafts share a submission path.
+
+== The finding in one line
+
+The two drafts need *different venues*, because the IETF working group that owns half this
+territory has explicitly and repeatedly declined to own the other half.
+
+== What is actually happening at the IETF
+
+The *AIPREF* working group (WIT area; chairs Mark Nottingham, Suresh Krishnan) is chartered
+to standardise "the expression of preferences about how content is collected and processed
+for AI", attached "using Well-Known URIs (RFC 8615) ... and HTTP response header fields".
+Milestones: *31 August 2026*.
+
+[cols="2,1,4",options="header"]
+|===
+| Document | State | What it means for us
+
+| `draft-ietf-aipref-vocab-06`
+| *Active*, Standards Track
+| Two categories only — `train-ai`, `search`. Binary `y`/`n`/absent. No conditions, no
+  rationale, no path scoping. Serialised as RFC 9651 Structured Fields, *not JSON*.
+
+| `draft-ietf-aipref-attach-04`
+| *EXPIRED* 2025-10-28, *no successor*
+| Defined a `Content-Usage` HTTP header and a path-specific robots.txt rule. *No
+  well-known URI. No JSON.* The attachment lane is vacant.
+
+| `draft-madhavan-aipref-displaybasedpref-02`
+| Candidate for WG adoption
+| Individual drafts *do* get adopted here. This is the normal route in.
+
+| `draft-wallace-aipref-grant-binding-01`
+| 2026-08-06
+| Signed, offline-verifiable JWS credentials granting revocable exceptions to named
+  parties. *Directly contests AIBDP's `conditional`* — and does it better.
+
+| `draft-zehta-aipref-exclusions-01`
+| 2026-04-22
+| *Use*-based public-interest carve-outs, not path-based. AIBDP's path `exceptions` remain
+  distinct.
+
+| `draft-reilly-aipref-compliance-00`
+| 2026-08-01
+| Audit records (AUCR). Explicitly: "Enforcement. Nothing here blocks, throttles, or
+  penalizes any party."
+|===
+
+=== Two quotations that decide everything
+
+From `vocab-06` §4 — *the vocabulary is not settled*:
+
+____
+"Its contents DO NOT REFLECT CONSENSUS of the Working Group either in whole or part ...
+published solely as a basis of further discussion."
+____
+
+From `vocab-06` §6.6 — *alternative formats are explicitly invited*:
+
+____
+"This format is only an exemplary way to represent preferences. The data model described in
+Section 3 can be used without this serialization. Any alternative format needs to define the
+mapping both from that format to the model used in this document and from the model to the
+alternative format ... The mapping does not need to be complete, it only needs to be clear
+and unambiguous."
+____
+
+== Correcting two earlier assessments
+
+*"AIBDP will be overtaken this month."* Overstated. The vocabulary explicitly lacks
+consensus and §6.6 invites alternative formats. The risk is not obsolescence; it is
+*misalignment* — AIBDP currently invents a parallel vocabulary instead of mapping to theirs.
+
+*"Submitting an individual `-00` reads as not having done the homework."* Wrong. Four
+individual drafts were filed into this space in the last week and one is already an adoption
+candidate. An individual draft *is* the route in. What would read badly is an individual
+draft that does not reference AIPREF at all — which is what we have today.
+
+== Where the enforcement lane stands
+
+Three separate documents each decline to provide enforcement:
+
+* the AIPREF *charter* — "Technical enforcement of preferences" is out of scope
+* `vocab-06` — "Enforcement is not provided by this specification. Preferences do not
+  themselves create rights, obligations, or prohibitions."
+* `compliance-00` — "Nothing here blocks, throttles, or penalizes any party."
+
+Nothing in the WG's document set defines a status code or refusal semantics. *HTTP 430's
+lane is uncontested, and the gap is one the working group has deliberately left open.*
+
+== The blocker that applies regardless
+
+Both drafts declare `category="std"` *and* `submissionType="independent"`. The Independent
+Stream cannot publish Standards Track documents or create IANA registry entries, and the
+HTTP Status Codes registry is *IETF Review* (RFC 9110 §16.2.1; 430 currently unassigned).
+
+*As written, the 430 draft cannot achieve its own purpose in its declared stream.* This is
+independent of the `std` vs `info` question recorded in ADR-0005 — that decision addressed a
+second-order variable.
+
+== Recommended positioning
+
+=== HTTP 430 — reframe as enforcement of AIPREF preferences
+
+Strongest available pitch, because it opens on the working group's own words. Make the
+normative dependency *AIPREF*, not AIBDP:
+
+____
+A server MAY return 430 (Consent Required) when a request conflicts with a declared usage
+preference — for example `Content-Usage: train-ai=n`.
+____
+
+AIBDP becomes one richer declaration source rather than a hard dependency. This decouples
+430's fate from AIBDP's, removes the stale cross-draft references, and answers "why does
+this belong at the IETF" before it is asked.
+
+Rename to `draft-jewell-aipref-http-430` to signal alignment. Take it to the AIPREF list
+first; venue is then AD sponsorship or HTTPBIS, since AIPREF's charter excludes it.
+
+=== AIBDP — reposition as a mapped alternative format
+
+Do *not* submit as a competing vocabulary. Under §6.6, define the bidirectional mapping:
+
+* `train-ai` ⟷ `policies.training`
+* `search` ⟷ `policies.indexing`
+* AIBDP purposes absent from AIPREF map to *unknown*, which §6.6 explicitly permits
+
+Honest differential after mapping — narrower than previously claimed:
+
+[cols="2,4",options="header"]
+|===
+| Still distinct | Note
+
+| Well-known URI + JSON manifest | `attach-04` is expired with no successor and defined no well-known URI. *This is the real opening.*
+| Path-based `scope` and `exceptions` | `zehta-exclusions` is use-based; robots.txt path rules are coarser
+| `rationale` | No AIPREF equivalent
+| Enforcement binding | Belongs to the 430 draft
+|===
+
+[cols="2,4",options="header"]
+|===
+| No longer defensible | Why
+
+| `conditional` as headline feature | `wallace-grant-binding` does this with verifiable JWS credentials; AIBDP uses unverified request headers
+| "8 purposes vs 2" | `vocab-06` §4.3: extensions "MUST NOT introduce additional categories that include existing categories" — subsets only. Several AIBDP purposes need re-expressing as subsets or dropping
+| Per-path scoping as a differential | AIPREF-*as-a-system* has it via the robots.txt rule in `attach`
+|===
+
+== Work this creates
+
+. Define the §6.6 bidirectional mapping. Without it AIBDP is a competing vocabulary; with
+  it, a sanctioned alternative format.
+. Adopt `vocab-06` §5.1's conflict rule, or define AIBDP's own ordering over
+  `{allowed, refused, conditional, encouraged}`. AIBDP currently says "most restrictive
+  SHOULD take precedence" with no ordering — `DEBT.adoc` item 2 already admits this.
+. Re-express AIBDP purposes as subsets per §4.3, or drop them.
+. Decide `conditional`'s future: cede to `wallace-grant-binding`, or justify the
+  lighter-weight mechanism. Do not both claim it and leave the crypto section incoherent.
+. Rewrite the 430 draft's normative core on the RFC 7725 model, with real RFC 2119 language
+  and the §16.2.1 registration template.
+. Read the AIPREF list archive for `well-known`, `JSON`, `conditional`, `path`,
+  `status code` before pitching — AIPREF's minimalism may be considered consensus rather
+  than oversight.
+
+== Decisions for the owner
+
+. *Venue* — take 430 to the AIPREF list then seek AD sponsorship / HTTPBIS? Reposition
+  AIBDP as a mapped alternative format?
+. *`category` / `submissionType`* — must become coherent. IETF stream + `std`, or
+  independent + `info` and abandon the registry ambition.
+. *Draft names* — adopt `draft-jewell-aipref-*` to signal alignment?
+. *`conditional`* — contest `wallace-grant-binding`, or cede and cite it?
+. *Author identity* — unresolved since ADR-0005; determines who submits.
