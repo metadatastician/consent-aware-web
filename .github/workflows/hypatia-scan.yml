@@ -28,3 +28,10 @@ permissions:
 jobs:
   scan:
     uses: hyperpolymath/standards/.github/workflows/hypatia-scan-reusable.yml@092dedada188f56c5915f74a5fd40aac093742c3
+    # The reusable's job requests actions: read; a caller cannot grant less
+    # than its callee asks, or GitHub refuses the run at startup (standards#451;
+    # B-PERMS in metadatastician-governance#30).
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
