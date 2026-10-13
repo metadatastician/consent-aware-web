@@ -32,7 +32,7 @@ workflows:
         - 'actions/checkout@v7.0.1'
     '.github/workflows/sonarqube.yml':
         - 'actions/checkout@v7.0.1'
-        - 'sonarsource/sonarqube-scan-action@v8.2.1'
+        - 'sonarsource/sonarqube-scan-action@v8.3.0'
     '.github/workflows/spec-gates.yml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/static-analysis-gate.yml':
@@ -80,8 +80,8 @@ dependencies:
         commit: 'sha1-89f3c2702f4f650a92aa7411502f38da06abd562'
         owner_id: 6759885
         repo_id: 1275650185
-    'sonarsource/sonarqube-scan-action@v8.2.1':
-        ref: 'v8.2.1'
-        commit: 'sha1-22918119ff8e1ca75a623e15c8296b6ea4fbe28f'
+    'sonarsource/sonarqube-scan-action@v8.3.0':
+        ref: 'v8.3.0'
+        commit: 'sha1-d209202bc7d53ff1cc128f7f907dac145c9d6ae9'
         owner_id: 545988
         repo_id: 366408409
