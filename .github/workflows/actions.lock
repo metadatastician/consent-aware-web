@@ -27,7 +27,8 @@ workflows:
     '.github/workflows/runtime-policy.yml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/scorecard.yml': []
-    '.github/workflows/secret-scanner.yml': []
+    '.github/workflows/secret-scanner.yml':
+        - 'metadatastician/standards@b8f60511e76c9015d86990317162dce653c92fe1'
     '.github/workflows/security-policy.yml':
         - 'actions/checkout@v7.0.1'
     '.github/workflows/sonarqube.yml':
@@ -45,6 +46,11 @@ workflows:
     '.github/workflows/workflow-linter.yml':
         - 'actions/checkout@v7.0.1'
 dependencies:
+    'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1':
+        ref: 'v7.0.1'
+        commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
+        owner_id: 44036562
+        repo_id: 197814629
     'actions/checkout@v7.0.1':
         ref: 'v7.0.1'
         commit: 'sha1-3d3c42e5aac5ba805825da76410c181273ba90b1'
@@ -80,6 +86,13 @@ dependencies:
         commit: 'sha1-89f3c2702f4f650a92aa7411502f38da06abd562'
         owner_id: 6759885
         repo_id: 1275650185
+    'metadatastician/standards@b8f60511e76c9015d86990317162dce653c92fe1':
+        ref: 'b8f60511e76c9015d86990317162dce653c92fe1'
+        commit: 'sha1-b8f60511e76c9015d86990317162dce653c92fe1'
+        owner_id: 297579217
+        repo_id: 1116521501
+        uses:
+            - 'actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1'
     'sonarsource/sonarqube-scan-action@v8.3.0':
         ref: 'v8.3.0'
         commit: 'sha1-d209202bc7d53ff1cc128f7f907dac145c9d6ae9'
